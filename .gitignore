@@ -6,3 +6,6 @@
 /.idea/libraries
 .DS_Store
 /build
+/GauchoGrubAzure/packages/
+/GauchoGrubAzure/GauchoGrub/bin
+/GauchoGrubAzure/GauchoGrub.Deployment/bin
