@@ -1,0 +1,3 @@
+c:\users\evgeny\documents\visual studio 2013\Projects\GauchoGrub\GauchoGrub.Deployment\bin\Debug\Scripts\Publish-AzureResourceGroup.ps1
+c:\users\evgeny\documents\visual studio 2013\Projects\GauchoGrub\GauchoGrub.Deployment\bin\Debug\Templates\WebSiteDeploySQL.json
+c:\users\evgeny\documents\visual studio 2013\Projects\GauchoGrub\GauchoGrub.Deployment\obj\Debug\GauchoGrub.Deployment.deployprojResolveAssemblyReference.cache

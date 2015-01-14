@@ -9,3 +9,6 @@
 /GauchoGrubAzure/packages/
 /GauchoGrubAzure/GauchoGrub/bin
 /GauchoGrubAzure/GauchoGrub.Deployment/bin
+/GauchoGrubAzure/GauchoGrub/obj
+*.mdf
+*.ldf
