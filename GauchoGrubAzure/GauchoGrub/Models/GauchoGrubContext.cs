@@ -26,6 +26,12 @@ namespace GauchoGrub.Models
         public System.Data.Entity.DbSet<GauchoGrub.Models.Menu> Menus { get; set; }
 
         public System.Data.Entity.DbSet<GauchoGrub.Models.RepeatedEvent> RepeatedEvents { get; set; }
+
+        public System.Data.Entity.DbSet<GauchoGrub.Models.Meal> Meals { get; set; }
+
+        public System.Data.Entity.DbSet<GauchoGrub.Models.MenuCategory> MenuCategories { get; set; }
+
+        public System.Data.Entity.DbSet<GauchoGrub.Models.MenuItemType> MenuItemTypes { get; set; }
     
     }
 }

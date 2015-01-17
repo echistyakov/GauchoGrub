@@ -11,11 +11,12 @@ namespace GauchoGrub.Models
         public int Id { get; set; }
 
         [Required]
-        public int MenuCategoryId { get; set; }
+        public int MenuCategoryId { get; set; } // Foreign key
+
+        [Required]
+        public int MenuItemTypeId { get; set; } // Foreign key
 
         [Required]
         public String Title { get; set; }
-
-        public MenuItemType DietType { get; set; }
     }
 }

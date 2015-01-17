@@ -13,6 +13,10 @@ namespace GauchoGrub.Models
         [Required]
         public String Name { get; set; }
 
-        // TODO: GeoPosition ?
+        [Required]
+        public double Latitude { get; set; }
+
+        [Required]
+        public double Longitude { get; set; }
     }
 }

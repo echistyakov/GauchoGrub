@@ -5,7 +5,7 @@ using System.Web;
 
 namespace GauchoGrub.Models
 {
-    public class SpecialMeal : Meal
+    public class SpecialEvent
     {
         // NotImplemented: for holidays and/or finals week etc
         // DiningCommonsId, Date

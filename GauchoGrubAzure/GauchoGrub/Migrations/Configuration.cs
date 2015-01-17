@@ -5,6 +5,7 @@ namespace GauchoGrub.Migrations
     using System.Data.Entity.Migrations;
     using System.Linq;
     using GauchoGrub.Models;
+    using System.Device.Location;
 
     internal sealed class Configuration : DbMigrationsConfiguration<GauchoGrub.Models.GauchoGrubContext>
     {
@@ -13,28 +14,31 @@ namespace GauchoGrub.Migrations
             AutomaticMigrationsEnabled = false;
         }
 
+        // This method will be called after migrating to the latest version.
         protected override void Seed(GauchoGrub.Models.GauchoGrubContext context)
         {
             context.DiningCommons.AddOrUpdate(
                   x => x.Id,
-                  new DiningCommon { Name = "De La Guerra" },
-                  new DiningCommon { Name = "Ortega" },
-                  new DiningCommon { Name = "Carillo" },
-                  new DiningCommon { Name = "Portolla" }
+                  new DiningCommon { Name = "De La Guerra", Latitude = 34.409556, Longitude = -119.845047 },
+                  new DiningCommon { Name = "Ortega", Latitude = 34.410963, Longitude = -119.847048 },
+                  new DiningCommon { Name = "Carillo", Latitude = 34.410022, Longitude = -119.852730 },
+                  new DiningCommon { Name = "Portolla", Latitude = 34.417998, Longitude = -119.868003 }
                 );
-
-            //  This method will be called after migrating to the latest version.
-
-            //  You can use the DbSet<T>.AddOrUpdate() helper extension method 
-            //  to avoid creating duplicate seed data. E.g.
-            //
-            //    context.People.AddOrUpdate(
-            //      p => p.FullName,
-            //      new Person { FullName = "Andrew Peters" },
-            //      new Person { FullName = "Brice Lambson" },
-            //      new Person { FullName = "Rowan Miller" }
-            //    );
-            //
+            context.Meals.AddOrUpdate(
+                  x => x.Id,
+                  new Meal { Name = "Breakfast" },
+                  new Meal { Name = "Brunch" },
+                  new Meal { Name = "Lunch" },
+                  new Meal { Name = "Dinner" },
+                  new Meal { Name = "Late Night" },
+                  new Meal { Name = "Sack Meal" }
+                );
+            context.MenuItemTypes.AddOrUpdate(
+                  x => x.Id,
+                  new MenuItemType { Name = "Regular"},
+                  new MenuItemType { Name = "Vegetarian"},
+                  new MenuItemType { Name = "Vegan"}
+                );
         }
     }
 }

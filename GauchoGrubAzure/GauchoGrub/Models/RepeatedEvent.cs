@@ -14,7 +14,7 @@ namespace GauchoGrub.Models
         public int DiningCommonId { get; set; }  // Foreign Key
 
         [Required]
-        public int EventId { get; set; }  // Foreign Key
+        public int MealId { get; set; }  // Foreign Key
 
         [Required]
         public TimeSpan From { get; set; }
