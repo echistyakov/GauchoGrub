@@ -17,14 +17,12 @@ namespace GauchoGrub.Controllers
     {
         private GauchoGrubContext db = new GauchoGrubContext();
 
-        // TODO: date range perhaps?
         // GET: api/Menus
         public IQueryable<Menu> GetMenus()
         {
             return db.Menus;
         }
 
-        // TODO: get menu by dining common id + event id + date
         // GET: api/Menus/5
         [ResponseType(typeof(Menu))]
         public async Task<IHttpActionResult> GetMenu(int id)

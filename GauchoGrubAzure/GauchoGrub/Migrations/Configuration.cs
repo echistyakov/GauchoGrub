@@ -1,11 +1,10 @@
 namespace GauchoGrub.Migrations
 {
+    using GauchoGrub.Models;
     using System;
     using System.Data.Entity;
     using System.Data.Entity.Migrations;
     using System.Linq;
-    using GauchoGrub.Models;
-    using System.Device.Location;
 
     internal sealed class Configuration : DbMigrationsConfiguration<GauchoGrub.Models.GauchoGrubContext>
     {
@@ -14,9 +13,10 @@ namespace GauchoGrub.Migrations
             AutomaticMigrationsEnabled = false;
         }
 
-        // This method will be called after migrating to the latest version.
         protected override void Seed(GauchoGrub.Models.GauchoGrubContext context)
         {
+            //  This method will be called after migrating to the latest version.
+
             context.DiningCommons.AddOrUpdate(
                   x => x.Id,
                   new DiningCommon { Name = "De La Guerra", Latitude = 34.409556, Longitude = -119.845047 },
@@ -35,10 +35,11 @@ namespace GauchoGrub.Migrations
                 );
             context.MenuItemTypes.AddOrUpdate(
                   x => x.Id,
-                  new MenuItemType { Name = "Regular"},
-                  new MenuItemType { Name = "Vegetarian"},
-                  new MenuItemType { Name = "Vegan"}
+                  new MenuItemType { Name = "Regular" },
+                  new MenuItemType { Name = "Vegetarian" },
+                  new MenuItemType { Name = "Vegan" }
                 );
+            context.SaveChanges();
         }
     }
 }

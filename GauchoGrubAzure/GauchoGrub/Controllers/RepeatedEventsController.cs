@@ -13,7 +13,6 @@ using GauchoGrub.Models;
 
 namespace GauchoGrub.Controllers
 {
-    // TODO: rename to Schedule - RepeatedEvent is just a model name
     public class RepeatedEventsController : ApiController
     {
         private GauchoGrubContext db = new GauchoGrubContext();

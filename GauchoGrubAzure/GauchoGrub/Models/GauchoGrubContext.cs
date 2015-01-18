@@ -17,6 +17,7 @@ namespace GauchoGrub.Models
     
         public GauchoGrubContext() : base("name=GauchoGrubContext")
         {
+            this.Database.Log = s => System.Diagnostics.Debug.WriteLine(s);
         }
 
         public System.Data.Entity.DbSet<GauchoGrub.Models.DiningCommon> DiningCommons { get; set; }
