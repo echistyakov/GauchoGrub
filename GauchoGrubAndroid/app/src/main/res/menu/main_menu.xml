@@ -1,0 +1,12 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools" tools:context=".BaseActivity">
+    <item android:id="@+id/menu_tab" android:title="@string/menu_tab"
+        android:orderInCategory="100" app:showAsAction="never" />
+    <item android:id="@+id/schedule_tab" android:title="@string/schedule_tab"
+        android:orderInCategory="100" app:showAsAction="never" />
+    <item android:id="@+id/dining_cams_tab" android:title="@string/dining_cams_tab"
+        android:orderInCategory="100" app:showAsAction="never" />
+    <item android:id="@+id/action_settings" android:title="@string/action_settings"
+        android:orderInCategory="100" app:showAsAction="never" />
+</menu>

@@ -4,5 +4,16 @@
     <string name="app_name">Gaucho Grub</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+    <string name="menu_tab">Menus</string>
+    <string name="schedule_tab">Schedule</string>
+    <string name="dining_cams_tab">Dining Cams</string>
+    <string name="drawer_open">Open Drawer</string>
+    <string name="drawer_close">Close Drawer</string>
+    <string-array
+        name="nav_drawer_array">
+        <item>Menus</item>
+        <item>Schedule</item>
+        <item>Dining Cams</item>
+    </string-array>
 
 </resources>
