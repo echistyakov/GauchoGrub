@@ -1,12 +1,11 @@
 package com.g10.gauchogrub;
 
-import android.content.Context;
-import android.content.Intent;
+import android.app.Fragment;
+import android.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -16,7 +15,11 @@ import android.widget.ListView;
 
 import java.util.logging.Logger;
 
-
+/*
+ * BaseActivity - is the main activity that gets launched.
+ * It contains a navigation drawer that wraps Fragments.
+ * Based on Android tutorial: "Creating a Navigation Drawer"
+ */
 public class BaseActivity extends ActionBarActivity {
 
     private static String[] navDrawerArray;
@@ -29,15 +32,9 @@ public class BaseActivity extends ActionBarActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //this.supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.base_layout);
 
-        if(navDrawerLayout == null){
-            CreateNavigationDrawer();
-        }
-    }
-
-    private void CreateNavigationDrawer(){
+        // Create a drawer
         navTitle = navDrawerTitle = getTitle();
         navDrawerArray = getResources().getStringArray(R.array.nav_drawer_array);
         navDrawerLayout = (DrawerLayout) findViewById(R.id.nav_drawer_layout);
@@ -48,7 +45,7 @@ public class BaseActivity extends ActionBarActivity {
         // Set the list's click listener
         navDrawerList.setOnItemClickListener(new DrawerItemClickListener());
 
-        // enable ActionBar app icon to behave as action to toggle nav drawer
+        // Enable ActionBar app icon to behave as action to toggle nav drawer
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
 
@@ -110,24 +107,16 @@ public class BaseActivity extends ActionBarActivity {
 
     /** Swaps fragments in the main content view */
     private void selectItem(int position) {
-        Logger.getLogger(Logger.GLOBAL_LOGGER_NAME).info(position + " position");
-        Intent intent = null;
-        if (position == 0){
-            intent = new Intent(this, MenuActivity.class);
+        Logger.getLogger(Logger.GLOBAL_LOGGER_NAME).info(String.format("Item {} selected in NavDrawer", position));
+        // Create a new fragment
+        Fragment fragment = null;
+        if (position == 0) {
+            fragment = new MenuFragment();
         } else if (position == 1){
-
+            fragment = new ScheduleFragment();
         } else if (position == 2){
-            intent = new Intent(this, DiningCamsActivity.class);
+            fragment = new DiningCamsFragment();
         }
-        startActivity(intent);
-        navDrawerToggle.syncState();
-
-/*
-        // Create a new fragment and specify the planet to show based on position
-        Fragment fragment = new PlanetFragment();
-        Bundle args = new Bundle();
-        args.putInt(PlanetFragment.ARG_PLANET_NUMBER, position);
-        fragment.setArguments(args);
 
         // Insert the fragment by replacing any existing fragment
         FragmentManager fragmentManager = getFragmentManager();
@@ -136,23 +125,15 @@ public class BaseActivity extends ActionBarActivity {
                 .commit();
 
         // Highlight the selected item, update the title, and close the drawer
-        mDrawerList.setItemChecked(position, true);
-        setTitle(mPlanetTitles[position]);
-        mDrawerLayout.closeDrawer(mDrawerList);*/
+        navDrawerList.setItemChecked(position, true);
+        setTitle(navDrawerArray[position]);
+        navDrawerLayout.closeDrawer(navDrawerList);
     }
 
     private class DrawerItemClickListener implements ListView.OnItemClickListener {
         @Override
         public void onItemClick(AdapterView parent, View view, int position, long id) {
             selectItem(position);
-            navDrawerLayout.closeDrawer(navDrawerList);
         }
-    }
-
-    protected void InflateLayout(int layout_id){
-        // Inflate activity layout
-        LayoutInflater inflater = (LayoutInflater) this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View contentView = inflater.inflate(layout_id, null, false);
-        navDrawerLayout.addView(contentView, 1);
     }
 }
