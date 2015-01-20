@@ -7,9 +7,10 @@ import java.util.Date;
  */
 public class DiningCam {
     public final static String Carrillo = "http://diningcams.housing.ucsb.edu/Image/Carrillo?";
-    public final static String DeLaGuerra = "http://diningcams.housing.ucsb.edu/Image/Carrillo?";
-    public final static String Ortega = "http://diningcams.housing.ucsb.edu/Image/Carrillo?";
-    public final static String Portolla = "http://diningcams.housing.ucsb.edu/Image/Carrillo?";
+    public final static String DeLaGuerra = "http://diningcams.housing.ucsb.edu/Image/DeLaGuerra?";
+    public final static String Ortega = "http://diningcams.housing.ucsb.edu/Image/Ortega?";
+    //public final static String Portolla = "http://diningcams.housing.ucsb.edu/Image/Portolla?";
+    // Note, DiningCam doesn't exist for Portolla
     private final static int delaySeconds = 2;
 
     private String url;
