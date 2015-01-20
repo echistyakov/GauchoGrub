@@ -13,6 +13,8 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import com.g10.gauchogrub.dining_cams.DiningCamsFragment;
+
 import java.util.logging.Logger;
 
 /*

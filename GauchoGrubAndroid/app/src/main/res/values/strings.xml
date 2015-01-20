@@ -15,5 +15,12 @@
         <item>Schedule</item>
         <item>Dining Cams</item>
     </string-array>
+    <string-array
+        name="dining_commons_array">
+        <item>Carrillo</item>
+        <item>De La Guerra</item>
+        <item>Ortega</item>
+        <item>Portolla</item>
+    </string-array>
 
 </resources>
