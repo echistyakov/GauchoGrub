@@ -195,6 +195,10 @@
     <Compile Include="Migrations\201501180240412_Initial.Designer.cs">
       <DependentUpon>201501180240412_Initial.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201501260625332_unique_constraints.cs" />
+    <Compile Include="Migrations\201501260625332_unique_constraints.Designer.cs">
+      <DependentUpon>201501260625332_unique_constraints.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\DiningCommon.cs" />
     <Compile Include="Models\GauchoGrubContext.cs" />
@@ -263,6 +267,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201501180240412_Initial.resx">
       <DependentUpon>201501180240412_Initial.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201501260625332_unique_constraints.resx">
+      <DependentUpon>201501260625332_unique_constraints.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
