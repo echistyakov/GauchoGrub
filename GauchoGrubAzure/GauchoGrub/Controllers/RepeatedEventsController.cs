@@ -20,7 +20,7 @@ namespace GauchoGrub.Controllers
         // GET: api/RepeatedEvents
         public IQueryable<RepeatedEvent> GetRepeatedEvents()
         {
-            return db.RepeatedEvents;
+            return db.RepeatedEvents.Include(r => r.DiningCommon).Include(r => r.Meal);
         }
 
         // GET: api/RepeatedEvents/5
