@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Web;
 
@@ -13,8 +14,14 @@ namespace GauchoGrub.Models
         [Required]
         public int DiningCommonId { get; set; }  // Foreign Key
 
+        [ForeignKey("DiningCommonId")]
+        public DiningCommon DiningCommon { get; set; }  // Navigation Property
+
         [Required]
         public int MealId { get; set; }  // Foreign Key
+
+        [ForeignKey("MealId")]
+        public Meal Meal { get; set; }  // Navigation property
 
         [Required]
         public TimeSpan From { get; set; }

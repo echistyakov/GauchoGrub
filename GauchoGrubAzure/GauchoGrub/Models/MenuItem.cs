@@ -14,12 +14,18 @@ namespace GauchoGrub.Models
         [Required]
         public int MenuCategoryId { get; set; } // Foreign key
 
+        [ForeignKey("MenuCategoryId")]
+        public MenuCategory MenuCategory { get; set; }  // Navigation property
+
         [Required]
         public int MenuItemTypeId { get; set; } // Foreign key
 
+        [ForeignKey("MenuItemTypeId")]
+        public MenuItemType MenuItemType { get; set; }  // Navigation property
+
         [Required]
-        [Index(IsUnique = true)] // Extra duplication prevention
-        [MaxLength(450)] // Unique constraint won't work without length limitation
+        [Index(IsUnique = true)]  // Extra duplication prevention
+        [MaxLength(450)]  // Unique constraint won't work without length limitation
         public String Title { get; set; }
     }
 }

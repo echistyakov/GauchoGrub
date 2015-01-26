@@ -20,7 +20,7 @@ namespace GauchoGrub.Controllers
         // GET: api/Menus
         public IQueryable<Menu> GetMenus()
         {
-            return db.Menus;
+            return db.Menus.Include(m => m.Event).Include(m => m.MenuItems);
         }
 
         // GET: api/Menus/5
