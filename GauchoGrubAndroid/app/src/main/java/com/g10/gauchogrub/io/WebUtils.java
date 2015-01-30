@@ -1,6 +1,8 @@
 package com.g10.gauchogrub.io;
 
 
+import android.graphics.drawable.Drawable;
+
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
@@ -8,7 +10,6 @@ import java.io.ByteArrayInputStream;
 import java.net.URL;
 import java.io.IOException;
 import java.net.HttpURLConnection;
-import java.util.HashMap;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Hashtable;
@@ -20,6 +21,16 @@ public class WebUtils {
     public static final int BASIC_TIMEOUT = 60 * 1000;        // 60 seconds
     public static final int DOWNLOAD_TIMEOUT = 5 * 60 * 1000; // 5 minutes
     public final static Logger logger = Logger.getLogger("WebUtils");
+
+    public Drawable getDrawable(URL url){
+        try {
+            InputStream stream = (InputStream) url.getContent();
+            Drawable image = Drawable.createFromStream(stream, "drawable image");
+            return image;
+        } catch (Exception e) {
+            return null;
+        }
+    }
 
     /* A synchronous method that performs an HTTP request returning data received from the sever as a String */
     public String httpRequest(URL url, HttpMethod method, int timeout) throws IOException {
