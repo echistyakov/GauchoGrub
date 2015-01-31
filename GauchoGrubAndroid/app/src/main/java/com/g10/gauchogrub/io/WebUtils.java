@@ -32,13 +32,14 @@ public class WebUtils {
         HttpURLConnection connection = null;
         Bitmap image = null;
         try {
+            logger.info(url.toString());
             connection = (HttpURLConnection) url.openConnection();
             connection.setConnectTimeout(timeout);
             connection.setReadTimeout(timeout);
             connection.connect();
 
             byte[] response = readByteStream(connection.getInputStream());
-            Logger.getGlobal().info("byte array length " + response.length);
+            logger.info("GET image/jpeg: " + response.length + " bytes");
             image = BitmapFactory.decodeByteArray(response, 0, response.length);
         } catch (SocketTimeoutException e) {
             return null;
@@ -47,7 +48,6 @@ public class WebUtils {
         } finally {
             connection.disconnect();
         }
-        Logger.getGlobal().info(url.toString() + " " + (image == null));
         return image;
     }
 

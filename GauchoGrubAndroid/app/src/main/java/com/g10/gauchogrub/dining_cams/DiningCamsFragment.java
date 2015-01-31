@@ -21,7 +21,7 @@ public class DiningCamsFragment extends Fragment implements AdapterView.OnItemSe
     private DiningCam currentCam;
     private Handler handler;
     private ImageView imageView;
-    private final int delay = 3 * 1000;  // Milliseconds (2 seconds)
+    private final int delay = 2 * 1000;  // Milliseconds (2 seconds)
     private boolean isOn;
 
     @Override
@@ -30,7 +30,7 @@ public class DiningCamsFragment extends Fragment implements AdapterView.OnItemSe
 
         // Initialize Spinner
         Spinner spinner = (Spinner)rootView.findViewById(R.id.dining_cams_spinner);
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getActivity(), R.array.dining_commons_array, R.layout.dining_cams_spinner_item);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getActivity(), R.array.dining_cams_array, R.layout.dining_cams_spinner_item);
         adapter.setDropDownViewResource(R.layout.dining_cams_spinner_item);
         spinner.setAdapter(adapter);
         spinner.setOnItemSelectedListener(this);
@@ -42,14 +42,30 @@ public class DiningCamsFragment extends Fragment implements AdapterView.OnItemSe
         return rootView;
     }
 
+    @Override
     public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
         // An item was selected. You can retrieve the selected item using
         // parent.getItemAtPosition(pos)
-        // TODO: change dining cam
-
-        this.currentCam = new DiningCam(DiningCam.Carrillo);
+        String[] camUrls = new String[]{DiningCam.Carrillo, DiningCam.DeLaGuerra, DiningCam.Ortega};
+        String camUrl = camUrls[pos];
+        this.currentCam = new DiningCam(camUrl);
         this.startCam();
-        //this.run();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        if(this.currentCam != null) {
+            this.stopCam();
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if(this.currentCam != null) {
+            this.startCam();
+        }
     }
 
     private void startCam() {
@@ -59,8 +75,10 @@ public class DiningCamsFragment extends Fragment implements AdapterView.OnItemSe
 
     private void stopCam() {
         this.isOn = false;
+        this.handler.removeCallbacks(this);
     }
 
+    @Override
     public void run() {
         new AsyncTask<Void, Void, Bitmap>() {
             @Override
@@ -81,6 +99,7 @@ public class DiningCamsFragment extends Fragment implements AdapterView.OnItemSe
         }
     }
 
+    @Override
     public void onNothingSelected(AdapterView<?> parent) {
         // Another interface callback
     }
