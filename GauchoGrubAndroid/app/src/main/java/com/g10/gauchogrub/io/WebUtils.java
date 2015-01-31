@@ -1,17 +1,23 @@
 package com.g10.gauchogrub.io;
 
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 
+import org.apache.http.util.ByteArrayBuffer;
+
 import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
+import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.nio.ByteBuffer;
 import java.util.Hashtable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -22,14 +28,27 @@ public class WebUtils {
     public static final int DOWNLOAD_TIMEOUT = 5 * 60 * 1000; // 5 minutes
     public final static Logger logger = Logger.getLogger("WebUtils");
 
-    public Drawable getDrawable(URL url){
+    public Bitmap getDrawable(URL url, int timeout){
+        HttpURLConnection connection = null;
+        Bitmap image = null;
         try {
-            InputStream stream = (InputStream) url.getContent();
-            Drawable image = Drawable.createFromStream(stream, "drawable image");
-            return image;
-        } catch (Exception e) {
+            connection = (HttpURLConnection) url.openConnection();
+            connection.setConnectTimeout(timeout);
+            connection.setReadTimeout(timeout);
+            connection.connect();
+
+            byte[] response = readByteStream(connection.getInputStream());
+            Logger.getGlobal().info("byte array length " + response.length);
+            image = BitmapFactory.decodeByteArray(response, 0, response.length);
+        } catch (SocketTimeoutException e) {
             return null;
+        } catch(IOException e){
+            return null;
+        } finally {
+            connection.disconnect();
         }
+        Logger.getGlobal().info(url.toString() + " " + (image == null));
+        return image;
     }
 
     /* A synchronous method that performs an HTTP request returning data received from the sever as a String */
@@ -51,41 +70,6 @@ public class WebUtils {
         connection.setConnectTimeout(timeout);
         connection.setReadTimeout(timeout);
         connection.connect();
-
-        return readResponse(connection);
-    }
-
-    /* Used exclusively by updatePassword method */
-    public String httpRequest(URL url, HttpMethod method, int timeout, String requestBody) throws IOException {
-        byte[] byteArray = requestBody.getBytes("UTF-8");
-        InputStream inputStream = new ByteArrayInputStream(byteArray);
-        BufferedInputStream bufferedInputStream = new BufferedInputStream(inputStream);
-        return uploadData(url, bufferedInputStream, "password", byteArray.length);
-    }
-
-    /* Uploads data in the body of HTTP request */
-    public String uploadData(URL url, BufferedInputStream inputStream, String contentType, long length) throws IOException {
-        log(url);
-
-        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-        connection.setRequestMethod(HttpMethod.POST.toString());
-        connection.setRequestProperty("Content-Type", contentType);
-        connection.setRequestProperty("Content-Length", Long.toString(length));
-        connection.setFixedLengthStreamingMode(length);
-        connection.setDoOutput(true);
-        connection.setDoInput(true);
-        connection.connect();
-
-        BufferedOutputStream outputStream = new BufferedOutputStream(connection.getOutputStream());
-
-        // Copy contents to output stream
-        byte[] buffer = new byte[1024];
-        int len;
-        while ((len = inputStream.read(buffer)) != -1) {
-            outputStream.write(buffer, 0, len);
-        }
-        outputStream.flush();
-        outputStream.close();
 
         return readResponse(connection);
     }
@@ -112,6 +96,19 @@ public class WebUtils {
         }
         reader.close();
         return response.toString();
+    }
+
+    /* Reads data (byte[]) from an input stream */
+    private byte[] readByteStream(InputStream stream) throws IOException {
+        BufferedInputStream reader = new BufferedInputStream(stream);
+        ByteArrayBuffer response = new ByteArrayBuffer(100000);
+        byte[] buffer = new byte[1024];
+        int length;
+        while((length = reader.read(buffer)) != -1){
+            response.append(buffer, 0, length);
+        }
+        reader.close();
+        return response.toByteArray();
     }
 
     /* Logs the URL */
