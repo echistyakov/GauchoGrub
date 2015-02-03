@@ -21,7 +21,7 @@ public class DiningCamsFragment extends Fragment implements AdapterView.OnItemSe
     private DiningCam currentCam;
     private Handler handler;
     private ImageView imageView;
-    private final int delay = 2 * 1000;  // Milliseconds (2 seconds)
+    private final int delay = 30 * 1000;  // Milliseconds (30 seconds)
     private boolean isOn;
 
     @Override
