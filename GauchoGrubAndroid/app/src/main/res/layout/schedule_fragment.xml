@@ -1,12 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:layout_column="4">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Schedule Fragment"
-        android:id="@+id/textView3" />
+    <Spinner
+        android:layout_width="fill_parent"
+        android:layout_height="48dp"
+        android:id="@+id/schedule_spinner"
+        android:spinnerMode="dropdown"
+        android:touchscreenBlocksFocus="false"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp" />
+
+    <TableLayout
+             android:layout_width="match_parent"
+             android:layout_height="wrap_content"
+             android:layout_gravity="center_horizontal"
+             android:id="@+id/schedule_table" >
+
+    </TableLayout>
 </LinearLayout>
