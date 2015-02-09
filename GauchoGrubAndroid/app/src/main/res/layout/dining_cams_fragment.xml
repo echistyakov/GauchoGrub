@@ -13,10 +13,28 @@
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp" />
 
-    <ImageView
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/imageView"
-        android:layout_gravity="center_vertical"
-        android:layout_margin="5dp" />
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="fill_parent"
+        android:layout_gravity="center_horizontal">
+
+        <ImageView
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:id="@+id/dining_cam_image_view"
+            android:layout_gravity="center_vertical"
+            android:layout_margin="5dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:gravity="center"
+            android:layout_gravity="center"
+            android:visibility="invisible"
+            android:text="Could not load image" />
+
+    </FrameLayout>
+
+
 </LinearLayout>

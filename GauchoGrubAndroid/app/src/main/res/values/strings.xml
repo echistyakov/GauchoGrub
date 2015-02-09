@@ -22,5 +22,12 @@
         <item>Ortega</item>
         <item>Portolla</item>
     </string-array>
+    <string-array
+        name="dining_cams_array">
+        <item>Carrillo</item>
+        <item>De La Guerra</item>
+        <item>Ortega</item>
+    </string-array>
+
 
 </resources>
