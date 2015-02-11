@@ -5,4 +5,15 @@
         <!-- Customize your theme here. -->
     </style>
 
+    <style name="text">
+        <item name="android:padding">4dip</item>
+        <item name="android:textAppearance">?android:attr/textAppearanceLarge</item>
+        <item name="android:textColor">#FFFF00</item>
+    </style>
+
+    <style name="background">
+        <item name="android:background">#ff00a8ff</item>
+        <item name="android:textColor">#FFFF00</item>
+    </style>
+
 </resources>

@@ -4,7 +4,9 @@
     android:orientation="vertical"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:layout_column="4">
+    android:layout_column="4"
+    android:background="#ff0093ff">
+    style="@style/background"
 
     <Spinner
         android:layout_width="fill_parent"
@@ -13,13 +15,15 @@
         android:spinnerMode="dropdown"
         android:touchscreenBlocksFocus="false"
         android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp" />
+        android:layout_marginRight="20dp"
+        />
 
     <TableLayout
              android:layout_width="match_parent"
              android:layout_height="wrap_content"
              android:layout_gravity="center_horizontal"
-             android:id="@+id/schedule_table" >
+             android:id="@+id/schedule_table"
+             style="@style/text">
 
     </TableLayout>
 </LinearLayout>
