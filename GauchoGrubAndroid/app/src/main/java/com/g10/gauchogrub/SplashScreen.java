@@ -24,14 +24,12 @@ public class SplashScreen extends Activity {
 
             @Override
             public void run() {
-                // TODO Auto-generated method stub
                 Intent i = new Intent(SplashScreen.this, BaseActivity.class);
                 startActivity(i);
                 this.finish();
             }
 
             private void finish() {
-                // TODO Auto-generated method stub
 
             }
         }, splashInterval);
