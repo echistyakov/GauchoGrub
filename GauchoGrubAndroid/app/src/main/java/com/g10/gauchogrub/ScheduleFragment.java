@@ -140,7 +140,7 @@ public class ScheduleFragment extends Fragment implements AdapterView.OnItemSele
 
         schedule.add(new SimpleEntry("Monday-Friday", monFri));
         schedule.add(new SimpleEntry("Saturday-Sunday", satSun));
-        schedule.add(new SimpleEntry("Moday-Thursday", monThu));
+        schedule.add(new SimpleEntry("Monday-Thursday", monThu));
 
         return schedule;
     }
