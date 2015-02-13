@@ -21,7 +21,6 @@ namespace GauchoGrub.Models
         [DataType(DataType.Date)]
         public DateTime Date { get; set; }
 
-        [Required]
-        public ICollection<MenuItem> MenuItems { get; set; }  // Navigation property
+        public ICollection<MenuItem> MenuItems { get; set; }  // Navigation property (Many-to-Many relationship)
     }
 }

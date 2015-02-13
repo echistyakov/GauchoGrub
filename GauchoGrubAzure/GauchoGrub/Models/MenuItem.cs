@@ -27,5 +27,7 @@ namespace GauchoGrub.Models
         [Index(IsUnique = true)]  // Extra duplication prevention
         [MaxLength(450)]  // Unique constraint won't work without length limitation
         public String Title { get; set; }
+
+        public ICollection<Menu> Menus { get; set; }  // Navigation property (Many-to-Many relationship)
     }
 }
