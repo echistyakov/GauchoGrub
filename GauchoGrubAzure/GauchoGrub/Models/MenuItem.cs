@@ -24,7 +24,7 @@ namespace GauchoGrub.Models
         public MenuItemType MenuItemType { get; set; }  // Navigation property
 
         [Required]
-        [Index(IsUnique = true)]  // Extra duplication prevention
+        //[Index(IsUnique = true)]  // Extra duplication prevention
         [MaxLength(450)]  // Unique constraint won't work without length limitation
         public String Title { get; set; }
 
