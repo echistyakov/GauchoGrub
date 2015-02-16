@@ -10,7 +10,12 @@ import org.apache.http.util.ByteArrayBuffer;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
 import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.io.IOException;
@@ -116,7 +121,26 @@ public class WebUtils {
         logger.log(Level.INFO, url.toString());
     }
 
+    public void createMenuFile(URL u) throws Exception{
+
+        //Make API Call
+        WebUtils w = new WebUtils();
+        String ur = "http://gauchogrub.azurewebsites.net/api/Menus?diningCommon=Ortega&date=02/17/2015";
+        URL url = new URL(ur);
+        String result = w.httpRequest(url,HttpMethod.GET,100000);
+
+        //Writes API Response to file
+        File statText = new File("OrtegaTestMenu.json");
+        FileOutputStream is = new FileOutputStream(statText);
+        OutputStreamWriter osw = new OutputStreamWriter(is);
+        Writer w2 = new BufferedWriter(osw);
+        w2.write(result);
+        w2.close();
+    }
+
     public enum HttpMethod {
         GET, POST, DELETE, PUT
     }
+
+
 }

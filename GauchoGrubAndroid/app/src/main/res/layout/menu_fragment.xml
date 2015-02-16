@@ -1,14 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:baselineAligned="true"
-    style="@style/background">
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:layout_column="4"
+    android:background="#ffffff"
+    android:weightSum="1">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Menu Fragment Test"
-        android:id="@+id/textView2" />
+
+    <GridLayout
+        android:layout_width="match_parent"
+        android:layout_height="48dp">
+
+        <Spinner
+            android:layout_width="145dp"
+            android:layout_height="48dp"
+            android:id="@+id/dining_common_spinner"
+            android:spinnerMode="dropdown"
+            android:touchscreenBlocksFocus="false"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="15dp"
+            android:layout_column="0"
+            android:layout_row="0" />
+
+        <Spinner
+            android:layout_width="145dp"
+            android:layout_height="48dp"
+            android:id="@+id/date_spinner"
+            android:spinnerMode="dropdown"
+            android:touchscreenBlocksFocus="false"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="20dp"
+            android:layout_gravity="right"
+            android:layout_column="1"
+            android:layout_row="0" />
+
+    </GridLayout>
+
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/menu_table"
+        style="@style/text">
+
+    </TableLayout>
+
 </LinearLayout>
