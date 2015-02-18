@@ -106,7 +106,7 @@ public class MenuFragment extends Fragment implements AdapterView.OnItemSelected
         new AsyncTask<Void, Void, DayMenu>() {
             @Override
             protected DayMenu doInBackground(Void... v) {
-                Spinner spinner = (Spinner)findViewById(R.id.dining_common_spinner);
+                //Spinner spinner = (Spinner)findViewById(R.id.dining_common_spinner);
                 try {
                     WebUtils w = new WebUtils();
                     String menuString = w.createMenuString("Ortega","2/17/2015");
