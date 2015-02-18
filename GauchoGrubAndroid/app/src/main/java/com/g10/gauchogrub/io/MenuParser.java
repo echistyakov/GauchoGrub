@@ -1,33 +1,42 @@
 package com.g10.gauchogrub.io;
 
+import android.app.Application;
+import android.content.Context;
+import android.content.res.AssetFileDescriptor;
+import android.content.res.AssetManager;
+
 import com.g10.gauchogrub.menu.DayMenu;
 import com.g10.gauchogrub.menu.Meal;
 import com.g10.gauchogrub.menu.MenuItem;
 
+import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
 import java.util.Iterator;
 import java.util.ArrayList;
-
+import com.g10.gauchogrub.io.*;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+import java.util.logging.Logger;
 
 public class MenuParser{
 
-    private static final String filePath = "OrtegaTestMenu.json";
+    public final static Logger logger = Logger.getLogger("MenuFragment");
 
-    public DayMenu getDayMenu() {
+    public DayMenu getDayMenu(String menuString) {
 
-        DayMenu myDayMenu = new DayMenu("","",0);
+        DayMenu myDayMenu = new DayMenu("3","",0);
         try {
-            // read the json file
-            FileReader reader = new FileReader(filePath);
-
             JSONParser jsonParser = new JSONParser();
-            JSONArray eventList = (JSONArray) jsonParser.parse(reader);
+            JSONArray eventList = (JSONArray) jsonParser.parse(menuString);
             int eventCount = eventList.size();
 
             for(int x = 0; x < eventCount; x++) {
@@ -74,17 +83,14 @@ public class MenuParser{
                 //Insert meal into DayMenu
                 myDayMenu.addMeal(meal);
             }
-            //System.out.println(myDayMenu.toString());
 
-        } catch (FileNotFoundException ex) {
-            ex.printStackTrace();
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        } catch (ParseException ex) {
-            ex.printStackTrace();
         } catch (NullPointerException ex) {
             ex.printStackTrace();
+        } catch (Exception ex) {
+            ex.printStackTrace();
         }
+
+
         return myDayMenu;
     }
 

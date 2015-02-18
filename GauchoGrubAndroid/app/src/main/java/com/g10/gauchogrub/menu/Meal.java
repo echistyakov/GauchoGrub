@@ -21,6 +21,8 @@ public class Meal {
         return this.mealName;
     }
 
+    public ArrayList<MenuItem> getMenuItems() { return menuItems; }
+
     public void addMenuItem(MenuItem item) {
         menuItems.add(item);
     }

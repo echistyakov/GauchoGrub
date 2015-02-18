@@ -29,9 +29,11 @@ public class DayMenu {
         return date;
     }
 
-    public String getDiningcommon(){
+    public String getDiningCommon() {
         return this.diningCommon;
     }
+
+    public ArrayList<Meal> getMeals() { return meals; }
 
     //setters
 

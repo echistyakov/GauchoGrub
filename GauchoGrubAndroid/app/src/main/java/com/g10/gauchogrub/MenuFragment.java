@@ -108,7 +108,7 @@ public class MenuFragment extends Fragment implements AdapterView.OnItemSelected
             protected DayMenu doInBackground(Void... v) {
                 try {
                     WebUtils w = new WebUtils();
-                    String menuString = w.createMenuFile();
+                    String menuString = w.createMenuString();
                     MenuParser mp = new MenuParser();
                     return mp.getDayMenu(menuString);
                 }catch(Exception e){};
