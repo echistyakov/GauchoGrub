@@ -1,26 +1,8 @@
 package com.g10.gauchogrub.io;
 
-import android.app.Application;
-import android.content.Context;
-import android.content.res.AssetFileDescriptor;
-import android.content.res.AssetManager;
-
 import com.g10.gauchogrub.menu.DayMenu;
 import com.g10.gauchogrub.menu.Meal;
 import com.g10.gauchogrub.menu.MenuItem;
-
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStreamWriter;
-import java.io.Writer;
-import java.util.Iterator;
-import java.util.ArrayList;
-import com.g10.gauchogrub.io.*;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -77,6 +59,7 @@ public class MenuParser{
                     String menuCategory = (String) menuCategoryJ.get("Name");
                     String menuItemType = (String) menuItemTypeJ.get("Name");
                     MenuItem food = new MenuItem(title,menuCategory,menuItemType);
+                    //Insert MenuItem into Meal List
                     meal.addMenuItem(food);
                 }
 

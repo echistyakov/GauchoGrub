@@ -19,8 +19,6 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import android.os.AsyncTask;
 import java.io.File;
-
-
 import java.util.ArrayList;
 
 import com.g10.gauchogrub.menu.DayMenu;
@@ -32,6 +30,10 @@ public class MenuFragment extends Fragment implements AdapterView.OnItemSelected
     private TableLayout menuTable;
 
     public final static Logger logger = Logger.getLogger("MenuFragment");
+
+    private String diningCommon;
+    private String date;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -59,34 +61,32 @@ public class MenuFragment extends Fragment implements AdapterView.OnItemSelected
 
     private void inflateMenu(DayMenu displayMenu) {
 
-        logger.info("Spinner Position 1: ");
-
-        //menuTable.removeAllViews();
+        menuTable.removeAllViews();
 
         ArrayList<Meal> menuMeals = displayMenu.getMeals();
 
-        String test = displayMenu.getDate();
-        logger.info("Test Date: " + test);
         if(displayMenu.getMeals() == null) return;
         for (Meal headerEntry : menuMeals) {
             String mealName = headerEntry.getMealName();
 
             TableRow headerRow = new TableRow(getActivity().getApplicationContext());
             headerRow.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
-            View headerView = LayoutInflater.from(getActivity().getApplicationContext()).inflate(R.layout.schedule_header, null);
+            View headerView = LayoutInflater.from(getActivity().getApplicationContext()).inflate(R.layout.meal_header, null);
             TextView headerTextView = (TextView) headerView.findViewById(R.id.header);
             headerTextView.setText(mealName);
             headerRow.addView(headerView);
             menuTable.addView(headerRow);
 
             for(MenuItem itemEntry : headerEntry.getMenuItems()) {
-                String itemTitle = itemEntry.getTitle();
+                String itemTitle = "   " + itemEntry.getTitle();
                 String itemCategory = itemEntry.getMenuCategory();
                 String itemType = itemEntry.getMenuItemType();
 
+                if(itemType.equals("Regular")) itemType = "";
+
                 TableRow entryRow = new TableRow(getActivity().getApplicationContext());
                 entryRow.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
-                View entryView = LayoutInflater.from(getActivity().getApplicationContext()).inflate(R.layout.schedule_entry, null);
+                View entryView = LayoutInflater.from(getActivity().getApplicationContext()).inflate(R.layout.meal_entry, null);
 
                 TextView mealTypeView = (TextView) entryView.findViewById(R.id.meal_type);
                 mealTypeView.setText(itemTitle);
@@ -106,14 +106,15 @@ public class MenuFragment extends Fragment implements AdapterView.OnItemSelected
         new AsyncTask<Void, Void, DayMenu>() {
             @Override
             protected DayMenu doInBackground(Void... v) {
+                Spinner spinner = (Spinner)findViewById(R.id.dining_common_spinner);
                 try {
                     WebUtils w = new WebUtils();
-                    String menuString = w.createMenuString();
+                    String menuString = w.createMenuString("Ortega","2/17/2015");
                     MenuParser mp = new MenuParser();
                     return mp.getDayMenu(menuString);
                 }catch(Exception e){};
 
-                return new DayMenu("999","",0);
+                return new DayMenu("","",0);
         }
             @Override
             protected void onPostExecute(DayMenu result) {

@@ -121,10 +121,9 @@ public class WebUtils {
         logger.log(Level.INFO, url.toString());
     }
 
-    public String createMenuString() throws Exception{
-
+    public String createMenuString(String diningCommon, String date) throws Exception{
         //Make API Call
-        String ur = "http://gauchogrub.azurewebsites.net/api/Menus?diningCommon=Ortega&date=02/17/2015";
+        String ur = "http://gauchogrub.azurewebsites.net/api/Menus?diningCommon=" + diningCommon + "&date=" + date;
         URL url = new URL(ur);
         String result = httpRequest(url,HttpMethod.GET,100000);
 
