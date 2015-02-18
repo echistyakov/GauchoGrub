@@ -11,28 +11,33 @@ import android.widget.Spinner;
 import android.widget.TableLayout;
 import com.g10.gauchogrub.io.WebUtils;
 import com.g10.gauchogrub.io.MenuParser;
+import com.g10.gauchogrub.menu.Meal;
+import com.g10.gauchogrub.menu.MenuItem;
 import java.net.URL;
-import java.io.BufferedWriter;
+import java.util.logging.Logger;
+import android.widget.TableRow;
+import android.widget.TextView;
+import android.os.AsyncTask;
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.OutputStreamWriter;
-import java.io.Writer;
-import java.net.HttpURLConnection;
+
+
+import java.util.ArrayList;
+
 import com.g10.gauchogrub.menu.DayMenu;
 
 
-public class MenuFragment extends Fragment implements AdapterView.OnItemSelectedListener {
+public class MenuFragment extends Fragment implements AdapterView.OnItemSelectedListener, Runnable {
 
 
     private TableLayout menuTable;
 
-
+    public final static Logger logger = Logger.getLogger("MenuFragment");
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.menu_fragment, container, false);
 
-        this.menuTable = (TableLayout) rootView.findViewById(R.id.schedule_table);
+        this.menuTable = (TableLayout) rootView.findViewById(R.id.menu_table);
 
         // Initialize Spinner (DC)
         Spinner spinner = (Spinner)rootView.findViewById(R.id.dining_common_spinner);
@@ -52,57 +57,83 @@ public class MenuFragment extends Fragment implements AdapterView.OnItemSelected
         return rootView;
     }
 
-    public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
-        /*
-        WE HAVE BUILT A FUNCTION TO MAKE THE API REQUEST AND WRITE THE RESPONSE TO A FILE. WE ALSO
-        HAVE A FUNCTION THE WILL PARSE THE FILE INTO A DAYMENU DATA STRUCTURE AND RETURN THAT STRUCTURE.
-        WE NOW NEED TO GET REFERNCES TO THE TWO SPINNERS OF THE MENU FRAGMENT AND CREATE THE API REQUEST
-        ON THE TEXT IN THE SPINNERS. USING THE DATA FROM THE RETURNED DAYMENU STRUCTURE WE WILL USE THE
-        DYNAMIC SCHEDULE FRAGMENT CODE AS A REFERENCE TO BUILD DYNAMIC MENU TABLES.
+    private void inflateMenu(DayMenu displayMenu) {
 
-        DayMenu displayMenu = getDayMenu();
+        logger.info("Spinner Position 1: ");
 
-        for (Meal headerEntry : schedule) {
-            String header = headerEntry.getKey();
+        //menuTable.removeAllViews();
+
+        ArrayList<Meal> menuMeals = displayMenu.getMeals();
+
+        String test = displayMenu.getDate();
+        logger.info("Test Date: " + test);
+        if(displayMenu.getMeals() == null) return;
+        for (Meal headerEntry : menuMeals) {
+            String mealName = headerEntry.getMealName();
 
             TableRow headerRow = new TableRow(getActivity().getApplicationContext());
             headerRow.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
             View headerView = LayoutInflater.from(getActivity().getApplicationContext()).inflate(R.layout.schedule_header, null);
             TextView headerTextView = (TextView) headerView.findViewById(R.id.header);
-            headerTextView.setText(header);
+            headerTextView.setText(mealName);
             headerRow.addView(headerView);
-            scheduleTable.addView(headerRow);
+            menuTable.addView(headerRow);
 
-            for(AbstractMap.SimpleEntry<String, String> mealEntry : headerEntry.getValue()) {
-                String mealTitle = mealEntry.getKey();
-                String mealTime = mealEntry.getValue();
+            for(MenuItem itemEntry : headerEntry.getMenuItems()) {
+                String itemTitle = itemEntry.getTitle();
+                String itemCategory = itemEntry.getMenuCategory();
+                String itemType = itemEntry.getMenuItemType();
 
                 TableRow entryRow = new TableRow(getActivity().getApplicationContext());
                 entryRow.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
                 View entryView = LayoutInflater.from(getActivity().getApplicationContext()).inflate(R.layout.schedule_entry, null);
 
                 TextView mealTypeView = (TextView) entryView.findViewById(R.id.meal_type);
-                mealTypeView.setText(mealTitle);
+                mealTypeView.setText(itemTitle);
 
                 TextView mealTimeView = (TextView) entryView.findViewById(R.id.meal_time);
-                mealTimeView.setText(mealTime);
+                mealTimeView.setText(itemType);
 
                 entryRow.addView(entryView);
-                scheduleTable.addView(entryRow);
-                logger.info("child count " + scheduleTable.getChildCount());
+                menuTable.addView(entryRow);
+
             }
         }
-    */
+    }
+
+    @Override
+    public void run() {
+        new AsyncTask<Void, Void, DayMenu>() {
+            @Override
+            protected DayMenu doInBackground(Void... v) {
+                try {
+                    WebUtils w = new WebUtils();
+                    String menuString = w.createMenuFile();
+                    MenuParser mp = new MenuParser();
+                    return mp.getDayMenu(menuString);
+                }catch(Exception e){};
+
+                return new DayMenu("999","",0);
+        }
+            @Override
+            protected void onPostExecute(DayMenu result) {
+                inflateMenu(result);
+            }
+        }.execute();
+    }
+
+
+
+
+
+    public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
+        logger.info("item selected");
+        run();
     }
 
     public void onNothingSelected(AdapterView<?> parent) {
         // Another interface callback
     }
 
-    public DayMenu getDayMenu() {
-        MenuParser mp = new MenuParser();
-        DayMenu displayMenu = mp.getDayMenu();
-        return displayMenu;
-    }
 
 }
