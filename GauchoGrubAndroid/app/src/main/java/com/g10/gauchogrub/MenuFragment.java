@@ -77,6 +77,8 @@ public class MenuFragment extends Fragment implements AdapterView.OnItemSelected
             headerRow.addView(headerView);
             menuTable.addView(headerRow);
 
+            String currentCategory = "Default";
+
             for(MenuItem itemEntry : headerEntry.getMenuItems()) {
                 String itemTitle = itemEntry.getTitle();
                 String itemCategory = itemEntry.getMenuCategory();
@@ -85,6 +87,19 @@ public class MenuFragment extends Fragment implements AdapterView.OnItemSelected
                 if(itemType.equals("Regular")) itemType = "";
                 if(itemType.equals("Vegetarian")) itemType = "(v)";
                 if(itemType.equals("Vegan")) itemType = "(vgn)";
+
+                if(!itemCategory.equals(currentCategory)) {
+                    TableRow categoryRow = new TableRow(getActivity().getApplicationContext());
+                    categoryRow.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
+                    View categoryView = LayoutInflater.from(getActivity().getApplicationContext()).inflate(R.layout.meal_category, null);
+
+                    TextView categoryTypeView = (TextView) categoryView.findViewById(R.id.meal_cat);
+                    categoryTypeView.setText(itemCategory);
+                    categoryRow.addView(categoryView);
+                    menuTable.addView(categoryRow);
+
+                    currentCategory = itemCategory;
+                }
 
                 TableRow entryRow = new TableRow(getActivity().getApplicationContext());
                 entryRow.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
