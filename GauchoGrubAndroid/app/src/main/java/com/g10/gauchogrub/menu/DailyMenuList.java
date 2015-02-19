@@ -1,23 +1,21 @@
 package com.g10.gauchogrub.menu;
-import java.util.Hashtable;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 
-public class DayMenu {
+public class DailyMenuList {
     private String date;
     private String diningCommon;
     private int day;
-    ArrayList<Meal> meals;
+    ArrayList<Menu> Menus;
 
-    public DayMenu(String date, String diningCommon, int day) {
-        meals = new ArrayList<Meal>();
+    public DailyMenuList(String date, String diningCommon, int day) {
+        Menus = new ArrayList<Menu>();
         setDate(date);
         setDiningcommon(diningCommon);
         setDay(day);
     }
 
-    public DayMenu(){
+    public DailyMenuList(){
         date = "";
         diningCommon = "";
         day = 0;
@@ -33,7 +31,7 @@ public class DayMenu {
         return this.diningCommon;
     }
 
-    public ArrayList<Meal> getMeals() { return meals; }
+    public ArrayList<Menu> getMenus() { return Menus; }
 
     //setters
 
@@ -58,12 +56,12 @@ public class DayMenu {
 
     //Methods
 
-    public void addMeal(Meal meal) {
-        meals.add(meal);
+    public void addMenu(Menu Menu) {
+        Menus.add(Menu);
     }
 
     public String toString(){
-        String dayMenuString;
+        String DailyMenuListString;
 
         ArrayList<String> days = new ArrayList<String>();
         days.add("Sunday");
@@ -75,12 +73,12 @@ public class DayMenu {
         days.add("Saturday");
 
 
-        dayMenuString = diningCommon + " Menu: " + days.get(day) + " " + date;
-        dayMenuString = dayMenuString + "\n";
-        for(Meal meal : meals){
-            dayMenuString = dayMenuString + meal.toString();
+        DailyMenuListString = diningCommon + " Menu: " + days.get(day) + " " + date;
+        DailyMenuListString = DailyMenuListString + "\n";
+        for(Menu menu : Menus){
+            DailyMenuListString = DailyMenuListString + menu.toString();
         }
 
-        return dayMenuString;
+        return DailyMenuListString;
     }
 }

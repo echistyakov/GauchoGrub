@@ -1,15 +1,13 @@
 package com.g10.gauchogrub.menu;
-import java.util.Hashtable;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 
-public class Meal {
-    private String mealName;
+public class Menu {
+    private String menuName;
     private ArrayList<MenuItem> menuItems;
 
-    public Meal(String mealName) {
-        this.mealName = mealName;
+    public Menu(String menuName) {
+        this.menuName = menuName;
         menuItems = new ArrayList<MenuItem>();
     }
 
@@ -17,8 +15,8 @@ public class Meal {
         return menuItems.get(0);
     }
 
-    public String getMealName() {
-        return this.mealName;
+    public String getMenuName() {
+        return this.menuName;
     }
 
     public ArrayList<MenuItem> getMenuItems() { return menuItems; }
@@ -28,14 +26,14 @@ public class Meal {
     }
 
     public String toString() {
-        String mealString;
-        mealString = mealName + ":\n";
+        String menuString;
+        menuString = menuName + ":\n";
 
         for(MenuItem item : menuItems) {
-            mealString = mealString + item.toString();
-            mealString = mealString + "\n";
+            menuString = menuString + item.toString();
+            menuString = menuString + "\n";
         }
 
-        return mealString;
+        return menuString;
     }
 }

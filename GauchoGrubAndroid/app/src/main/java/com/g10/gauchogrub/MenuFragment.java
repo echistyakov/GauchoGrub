@@ -11,17 +11,15 @@ import android.widget.Spinner;
 import android.widget.TableLayout;
 import com.g10.gauchogrub.io.WebUtils;
 import com.g10.gauchogrub.io.MenuParser;
-import com.g10.gauchogrub.menu.Meal;
+import com.g10.gauchogrub.menu.Menu;
 import com.g10.gauchogrub.menu.MenuItem;
-import java.net.URL;
 import java.util.logging.Logger;
 import android.widget.TableRow;
 import android.widget.TextView;
 import android.os.AsyncTask;
-import java.io.File;
 import java.util.ArrayList;
 
-import com.g10.gauchogrub.menu.DayMenu;
+import com.g10.gauchogrub.menu.DailyMenuList;
 
 
 public class MenuFragment extends Fragment implements AdapterView.OnItemSelectedListener, Runnable {
@@ -31,8 +29,9 @@ public class MenuFragment extends Fragment implements AdapterView.OnItemSelected
 
     public final static Logger logger = Logger.getLogger("MenuFragment");
 
-    private String diningCommon;
+    private static String diningCommon;
     private String date;
+
 
 
     @Override
@@ -48,6 +47,7 @@ public class MenuFragment extends Fragment implements AdapterView.OnItemSelected
         spinner.setAdapter(adapter);
         spinner.setOnItemSelectedListener(this);
         spinner.setSelection(0);
+
         // Initialize Spinner (date)
         Spinner dateSpinner = (Spinner)rootView.findViewById(R.id.date_spinner);
         ArrayAdapter<CharSequence> dateAdapter = ArrayAdapter.createFromResource(getActivity(), R.array.date_nav_array, R.layout.dining_cams_spinner_item);
@@ -59,40 +59,42 @@ public class MenuFragment extends Fragment implements AdapterView.OnItemSelected
         return rootView;
     }
 
-    private void inflateMenu(DayMenu displayMenu) {
+    private void inflateMenu(DailyMenuList displayMenu) {
 
         menuTable.removeAllViews();
 
-        ArrayList<Meal> menuMeals = displayMenu.getMeals();
+        ArrayList<Menu> menuMeals = displayMenu.getMenus();
 
-        if(displayMenu.getMeals() == null) return;
-        for (Meal headerEntry : menuMeals) {
-            String mealName = headerEntry.getMealName();
+        if(displayMenu.getMenus() == null) return;
+        for (Menu headerEntry : menuMeals) {
+            String MenuName = headerEntry.getMenuName();
 
             TableRow headerRow = new TableRow(getActivity().getApplicationContext());
             headerRow.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
             View headerView = LayoutInflater.from(getActivity().getApplicationContext()).inflate(R.layout.meal_header, null);
             TextView headerTextView = (TextView) headerView.findViewById(R.id.header);
-            headerTextView.setText(mealName);
+            headerTextView.setText(MenuName);
             headerRow.addView(headerView);
             menuTable.addView(headerRow);
 
             for(MenuItem itemEntry : headerEntry.getMenuItems()) {
-                String itemTitle = "   " + itemEntry.getTitle();
+                String itemTitle = itemEntry.getTitle();
                 String itemCategory = itemEntry.getMenuCategory();
                 String itemType = itemEntry.getMenuItemType();
 
                 if(itemType.equals("Regular")) itemType = "";
+                if(itemType.equals("Vegetarian")) itemType = "(v)";
+                if(itemType.equals("Vegan")) itemType = "(vgn)";
 
                 TableRow entryRow = new TableRow(getActivity().getApplicationContext());
                 entryRow.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
                 View entryView = LayoutInflater.from(getActivity().getApplicationContext()).inflate(R.layout.meal_entry, null);
 
-                TextView mealTypeView = (TextView) entryView.findViewById(R.id.meal_type);
-                mealTypeView.setText(itemTitle);
+                TextView menuTypeView = (TextView) entryView.findViewById(R.id.meal_type);
+                menuTypeView.setText(itemTitle);
 
-                TextView mealTimeView = (TextView) entryView.findViewById(R.id.meal_time);
-                mealTimeView.setText(itemType);
+                TextView menuTimeView = (TextView) entryView.findViewById(R.id.meal_time);
+                menuTimeView.setText(itemType);
 
                 entryRow.addView(entryView);
                 menuTable.addView(entryRow);
@@ -103,21 +105,20 @@ public class MenuFragment extends Fragment implements AdapterView.OnItemSelected
 
     @Override
     public void run() {
-        new AsyncTask<Void, Void, DayMenu>() {
+        new AsyncTask<Void, Void, DailyMenuList>() {
             @Override
-            protected DayMenu doInBackground(Void... v) {
-                //Spinner spinner = (Spinner)findViewById(R.id.dining_common_spinner);
+            protected DailyMenuList doInBackground(Void... v) {
                 try {
                     WebUtils w = new WebUtils();
-                    String menuString = w.createMenuString("Ortega","2/17/2015");
+                    String menuString = w.createMenuString(diningCommon,"2/17/2015");
                     MenuParser mp = new MenuParser();
-                    return mp.getDayMenu(menuString);
+                    return mp.getDailyMenuList(menuString);
                 }catch(Exception e){};
 
-                return new DayMenu("","",0);
+                return new DailyMenuList("","",0);
         }
             @Override
-            protected void onPostExecute(DayMenu result) {
+            protected void onPostExecute(DailyMenuList result) {
                 inflateMenu(result);
             }
         }.execute();
@@ -129,6 +130,10 @@ public class MenuFragment extends Fragment implements AdapterView.OnItemSelected
 
     public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
         logger.info("item selected");
+        if(pos == 0) diningCommon = "Carrillo";
+        if(pos == 1) diningCommon = "De_La_Guerra";
+        if(pos == 2) diningCommon = "Ortega";
+        if(pos == 3) diningCommon = "Portolla";
         run();
     }
 
