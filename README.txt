@@ -1,0 +1,14 @@
+G10: GauchoGrub
+UCSB CS48 W15
+Melvin Nguyen, Zak Blake, Victor Porter, Evgeny Chistyakov, Eric Swenson
+
+Public Github Repository: https://github.com/echistyakov/GauchoGrub
+Open source code from repo using Android Studio via the gradle file in GauchoGrub/GauchoGrubAndroid/
+
+Special information for testing:
+  The only seeded data for the Menu is for the 'Ortega' dining common
+  The app is only designed to be used in portrait mode, so far
+  The app has only been tested at a single DPI on Android Phones. 
+  There are formatting and layout changes left to be made for the Menu and Schedule pages, but they contain the necessary content.
+  
+All pages can be viewed via the sidebar, accessed by swyping from the left edge of the screen or pressing the button at the top left corner of the screen. Select a dining common to view information relevant to that dining common, depending on the page you are at within the application.
