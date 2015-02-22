@@ -6,21 +6,20 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.Spinner;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
-
 import java.util.AbstractMap.SimpleEntry;
-
+import android.widget.TabHost;
+import android.widget.TabHost.TabContentFactory;
+import android.widget.TabHost.TabSpec;
+import android.widget.TabHost.OnTabChangeListener;
 import java.util.ArrayList;
 import java.util.logging.Logger;
 
-public class ScheduleFragment extends Fragment implements AdapterView.OnItemSelectedListener {
+public class ScheduleFragment extends Fragment {
 
     private TableLayout scheduleTable;
-
     public final static Logger logger = Logger.getLogger("ScheduleFragment");
 
     @Override
@@ -29,40 +28,77 @@ public class ScheduleFragment extends Fragment implements AdapterView.OnItemSele
 
         this.scheduleTable = (TableLayout) rootView.findViewById(R.id.schedule_table);
 
-        // Initialize Spinner
-        Spinner spinner = (Spinner)rootView.findViewById(R.id.schedule_spinner);
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getActivity(), R.array.dining_commons_array, R.layout.dining_cams_spinner_item);
-        adapter.setDropDownViewResource(R.layout.dining_cams_spinner_item);
-        spinner.setAdapter(adapter);
-        spinner.setOnItemSelectedListener(this);
-        spinner.setSelection(0);
+        TabHost tabs = (TabHost)rootView.findViewById(R.id.tabHost);
+        TabContentFactory contentCreate = new TabContentFactory() {
+            @Override
+            public View createTabContent(String tag) {
+                // TODO Auto-generated method stub
+                scheduleTable.removeAllViews();
+                setScheduleTable(tag);
+                return (scheduleTable);
+            }
+        };
+
+        tabs.setup();
+
+        TabSpec tab1 = tabs.newTabSpec("0");
+        TabSpec tab2 = tabs.newTabSpec("1");
+        TabSpec tab3 = tabs.newTabSpec("2");
+        TabSpec tab4 = tabs.newTabSpec("3");
+
+        tab1.setContent(contentCreate);
+        tab1.setIndicator("Carillo"); //here you choose the text showed in the tab
+        tabs.addTab(tab1);  //add tab in tabHost
+
+        tab2.setContent(contentCreate);
+        tab2.setIndicator("DLG");
+        tabs.addTab(tab2);
+
+        tab3.setContent(contentCreate);
+        tab3.setIndicator("Ortega");
+        tabs.addTab(tab3);
+
+        tab4.setContent(contentCreate);
+        tab4.setIndicator("Portola");
+        tabs.addTab(tab4);
+
+        tabs.setOnTabChangedListener(new OnTabChangeListener(){
+            @Override
+            public void onTabChanged(String tabId) {
+                if("0".equals(tabId)) {
+                    scheduleTable.removeAllViews();
+                    setScheduleTable(tabId);
+                }
+                if("1".equals(tabId)) {
+                    scheduleTable.removeAllViews();
+                    setScheduleTable(tabId);
+                }
+                if("2".equals(tabId)) {
+                    scheduleTable.removeAllViews();
+                    setScheduleTable(tabId);
+                }
+                if("3".equals(tabId)) {
+                    scheduleTable.removeAllViews();
+                    setScheduleTable(tabId);
+                }
+            }});
 
         return rootView;
     }
 
-    private void inflateSchedule(View view) {
-        ArrayList<SimpleEntry<String, ArrayList<SimpleEntry<String, String>>>> schedule = getDeLaGuerraSchedule();
-        TableLayout scheduleTable = (TableLayout) view.findViewById(R.id.schedule_table);
-        TableRow row = new TableRow(getActivity().getApplicationContext());
-        TextView tv = new TextView(getActivity().getApplicationContext());
-        tv.setText("test");
-        row.addView(tv);
-        scheduleTable.addView(row);
-    }
-
-    public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
+    public void setScheduleTable(String tag) {
         // An item was selected. You can retrieve the selected item using
         // parent.getItemAtPosition(pos)
         ArrayList<SimpleEntry<String, ArrayList<SimpleEntry<String, String>>>> schedule = null;
         scheduleTable.removeAllViews();
 
-        if (pos == 0) {
+        if (tag.equals("0")) {
             schedule = getCarilloSchedule();
-        } else if (pos == 1) {
+        } else if (tag.equals("1")) {
             schedule = getDeLaGuerraSchedule();
-        } else if (pos == 2) {
+        } else if (tag.equals("2")) {
             schedule = getOrtegaSchedule();
-        } else if (pos == 3) {
+        } else if (tag.equals("3")) {
             schedule = getPortollaSchedule();
         }
 
@@ -189,4 +225,5 @@ public class ScheduleFragment extends Fragment implements AdapterView.OnItemSele
 
         return schedule;
     }
+
 }
