@@ -11,12 +11,13 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
-import android.widget.Spinner;
+import android.widget.Button;
+import android.widget.TabHost;
 
 import com.g10.gauchogrub.R;
 
 
-public class DiningCamsFragment extends Fragment implements AdapterView.OnItemSelectedListener, Runnable {
+public class DiningCamsFragment extends Fragment implements Runnable {
 
     private DiningCam currentCam;
     private Handler handler;
@@ -27,27 +28,20 @@ public class DiningCamsFragment extends Fragment implements AdapterView.OnItemSe
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.dining_cams_fragment, container, false);
-
-        // Initialize Spinner
-        Spinner spinner = (Spinner)rootView.findViewById(R.id.dining_cams_spinner);
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getActivity(), R.array.dining_cams_array, R.layout.dining_cams_spinner_item);
-        adapter.setDropDownViewResource(R.layout.dining_cams_spinner_item);
-        spinner.setAdapter(adapter);
-        spinner.setOnItemSelectedListener(this);
-        spinner.setSelection(0);
-
         this.imageView = (ImageView) rootView.findViewById(R.id.dining_cam_image_view);
         this.handler = new Handler();
+
+        TabHost tabs = (TabHost)rootView.findViewById(R.id.tabHost);
+        this.setUpTabs(tabs);
 
         return rootView;
     }
 
-    @Override
-    public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
+    public void setCam(String tag) {
         // An item was selected. You can retrieve the selected item using
         // parent.getItemAtPosition(pos)
         String[] camUrls = new String[]{DiningCam.Carrillo, DiningCam.DeLaGuerra, DiningCam.Ortega};
-        String camUrl = camUrls[pos];
+        String camUrl = camUrls[Integer.parseInt(tag)];
         this.currentCam = new DiningCam(camUrl);
         this.startCam();
     }
@@ -99,8 +93,34 @@ public class DiningCamsFragment extends Fragment implements AdapterView.OnItemSe
         }
     }
 
-    @Override
-    public void onNothingSelected(AdapterView<?> parent) {
-        // Another interface callback
+    public void setUpTabs(TabHost tabs){
+        String[] commons = new String[] {"Carillo","DLG","Ortega","Portola"};
+
+        //Set the initial tab content
+        TabHost.TabContentFactory contentCreate = new TabHost.TabContentFactory() {
+            @Override
+            public View createTabContent(String tag) {
+                if(!tag.equals("3")) { setCam(tag); }
+                return (imageView);
+            }
+        };
+        tabs.setup();
+        //Create tabs and set text & content
+        for(int i = 0; i < 4 ; i ++) {
+            TabHost.TabSpec tab = tabs.newTabSpec(i + "");
+            tab.setContent(contentCreate);
+            tab.setIndicator(commons[i]);
+            tabs.addTab(tab);
+        }
+        //Set tab listeners to change content when triggered
+        tabs.setOnTabChangedListener(new TabHost.OnTabChangeListener(){
+            @Override
+            public void onTabChanged(String tabId) {
+                if(!tabId.equals("3")) { setCam(tabId); }
+            }});
     }
+
+
+
+
 }

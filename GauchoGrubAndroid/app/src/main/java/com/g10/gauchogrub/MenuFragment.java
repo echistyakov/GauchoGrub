@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
+import android.widget.TabHost;
 import android.widget.TableLayout;
 import com.g10.gauchogrub.io.WebUtils;
 import com.g10.gauchogrub.io.MenuParser;
@@ -22,7 +23,7 @@ import java.util.ArrayList;
 import com.g10.gauchogrub.menu.DailyMenuList;
 
 
-public class MenuFragment extends Fragment implements AdapterView.OnItemSelectedListener, Runnable {
+public class MenuFragment extends Fragment implements Runnable {
 
 
     private TableLayout menuTable;
@@ -40,21 +41,8 @@ public class MenuFragment extends Fragment implements AdapterView.OnItemSelected
 
         this.menuTable = (TableLayout) rootView.findViewById(R.id.menu_table);
 
-        // Initialize Spinner (DC)
-        Spinner spinner = (Spinner)rootView.findViewById(R.id.dining_common_spinner);
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getActivity(), R.array.dining_commons_array, R.layout.dining_cams_spinner_item);
-        adapter.setDropDownViewResource(R.layout.dining_cams_spinner_item);
-        spinner.setAdapter(adapter);
-        spinner.setOnItemSelectedListener(this);
-        spinner.setSelection(0);
-
-        // Initialize Spinner (date)
-        Spinner dateSpinner = (Spinner)rootView.findViewById(R.id.date_spinner);
-        ArrayAdapter<CharSequence> dateAdapter = ArrayAdapter.createFromResource(getActivity(), R.array.date_nav_array, R.layout.dining_cams_spinner_item);
-        dateAdapter.setDropDownViewResource(R.layout.dining_cams_spinner_item);
-        dateSpinner.setAdapter(dateAdapter);
-        dateSpinner.setOnItemSelectedListener(this);
-        dateSpinner.setSelection(0);
+        TabHost tabs = (TabHost)rootView.findViewById(R.id.tabHost);
+        this.setUpTabs(tabs);
 
         return rootView;
     }
@@ -139,21 +127,44 @@ public class MenuFragment extends Fragment implements AdapterView.OnItemSelected
         }.execute();
     }
 
-
-
-
-
-    public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
-        logger.info("item selected");
-        if(pos == 0) diningCommon = "Carrillo";
-        if(pos == 1) diningCommon = "De_La_Guerra";
-        if(pos == 2) diningCommon = "Ortega";
-        if(pos == 3) diningCommon = "Portolla";
+    public void setMenuTable(String tag) {
+        if (tag.equals("0")) {
+            diningCommon = "Carrillo";
+        } else if (tag.equals("1")) {
+            diningCommon = "De_La_Guerra";
+        } else if (tag.equals("2")) {
+            diningCommon = "Ortega";
+        } else if (tag.equals("3")) {
+            diningCommon = "Portolla";
+        }
         run();
     }
 
-    public void onNothingSelected(AdapterView<?> parent) {
-        // Another interface callback
+    public void setUpTabs(TabHost tabs){
+        String[] commons = new String[] {"Carillo","DLG","Ortega","Portola"};
+
+        //Set the initial tab content
+        TabHost.TabContentFactory contentCreate = new TabHost.TabContentFactory() {
+            @Override
+            public View createTabContent(String tag) {
+                setMenuTable(tag);
+                return (menuTable);
+            }
+        };
+        tabs.setup();
+        //Create tabs and set text & content
+        for(int i = 0; i < 4 ; i ++) {
+            TabHost.TabSpec tab = tabs.newTabSpec(i + "");
+            tab.setContent(contentCreate);
+            tab.setIndicator(commons[i]);
+            tabs.addTab(tab);
+        }
+        //Set tab listeners to change content when triggered
+        tabs.setOnTabChangedListener(new TabHost.OnTabChangeListener(){
+            @Override
+            public void onTabChanged(String tabId) {
+                setMenuTable(tabId);
+            }});
     }
 
 

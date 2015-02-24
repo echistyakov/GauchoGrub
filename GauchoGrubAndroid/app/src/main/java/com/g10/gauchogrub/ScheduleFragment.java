@@ -27,61 +27,9 @@ public class ScheduleFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.schedule_fragment, container, false);
 
         this.scheduleTable = (TableLayout) rootView.findViewById(R.id.schedule_table);
-
+        //Create page tabs
         TabHost tabs = (TabHost)rootView.findViewById(R.id.tabHost);
-        TabContentFactory contentCreate = new TabContentFactory() {
-            @Override
-            public View createTabContent(String tag) {
-                // TODO Auto-generated method stub
-                scheduleTable.removeAllViews();
-                setScheduleTable(tag);
-                return (scheduleTable);
-            }
-        };
-
-        tabs.setup();
-
-        TabSpec tab1 = tabs.newTabSpec("0");
-        TabSpec tab2 = tabs.newTabSpec("1");
-        TabSpec tab3 = tabs.newTabSpec("2");
-        TabSpec tab4 = tabs.newTabSpec("3");
-
-        tab1.setContent(contentCreate);
-        tab1.setIndicator("Carillo"); //here you choose the text showed in the tab
-        tabs.addTab(tab1);  //add tab in tabHost
-
-        tab2.setContent(contentCreate);
-        tab2.setIndicator("DLG");
-        tabs.addTab(tab2);
-
-        tab3.setContent(contentCreate);
-        tab3.setIndicator("Ortega");
-        tabs.addTab(tab3);
-
-        tab4.setContent(contentCreate);
-        tab4.setIndicator("Portola");
-        tabs.addTab(tab4);
-
-        tabs.setOnTabChangedListener(new OnTabChangeListener(){
-            @Override
-            public void onTabChanged(String tabId) {
-                if("0".equals(tabId)) {
-                    scheduleTable.removeAllViews();
-                    setScheduleTable(tabId);
-                }
-                if("1".equals(tabId)) {
-                    scheduleTable.removeAllViews();
-                    setScheduleTable(tabId);
-                }
-                if("2".equals(tabId)) {
-                    scheduleTable.removeAllViews();
-                    setScheduleTable(tabId);
-                }
-                if("3".equals(tabId)) {
-                    scheduleTable.removeAllViews();
-                    setScheduleTable(tabId);
-                }
-            }});
+        this.setUpTabs(tabs);
 
         return rootView;
     }
@@ -224,6 +172,33 @@ public class ScheduleFragment extends Fragment {
         schedule.add(new SimpleEntry("Sack Meals", sackMeals));
 
         return schedule;
+    }
+
+    public void setUpTabs(TabHost tabs){
+        String[] commons = new String[] {"Carillo","DLG","Ortega","Portola"};
+
+        //Set the initial tab content
+        TabContentFactory contentCreate = new TabContentFactory() {
+            @Override
+            public View createTabContent(String tag) {
+                setScheduleTable(tag);
+                return (scheduleTable);
+            }
+        };
+        tabs.setup();
+        //Create tabs and set text & content
+        for(int i = 0; i < 4 ; i ++) {
+            TabSpec tab = tabs.newTabSpec(i + "");
+            tab.setContent(contentCreate);
+            tab.setIndicator(commons[i]);
+            tabs.addTab(tab);
+        }
+        //Set tab listeners to change content when triggered
+        tabs.setOnTabChangedListener(new OnTabChangeListener(){
+            @Override
+            public void onTabChanged(String tabId) {
+                setScheduleTable(tabId);
+            }});
     }
 
 }
