@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.MotionEvent;
 import android.widget.AdapterView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -16,6 +17,7 @@ import android.widget.TabHost.TabSpec;
 import android.widget.TabHost.OnTabChangeListener;
 import java.util.ArrayList;
 import java.util.logging.Logger;
+import android.widget.Toast;
 
 public class ScheduleFragment extends Fragment {
 
@@ -200,5 +202,6 @@ public class ScheduleFragment extends Fragment {
                 setScheduleTable(tabId);
             }});
     }
+
 
 }
