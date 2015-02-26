@@ -12,15 +12,21 @@
         android:layout_height="48dp"
         android:id="@+id/schedule_spinner"
         android:spinnerMode="dropdown"
-        android:touchscreenBlocksFocus="false"
+
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp" />
 
-    <TableLayout
-             android:layout_width="match_parent"
-             android:layout_height="wrap_content"
-             android:layout_gravity="center_horizontal"
-             android:id="@+id/schedule_table"
-             style="@style/text" />
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/scrollView" >
+
+        <TableLayout
+                 android:layout_width="match_parent"
+                 android:layout_height="wrap_content"
+                 android:layout_gravity="center_horizontal"
+                 android:id="@+id/schedule_table"
+                 style="@style/text" />
+    </ScrollView>
 
 </LinearLayout>
