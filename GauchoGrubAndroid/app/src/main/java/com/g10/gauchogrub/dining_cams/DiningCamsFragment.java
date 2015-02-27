@@ -94,29 +94,30 @@ public class DiningCamsFragment extends Fragment implements Runnable {
     }
 
     public void setUpTabs(TabHost tabs){
-        String[] commons = new String[] {"Carillo","DLG","Ortega","Portola"};
+        String[] commons = new String[] {"Carillo","DLG","Ortega"};
 
         //Set the initial tab content
         TabHost.TabContentFactory contentCreate = new TabHost.TabContentFactory() {
             @Override
             public View createTabContent(String tag) {
-                if(!tag.equals("3")) { setCam(tag); }
+                setCam(tag);
                 return (imageView);
             }
         };
         tabs.setup();
         //Create tabs and set text & content
-        for(int i = 0; i < 4 ; i ++) {
+        for(int i = 0; i < 3 ; i ++) {
             TabHost.TabSpec tab = tabs.newTabSpec(i + "");
             tab.setContent(contentCreate);
             tab.setIndicator(commons[i]);
             tabs.addTab(tab);
         }
+
         //Set tab listeners to change content when triggered
         tabs.setOnTabChangedListener(new TabHost.OnTabChangeListener(){
             @Override
             public void onTabChanged(String tabId) {
-                if(!tabId.equals("3")) { setCam(tabId); }
+                setCam(tabId);
             }});
     }
 
