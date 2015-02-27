@@ -1,13 +1,16 @@
 package com.g10.gauchogrub;
 
 import android.app.Fragment;
+import android.media.Image;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ImageButton;
 import android.widget.Spinner;
+import android.widget.TabHost;
 import android.widget.TableLayout;
 import com.g10.gauchogrub.io.WebUtils;
 import com.g10.gauchogrub.io.MenuParser;
@@ -18,6 +21,10 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import android.os.AsyncTask;
 import java.util.ArrayList;
+import java.util.Date;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.List;
 
 import com.g10.gauchogrub.menu.DailyMenuList;
 
@@ -30,8 +37,9 @@ public class MenuFragment extends Fragment implements AdapterView.OnItemSelected
     public final static Logger logger = Logger.getLogger("MenuFragment");
 
     private static String diningCommon;
-    private String date;
-
+    private static String date;
+    private ArrayList<String> dates;
+    private TableRow currentButtons = null;
 
 
     @Override
@@ -39,31 +47,39 @@ public class MenuFragment extends Fragment implements AdapterView.OnItemSelected
         View rootView = inflater.inflate(R.layout.menu_fragment, container, false);
 
         this.menuTable = (TableLayout) rootView.findViewById(R.id.menu_table);
+        this.dates = new ArrayList<String>();
 
-        // Initialize Spinner (DC)
-        Spinner spinner = (Spinner)rootView.findViewById(R.id.dining_common_spinner);
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getActivity(), R.array.dining_commons_array, R.layout.dining_cams_spinner_item);
+        TabHost tabs = (TabHost)rootView.findViewById(R.id.tabHost);
+        this.setUpTabs(tabs);
+
+        this.fillSpinnerWithDates();
+
+        // Initialize Spinner
+        Spinner spinner = (Spinner)rootView.findViewById(R.id.schedule_spinner);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(),R.layout.dining_cams_spinner_item, this.dates);
         adapter.setDropDownViewResource(R.layout.dining_cams_spinner_item);
         spinner.setAdapter(adapter);
         spinner.setOnItemSelectedListener(this);
         spinner.setSelection(0);
 
-        // Initialize Spinner (date)
-        Spinner dateSpinner = (Spinner)rootView.findViewById(R.id.date_spinner);
-        ArrayAdapter<CharSequence> dateAdapter = ArrayAdapter.createFromResource(getActivity(), R.array.date_nav_array, R.layout.dining_cams_spinner_item);
-        dateAdapter.setDropDownViewResource(R.layout.dining_cams_spinner_item);
-        dateSpinner.setAdapter(dateAdapter);
-        dateSpinner.setOnItemSelectedListener(this);
-        dateSpinner.setSelection(0);
-
         return rootView;
+    }
+
+    public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
+        TextView dateView = (TextView) view;
+        date = dateView.getText().toString();
+        run();
+    }
+
+    public void onNothingSelected(AdapterView<?> parent) {
+        // Another interface callback
     }
 
     private void inflateMenu(DailyMenuList displayMenu) {
 
         menuTable.removeAllViews();
 
-        ArrayList<Menu> menuMeals = displayMenu.getMenus();
+        final ArrayList<Menu> menuMeals = displayMenu.getMenus();
 
         if(displayMenu.getMenus() == null) return;
         for (Menu headerEntry : menuMeals) {
@@ -101,15 +117,58 @@ public class MenuFragment extends Fragment implements AdapterView.OnItemSelected
                     currentCategory = itemCategory;
                 }
 
-                TableRow entryRow = new TableRow(getActivity().getApplicationContext());
+                final TableRow entryRow = new TableRow(getActivity().getApplicationContext());
                 entryRow.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
-                View entryView = LayoutInflater.from(getActivity().getApplicationContext()).inflate(R.layout.meal_entry, null);
+                final View entryView = LayoutInflater.from(getActivity().getApplicationContext()).inflate(R.layout.meal_entry, null);
 
-                TextView menuTypeView = (TextView) entryView.findViewById(R.id.meal_type);
+                final TextView menuTypeView = (TextView) entryView.findViewById(R.id.meal_type);
                 menuTypeView.setText(itemTitle);
+
+                menuTypeView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        ImageButton favorite = (ImageButton) entryView.findViewById(R.id.imageButton);
+                        ImageButton like = (ImageButton) entryView.findViewById(R.id.imageButton2);
+                        ImageButton dislike = (ImageButton) entryView.findViewById(R.id.imageButton3);
+
+                        if(currentButtons != entryRow || currentButtons == null) {
+                            favorite.setBackgroundResource(R.drawable.favorite);
+                            favorite.setVisibility(View.VISIBLE);
+                            like.setBackgroundResource(R.drawable.upvote);
+                            like.setVisibility(View.VISIBLE);
+                            dislike.setBackgroundResource(R.drawable.downvote);
+                            dislike.setVisibility(View.VISIBLE);
+
+                            if(currentButtons != null){
+                                View buttonsToMakeInvisible = currentButtons.getVirtualChildAt(0);
+                                ImageButton lastFavorite = (ImageButton) buttonsToMakeInvisible.findViewById(R.id.imageButton);
+                                ImageButton lastLike = (ImageButton) buttonsToMakeInvisible.findViewById(R.id.imageButton2);
+                                ImageButton lastDislike = (ImageButton) buttonsToMakeInvisible.findViewById(R.id.imageButton3);
+                                lastFavorite.setVisibility(View.INVISIBLE);
+                                lastLike.setVisibility(View.INVISIBLE);
+                                lastDislike.setVisibility(View.INVISIBLE);
+                            }
+                            currentButtons = entryRow;
+                        }
+                        else if(currentButtons == entryRow) {
+                            favorite.setVisibility(View.INVISIBLE);
+                            like.setVisibility(View.INVISIBLE);
+                            dislike.setVisibility(View.INVISIBLE);
+                            currentButtons = null;
+                        }
+                    }
+                });
 
                 TextView menuTimeView = (TextView) entryView.findViewById(R.id.meal_time);
                 menuTimeView.setText(itemType);
+
+                ImageButton favorite = (ImageButton) entryView.findViewById(R.id.imageButton);
+                ImageButton like = (ImageButton) entryView.findViewById(R.id.imageButton2);
+                ImageButton dislike = (ImageButton) entryView.findViewById(R.id.imageButton3);
+                favorite.setVisibility(View.GONE);
+                like.setVisibility(View.GONE);
+                dislike.setVisibility(View.GONE);
 
                 entryRow.addView(entryView);
                 menuTable.addView(entryRow);
@@ -125,7 +184,7 @@ public class MenuFragment extends Fragment implements AdapterView.OnItemSelected
             protected DailyMenuList doInBackground(Void... v) {
                 try {
                     WebUtils w = new WebUtils();
-                    String menuString = w.createMenuString(diningCommon,"2/17/2015");
+                    String menuString = w.createMenuString(diningCommon,date);
                     MenuParser mp = new MenuParser();
                     return mp.getDailyMenuList(menuString);
                 }catch(Exception e){};
@@ -139,22 +198,61 @@ public class MenuFragment extends Fragment implements AdapterView.OnItemSelected
         }.execute();
     }
 
-
-
-
-
-    public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
-        logger.info("item selected");
-        if(pos == 0) diningCommon = "Carrillo";
-        if(pos == 1) diningCommon = "De_La_Guerra";
-        if(pos == 2) diningCommon = "Ortega";
-        if(pos == 3) diningCommon = "Portolla";
+    public void setMenuTable(String tag) {
+        if (tag.equals("0")) {
+            diningCommon = "Carrillo";
+        } else if (tag.equals("1")) {
+            diningCommon = "De_La_Guerra";
+        } else if (tag.equals("2")) {
+            diningCommon = "Ortega";
+        } else if (tag.equals("3")) {
+            diningCommon = "Portolla";
+        }
         run();
     }
 
-    public void onNothingSelected(AdapterView<?> parent) {
-        // Another interface callback
+    public void setUpTabs(TabHost tabs){
+        String[] commons = new String[] {"Carillo","DLG","Ortega","Portola"};
+
+        //Set the initial tab content
+        TabHost.TabContentFactory contentCreate = new TabHost.TabContentFactory() {
+            @Override
+            public View createTabContent(String tag) {
+                setMenuTable(tag);
+                return (menuTable);
+            }
+        };
+        tabs.setup();
+        //Create tabs and set text & content
+        for(int i = 0; i < 4 ; i ++) {
+            TabHost.TabSpec tab = tabs.newTabSpec(i + "");
+            tab.setContent(contentCreate);
+            tab.setIndicator(commons[i]);
+            tabs.addTab(tab);
+        }
+        //Set tab listeners to change content when triggered
+        tabs.setOnTabChangedListener(new TabHost.OnTabChangeListener(){
+            @Override
+            public void onTabChanged(String tabId) {
+                setMenuTable(tabId);
+            }});
     }
 
+    public void fillSpinnerWithDates(){
+        DateFormat dateFormat = new SimpleDateFormat("M/dd/yyyy");
+        Date date = new Date();
+
+        //TO BE DELETED EVENTUALLY
+        dates.add("2/17/2015");
+
+        for(int i = 0; i < 7 ; i++){
+            Date tomorrow = new Date(date.getTime() + i*(1000 * 60 * 60 * 24));
+            dates.add(dateFormat.format(tomorrow));
+        }
+    }
+
+    public void makeButtonsInvisible(View entryView) {
+
+    }
 
 }
