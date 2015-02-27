@@ -36,6 +36,21 @@ namespace GauchoGrub.Controllers
             return Ok(menu);
         }
 
+        // GET: api/Menus?diningCommon=Ortega&date=02/18/2015
+        [ResponseType(typeof(List<Menu>))]
+        public async Task<List<Menu>> GetMenus(string diningCommon, DateTime date)
+        {
+            int diningCommonId = db.DiningCommons.Where(d => d.Name.Equals(diningCommon)).First().Id;
+            return db.Menus
+                .Where(m => m.Date.Equals(date) && m.Event.DiningCommonId.Equals(diningCommonId))
+                .Include(m => m.Event)
+                .Include(m => m.Event.Meal)
+                .Include(m => m.MenuItems)
+                .Include(m => m.MenuItems.Select(p => p.MenuCategory))
+                .Include(m => m.MenuItems.Select(p => p.MenuItemType))
+                .ToList();
+        }
+
         protected override void Dispose(bool disposing)
         {
             if (disposing)
