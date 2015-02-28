@@ -1,14 +1,12 @@
 package com.g10.gauchogrub;
 
 import android.app.Fragment;
-import android.media.Image;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TabHost;
 import android.widget.TableLayout;
@@ -39,7 +37,7 @@ public class MenuFragment extends Fragment implements AdapterView.OnItemSelected
     private static String diningCommon;
     private static String date;
     private ArrayList<String> dates;
-    private TableRow currentButtons = null;
+
 
 
     @Override
@@ -79,7 +77,7 @@ public class MenuFragment extends Fragment implements AdapterView.OnItemSelected
 
         menuTable.removeAllViews();
 
-        final ArrayList<Menu> menuMeals = displayMenu.getMenus();
+        ArrayList<Menu> menuMeals = displayMenu.getMenus();
 
         if(displayMenu.getMenus() == null) return;
         for (Menu headerEntry : menuMeals) {
@@ -117,58 +115,15 @@ public class MenuFragment extends Fragment implements AdapterView.OnItemSelected
                     currentCategory = itemCategory;
                 }
 
-                final TableRow entryRow = new TableRow(getActivity().getApplicationContext());
+                TableRow entryRow = new TableRow(getActivity().getApplicationContext());
                 entryRow.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
-                final View entryView = LayoutInflater.from(getActivity().getApplicationContext()).inflate(R.layout.meal_entry, null);
+                View entryView = LayoutInflater.from(getActivity().getApplicationContext()).inflate(R.layout.meal_entry, null);
 
-                final TextView menuTypeView = (TextView) entryView.findViewById(R.id.meal_type);
+                TextView menuTypeView = (TextView) entryView.findViewById(R.id.meal_type);
                 menuTypeView.setText(itemTitle);
-
-                menuTypeView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-
-                        ImageButton favorite = (ImageButton) entryView.findViewById(R.id.imageButton);
-                        ImageButton like = (ImageButton) entryView.findViewById(R.id.imageButton2);
-                        ImageButton dislike = (ImageButton) entryView.findViewById(R.id.imageButton3);
-
-                        if(currentButtons != entryRow || currentButtons == null) {
-                            favorite.setBackgroundResource(R.drawable.favorite);
-                            favorite.setVisibility(View.VISIBLE);
-                            like.setBackgroundResource(R.drawable.upvote);
-                            like.setVisibility(View.VISIBLE);
-                            dislike.setBackgroundResource(R.drawable.downvote);
-                            dislike.setVisibility(View.VISIBLE);
-
-                            if(currentButtons != null){
-                                View buttonsToMakeInvisible = currentButtons.getVirtualChildAt(0);
-                                ImageButton lastFavorite = (ImageButton) buttonsToMakeInvisible.findViewById(R.id.imageButton);
-                                ImageButton lastLike = (ImageButton) buttonsToMakeInvisible.findViewById(R.id.imageButton2);
-                                ImageButton lastDislike = (ImageButton) buttonsToMakeInvisible.findViewById(R.id.imageButton3);
-                                lastFavorite.setVisibility(View.INVISIBLE);
-                                lastLike.setVisibility(View.INVISIBLE);
-                                lastDislike.setVisibility(View.INVISIBLE);
-                            }
-                            currentButtons = entryRow;
-                        }
-                        else if(currentButtons == entryRow) {
-                            favorite.setVisibility(View.INVISIBLE);
-                            like.setVisibility(View.INVISIBLE);
-                            dislike.setVisibility(View.INVISIBLE);
-                            currentButtons = null;
-                        }
-                    }
-                });
 
                 TextView menuTimeView = (TextView) entryView.findViewById(R.id.meal_time);
                 menuTimeView.setText(itemType);
-
-                ImageButton favorite = (ImageButton) entryView.findViewById(R.id.imageButton);
-                ImageButton like = (ImageButton) entryView.findViewById(R.id.imageButton2);
-                ImageButton dislike = (ImageButton) entryView.findViewById(R.id.imageButton3);
-                favorite.setVisibility(View.GONE);
-                like.setVisibility(View.GONE);
-                dislike.setVisibility(View.GONE);
 
                 entryRow.addView(entryView);
                 menuTable.addView(entryRow);
@@ -249,10 +204,6 @@ public class MenuFragment extends Fragment implements AdapterView.OnItemSelected
             Date tomorrow = new Date(date.getTime() + i*(1000 * 60 * 60 * 24));
             dates.add(dateFormat.format(tomorrow));
         }
-    }
-
-    public void makeButtonsInvisible(View entryView) {
-
     }
 
 }
