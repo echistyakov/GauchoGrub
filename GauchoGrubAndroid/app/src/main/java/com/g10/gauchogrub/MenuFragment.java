@@ -1,6 +1,7 @@
 package com.g10.gauchogrub;
 
 import android.app.Fragment;
+import android.graphics.drawable.Drawable;
 import android.media.Image;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -143,6 +144,8 @@ public class MenuFragment extends Fragment implements AdapterView.OnItemSelected
                     }
                 });
 
+                setButtonListeners(entryView);
+
                 TextView menuTimeView = (TextView) entryView.findViewById(R.id.meal_time);
                 menuTimeView.setText(itemType);
 
@@ -209,11 +212,12 @@ public class MenuFragment extends Fragment implements AdapterView.OnItemSelected
             tabs.addTab(tab);
         }
         //Set tab listeners to change content when triggered
-        tabs.setOnTabChangedListener(new TabHost.OnTabChangeListener(){
+        tabs.setOnTabChangedListener(new TabHost.OnTabChangeListener() {
             @Override
             public void onTabChanged(String tabId) {
                 setMenuTable(tabId);
-            }});
+            }
+        });
     }
 
     public void fillSpinnerWithDates(){
@@ -236,6 +240,46 @@ public class MenuFragment extends Fragment implements AdapterView.OnItemSelected
         favorite.setVisibility(visible);
         like.setVisibility(visible);
         dislike.setVisibility(visible);
+    }
+
+    public void setButtonListeners(View entryView){
+        final ImageButton favorite = (ImageButton) entryView.findViewById(R.id.imageButton);
+        final ImageButton like = (ImageButton) entryView.findViewById(R.id.imageButton2);
+        final ImageButton dislike = (ImageButton) entryView.findViewById(R.id.imageButton3);
+
+        favorite.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View w){
+                final Drawable current = getResources().getDrawable(R.drawable.favoriteoff);
+                if(favorite.getBackground().getConstantState().equals(current.getConstantState())) {
+                    favorite.setBackgroundResource(R.drawable.favorite);
+                }
+                else { favorite.setBackgroundResource(R.drawable.favoriteoff); }
+
+            }
+        });
+
+        like.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View w){
+                Drawable current = getResources().getDrawable(R.drawable.upvoteoff);
+                if(like.getBackground().getConstantState().equals(current.getConstantState())) {
+                    like.setBackgroundResource(R.drawable.upvote);
+                }
+                else { like.setBackgroundResource(R.drawable.upvoteoff); }
+            }
+        });
+
+        dislike.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View w){
+                Drawable current = getResources().getDrawable(R.drawable.downvoteoff);
+                if(dislike.getBackground().getConstantState().equals(current.getConstantState())) {
+                    dislike.setBackgroundResource(R.drawable.downvote);
+                }
+                else { dislike.setBackgroundResource(R.drawable.downvoteoff); }
+            }
+        });
     }
 
 }
