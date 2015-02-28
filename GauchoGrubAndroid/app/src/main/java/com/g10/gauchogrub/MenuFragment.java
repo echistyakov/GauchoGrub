@@ -1,12 +1,14 @@
 package com.g10.gauchogrub;
 
 import android.app.Fragment;
+import android.media.Image;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TabHost;
 import android.widget.TableLayout;
@@ -37,7 +39,7 @@ public class MenuFragment extends Fragment implements AdapterView.OnItemSelected
     private static String diningCommon;
     private static String date;
     private ArrayList<String> dates;
-
+    private TableRow currentButtons = null;
 
 
     @Override
@@ -77,7 +79,7 @@ public class MenuFragment extends Fragment implements AdapterView.OnItemSelected
 
         menuTable.removeAllViews();
 
-        ArrayList<Menu> menuMeals = displayMenu.getMenus();
+        final ArrayList<Menu> menuMeals = displayMenu.getMenus();
 
         if(displayMenu.getMenus() == null) return;
         for (Menu headerEntry : menuMeals) {
@@ -115,15 +117,36 @@ public class MenuFragment extends Fragment implements AdapterView.OnItemSelected
                     currentCategory = itemCategory;
                 }
 
-                TableRow entryRow = new TableRow(getActivity().getApplicationContext());
+                final TableRow entryRow = new TableRow(getActivity().getApplicationContext());
                 entryRow.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
-                View entryView = LayoutInflater.from(getActivity().getApplicationContext()).inflate(R.layout.meal_entry, null);
+                final View entryView = LayoutInflater.from(getActivity().getApplicationContext()).inflate(R.layout.meal_entry, null);
 
-                TextView menuTypeView = (TextView) entryView.findViewById(R.id.meal_type);
+                final TextView menuTypeView = (TextView) entryView.findViewById(R.id.meal_type);
                 menuTypeView.setText(itemTitle);
+
+                menuTypeView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if(currentButtons != entryRow || currentButtons == null) {
+                            changeButtonVisibility(entryView,View.VISIBLE);
+                            if(currentButtons != null){
+                                View buttonsToMakeInvisible = currentButtons.getVirtualChildAt(0);
+                                changeButtonVisibility(buttonsToMakeInvisible,View.INVISIBLE);
+                            }
+                            currentButtons = entryRow;
+                        }
+
+                        else if(currentButtons == entryRow) {
+                            changeButtonVisibility(entryView,View.INVISIBLE);
+                            currentButtons = null;
+                        }
+                    }
+                });
 
                 TextView menuTimeView = (TextView) entryView.findViewById(R.id.meal_time);
                 menuTimeView.setText(itemType);
+
+                changeButtonVisibility(entryView,View.GONE);
 
                 entryRow.addView(entryView);
                 menuTable.addView(entryRow);
@@ -145,7 +168,7 @@ public class MenuFragment extends Fragment implements AdapterView.OnItemSelected
                 }catch(Exception e){};
 
                 return new DailyMenuList("","",0);
-        }
+            }
             @Override
             protected void onPostExecute(DailyMenuList result) {
                 inflateMenu(result);
@@ -204,6 +227,15 @@ public class MenuFragment extends Fragment implements AdapterView.OnItemSelected
             Date tomorrow = new Date(date.getTime() + i*(1000 * 60 * 60 * 24));
             dates.add(dateFormat.format(tomorrow));
         }
+    }
+
+    public void changeButtonVisibility(View entryView,int visible) {
+        ImageButton favorite = (ImageButton) entryView.findViewById(R.id.imageButton);
+        ImageButton like = (ImageButton) entryView.findViewById(R.id.imageButton2);
+        ImageButton dislike = (ImageButton) entryView.findViewById(R.id.imageButton3);
+        favorite.setVisibility(visible);
+        like.setVisibility(visible);
+        dislike.setVisibility(visible);
     }
 
 }
