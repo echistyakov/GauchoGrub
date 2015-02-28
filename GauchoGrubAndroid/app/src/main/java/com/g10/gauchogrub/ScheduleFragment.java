@@ -1,11 +1,11 @@
 package com.g10.gauchogrub;
 
-import android.app.Fragment;
+
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.MotionEvent;
+
 import android.widget.AdapterView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -13,13 +13,10 @@ import android.widget.TextView;
 import java.util.AbstractMap.SimpleEntry;
 import android.widget.TabHost;
 import android.widget.TabHost.TabContentFactory;
-import android.widget.TabHost.TabSpec;
-import android.widget.TabHost.OnTabChangeListener;
 import java.util.ArrayList;
 import java.util.logging.Logger;
-import android.widget.Toast;
 
-public class ScheduleFragment extends Fragment {
+public class ScheduleFragment extends BaseFragment {
 
     private TableLayout scheduleTable;
     public final static Logger logger = Logger.getLogger("ScheduleFragment");
@@ -31,25 +28,26 @@ public class ScheduleFragment extends Fragment {
         this.scheduleTable = (TableLayout) rootView.findViewById(R.id.schedule_table);
         //Create page tabs
         TabHost tabs = (TabHost)rootView.findViewById(R.id.tabHost);
-        this.setUpTabs(tabs);
+        this.setUpTabs(tabs, createTabContent(), 4);
 
         return rootView;
     }
 
-    public void setScheduleTable(String tag) {
+    public void setDisplayContent(int tag) {
         // An item was selected. You can retrieve the selected item using
         // parent.getItemAtPosition(pos)
         ArrayList<SimpleEntry<String, ArrayList<SimpleEntry<String, String>>>> schedule = null;
         scheduleTable.removeAllViews();
 
-        if (tag.equals("0")) {
-            schedule = getCarilloSchedule();
-        } else if (tag.equals("1")) {
-            schedule = getDeLaGuerraSchedule();
-        } else if (tag.equals("2")) {
-            schedule = getOrtegaSchedule();
-        } else if (tag.equals("3")) {
-            schedule = getPortollaSchedule();
+        switch (tag) {
+            case 0: schedule = getCarilloSchedule();
+                    break;
+            case 1: schedule = getDeLaGuerraSchedule();
+                    break;
+            case 2: schedule = getOrtegaSchedule();
+                    break;
+            case 3: schedule = getPortollaSchedule();
+                    break;
         }
 
         for (SimpleEntry<String, ArrayList<SimpleEntry<String, String>>> headerEntry : schedule) {
@@ -176,32 +174,14 @@ public class ScheduleFragment extends Fragment {
         return schedule;
     }
 
-    public void setUpTabs(TabHost tabs){
-        String[] commons = new String[] {"Carillo","DLG","Ortega","Portola"};
-
-        //Set the initial tab content
-        TabContentFactory contentCreate = new TabContentFactory() {
+    public TabContentFactory createTabContent(){
+        return new TabContentFactory() {
             @Override
             public View createTabContent(String tag) {
-                setScheduleTable(tag);
+                setDisplayContent(Integer.parseInt(tag));
                 return (scheduleTable);
             }
         };
-        tabs.setup();
-        //Create tabs and set text & content
-        for(int i = 0; i < 4 ; i ++) {
-            TabSpec tab = tabs.newTabSpec(i + "");
-            tab.setContent(contentCreate);
-            tab.setIndicator(commons[i]);
-            tabs.addTab(tab);
-        }
-        //Set tab listeners to change content when triggered
-        tabs.setOnTabChangedListener(new OnTabChangeListener(){
-            @Override
-            public void onTabChanged(String tabId) {
-                setScheduleTable(tabId);
-            }});
     }
-
 
 }
