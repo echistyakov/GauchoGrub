@@ -10,11 +10,11 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TabHost;
 
-import com.g10.gauchogrub.BaseFragment;
+import com.g10.gauchogrub.BaseTabbedFragment;
 import com.g10.gauchogrub.R;
 
 
-public class DiningCamsFragment extends BaseFragment implements Runnable {
+public class DiningCamsFragment extends BaseTabbedFragment implements Runnable {
 
     private DiningCam currentCam;
     private Handler handler;

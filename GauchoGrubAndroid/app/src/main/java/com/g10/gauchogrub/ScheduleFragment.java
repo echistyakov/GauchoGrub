@@ -16,7 +16,7 @@ import android.widget.TabHost.TabContentFactory;
 import java.util.ArrayList;
 import java.util.logging.Logger;
 
-public class ScheduleFragment extends BaseFragment {
+public class ScheduleFragment extends BaseTabbedFragment {
 
     private TableLayout scheduleTable;
     public final static Logger logger = Logger.getLogger("ScheduleFragment");

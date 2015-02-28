@@ -27,7 +27,7 @@ import java.text.SimpleDateFormat;
 import com.g10.gauchogrub.menu.DailyMenuList;
 
 
-public class MenuFragment extends BaseFragment implements AdapterView.OnItemSelectedListener, Runnable {
+public class MenuFragment extends BaseTabbedFragment implements AdapterView.OnItemSelectedListener, Runnable {
 
 
     private TableLayout menuTable;
