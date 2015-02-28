@@ -1,6 +1,7 @@
 package com.g10.gauchogrub;
 
 import android.app.Fragment;
+import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.media.Image;
 import android.os.Bundle;
@@ -17,6 +18,13 @@ import com.g10.gauchogrub.io.WebUtils;
 import com.g10.gauchogrub.io.MenuParser;
 import com.g10.gauchogrub.menu.Menu;
 import com.g10.gauchogrub.menu.MenuItem;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.io.OutputStreamWriter;
+import java.util.HashSet;
 import java.util.logging.Logger;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -41,14 +49,18 @@ public class MenuFragment extends Fragment implements AdapterView.OnItemSelected
     private static String date;
     private ArrayList<String> dates;
     private TableRow currentButtons = null;
+    private HashSet<String> favoritesList;
+    private File favoritesFile;
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.menu_fragment, container, false);
 
+        this.favoritesList = new HashSet<>();
         this.menuTable = (TableLayout) rootView.findViewById(R.id.menu_table);
-        this.dates = new ArrayList<String>();
+        this.dates = new ArrayList<>();
+        this.favoritesFile = new File(getActivity().getApplicationContext().getFilesDir(),"favorites.ser");
 
         TabHost tabs = (TabHost)rootView.findViewById(R.id.tabHost);
         this.setUpTabs(tabs);
@@ -87,7 +99,7 @@ public class MenuFragment extends Fragment implements AdapterView.OnItemSelected
             String MenuName = headerEntry.getMenuName();
 
             TableRow headerRow = new TableRow(getActivity().getApplicationContext());
-            headerRow.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
+            headerRow.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT));
             View headerView = LayoutInflater.from(getActivity().getApplicationContext()).inflate(R.layout.meal_header, null);
             TextView headerTextView = (TextView) headerView.findViewById(R.id.header);
             headerTextView.setText(MenuName);
@@ -144,7 +156,7 @@ public class MenuFragment extends Fragment implements AdapterView.OnItemSelected
                     }
                 });
 
-                setButtonListeners(entryView);
+                setButtonListeners(entryView, (String) menuTypeView.getText());
 
                 TextView menuTimeView = (TextView) entryView.findViewById(R.id.meal_time);
                 menuTimeView.setText(itemType);
@@ -242,7 +254,7 @@ public class MenuFragment extends Fragment implements AdapterView.OnItemSelected
         dislike.setVisibility(visible);
     }
 
-    public void setButtonListeners(View entryView){
+    public void setButtonListeners(View entryView, final String menuItemName){
         final ImageButton favorite = (ImageButton) entryView.findViewById(R.id.imageButton);
         final ImageButton like = (ImageButton) entryView.findViewById(R.id.imageButton2);
         final ImageButton dislike = (ImageButton) entryView.findViewById(R.id.imageButton3);
@@ -253,8 +265,15 @@ public class MenuFragment extends Fragment implements AdapterView.OnItemSelected
                 final Drawable current = getResources().getDrawable(R.drawable.favoriteoff);
                 if(favorite.getBackground().getConstantState().equals(current.getConstantState())) {
                     favorite.setBackgroundResource(R.drawable.favorite);
+                    favoritesList.add(menuItemName);
+                    try {
+                        writeFavorites(favoritesList);
+                    } catch(IOException e){ e.printStackTrace(); }
                 }
-                else { favorite.setBackgroundResource(R.drawable.favoriteoff); }
+                else {
+                    favorite.setBackgroundResource(R.drawable.favoriteoff);
+                    favoritesList.remove(menuItemName);
+                }
 
             }
         });
@@ -280,6 +299,19 @@ public class MenuFragment extends Fragment implements AdapterView.OnItemSelected
                 else { dislike.setBackgroundResource(R.drawable.downvoteoff); }
             }
         });
+    }
+
+    public boolean writeFavorites(HashSet<String> favoritesList) throws IOException {
+        OutputStreamWriter outStream;
+        try {
+            outStream = new OutputStreamWriter(getActivity().getApplicationContext().openFileOutput("favorites.ser", Context.MODE_PRIVATE)); //new FileOutputStream(favoritesFile);
+            for (String thisfavorite : favoritesList) {
+                outStream.write(thisfavorite + "\n");
+                logger.info("Writing String " + thisfavorite);
+            }
+            outStream.close();
+        } catch (IOException e) { return false; }
+        return true;
     }
 
 }
