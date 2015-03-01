@@ -2,6 +2,7 @@ package com.g10.gauchogrub;
 
 import android.app.Fragment;
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.media.Image;
 import android.os.Bundle;
@@ -56,6 +57,7 @@ public class MenuFragment extends Fragment implements AdapterView.OnItemSelected
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.menu_fragment, container, false);
+        setHasOptionsMenu(true);
 
         this.favoritesList = new HashSet<>();
         this.menuTable = (TableLayout) rootView.findViewById(R.id.menu_table);
@@ -137,20 +139,23 @@ public class MenuFragment extends Fragment implements AdapterView.OnItemSelected
                 final TextView menuTypeView = (TextView) entryView.findViewById(R.id.meal_type);
                 menuTypeView.setText(itemTitle);
 
-                menuTypeView.setOnClickListener(new View.OnClickListener() {
+                entryRow.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         if(currentButtons != entryRow || currentButtons == null) {
-                            changeButtonVisibility(entryView,View.VISIBLE);
+                            //changeButtonVisibility(entryView,View.VISIBLE);
+                            entryRow.setBackgroundColor(Color.LTGRAY);
                             if(currentButtons != null){
+                                currentButtons.setBackgroundColor(0);
                                 View buttonsToMakeInvisible = currentButtons.getVirtualChildAt(0);
-                                changeButtonVisibility(buttonsToMakeInvisible,View.INVISIBLE);
+                                //changeButtonVisibility(buttonsToMakeInvisible,View.INVISIBLE);
                             }
                             currentButtons = entryRow;
                         }
 
                         else if(currentButtons == entryRow) {
-                            changeButtonVisibility(entryView,View.INVISIBLE);
+                            entryRow.setBackgroundColor(0);
+                            //changeButtonVisibility(entryView,View.INVISIBLE);
                             currentButtons = null;
                         }
                     }
@@ -262,16 +267,16 @@ public class MenuFragment extends Fragment implements AdapterView.OnItemSelected
         favorite.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View w){
-                final Drawable current = getResources().getDrawable(R.drawable.favoriteoff);
+                final Drawable current = getResources().getDrawable(R.drawable.ic_action_favorite);
                 if(favorite.getBackground().getConstantState().equals(current.getConstantState())) {
-                    favorite.setBackgroundResource(R.drawable.favorite);
+                    favorite.setBackgroundResource(R.drawable.ic_action_favorite);
                     favoritesList.add(menuItemName);
                     try {
                         writeFavorites(favoritesList);
                     } catch(IOException e){ e.printStackTrace(); }
                 }
                 else {
-                    favorite.setBackgroundResource(R.drawable.favoriteoff);
+                    favorite.setBackgroundResource(R.drawable.ic_action_favorite);
                     favoritesList.remove(menuItemName);
                 }
 
@@ -281,22 +286,22 @@ public class MenuFragment extends Fragment implements AdapterView.OnItemSelected
         like.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View w){
-                Drawable current = getResources().getDrawable(R.drawable.upvoteoff);
+                Drawable current = getResources().getDrawable(R.drawable.ic_action_favorite);
                 if(like.getBackground().getConstantState().equals(current.getConstantState())) {
-                    like.setBackgroundResource(R.drawable.upvote);
+                    like.setBackgroundResource(R.drawable.ic_action_good);
                 }
-                else { like.setBackgroundResource(R.drawable.upvoteoff); }
+                else { like.setBackgroundResource(R.drawable.ic_action_good); }
             }
         });
 
         dislike.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View w){
-                Drawable current = getResources().getDrawable(R.drawable.downvoteoff);
+                Drawable current = getResources().getDrawable(R.drawable.ic_action_bad);
                 if(dislike.getBackground().getConstantState().equals(current.getConstantState())) {
-                    dislike.setBackgroundResource(R.drawable.downvote);
+                    dislike.setBackgroundResource(R.drawable.ic_action_bad);
                 }
-                else { dislike.setBackgroundResource(R.drawable.downvoteoff); }
+                else { dislike.setBackgroundResource(R.drawable.ic_action_bad); }
             }
         });
     }
