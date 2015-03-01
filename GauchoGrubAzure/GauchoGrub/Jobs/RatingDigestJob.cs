@@ -21,6 +21,7 @@ namespace GauchoGrub.Jobs
                 rating.TotalRatings += 1;
                 rating.PositiveRatings += increment;
                 db.Ratings.AddOrUpdate(rating);
+                db.UserRatings.Remove(ur);
             }
             db.SaveChangesAsync();
         }
