@@ -56,13 +56,13 @@ public class FavoritesFragment extends FavoritesFileStorage {
         favoriteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View w) {
-                final Drawable current = getResources().getDrawable(R.drawable.favorite);
+                final Drawable current = getResources().getDrawable(R.drawable.ic_action_favorite_on);
                 if (favoriteButton.getBackground().getConstantState().equals(current.getConstantState())) {
                     favoritesList.remove(favorite);
-                    favoriteButton.setBackgroundResource(R.drawable.favoriteoff);
+                    favoriteButton.setBackgroundResource(R.drawable.ic_action_favorite);
                 } else {
                     favoritesList.add(favorite);
-                    favoriteButton.setBackgroundResource(R.drawable.favorite);
+                    favoriteButton.setBackgroundResource(R.drawable.ic_action_favorite_on);
                 }
                 try {
                     writeFavorites(favoritesList);

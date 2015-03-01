@@ -1,10 +1,7 @@
 package com.g10.gauchogrub;
 
-import android.app.Fragment;
-import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
-import android.media.Image;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TabHost;
 import android.widget.TableLayout;
@@ -39,7 +37,14 @@ public class MenuFragment extends FavoritesFileStorage implements AdapterView.On
     private static String diningCommon;
     private static String date;
     private ArrayList<String> dates;
-    private TableRow currentButtons = null;
+
+    //Current Selected Menu Item
+    private TableRow currentSelectedItem = null;
+    //Current visible buttons bar
+    private View currentBar;
+    //Reference to the container that will hold different sets of buttons
+    private RelativeLayout buttonLayout;
+
     private HashSet<String> favoritesList;
 
     @Override
@@ -49,6 +54,7 @@ public class MenuFragment extends FavoritesFileStorage implements AdapterView.On
 
         this.favoritesList = new HashSet<>();
         this.menuTable = (TableLayout) rootView.findViewById(R.id.menu_table);
+        this.buttonLayout = (RelativeLayout) rootView.findViewById(R.id.bottombar);
         this.dates = new ArrayList<>();
 
         TabHost tabs = (TabHost)rootView.findViewById(R.id.tabHost);
@@ -129,7 +135,9 @@ public class MenuFragment extends FavoritesFileStorage implements AdapterView.On
 
                 final TableRow entryRow = new TableRow(getActivity().getApplicationContext());
                 entryRow.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
+
                 final View entryView = LayoutInflater.from(getActivity().getApplicationContext()).inflate(R.layout.meal_entry, null);
+                final View buttonBar = LayoutInflater.from(getActivity().getApplicationContext()).inflate(R.layout.meal_entry_buttons, null);
 
                 final TextView menuTypeView = (TextView) entryView.findViewById(R.id.meal_type);
                 menuTypeView.setText(itemTitle);
@@ -137,35 +145,38 @@ public class MenuFragment extends FavoritesFileStorage implements AdapterView.On
                 menuTypeView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if(currentButtons != entryRow || currentButtons == null) {
-                            //changeButtonVisibility(entryView,View.VISIBLE);
-                            entryRow.setBackgroundColor(Color.LTGRAY);
-                            if(currentButtons != null){
-                                currentButtons.setBackgroundColor(0);
-                                View buttonsToMakeInvisible = currentButtons.getVirtualChildAt(0);
-                                //changeButtonVisibility(buttonsToMakeInvisible,View.INVISIBLE);
+                        //A user click a different menu item than previously selected
+                        if(currentSelectedItem != entryRow || currentSelectedItem == null) {
+                            //Switching from one selected item to another
+                            if(currentSelectedItem != null){
+                                currentSelectedItem.setBackgroundColor(0);
+                                buttonLayout.removeView(currentBar);
                             }
-                            currentButtons = entryRow;
+                            //This happens every time a new item is selected
+                            entryRow.setBackgroundColor(Color.LTGRAY);
+                            currentSelectedItem = entryRow;
+                            currentBar = buttonBar;
+                            buttonLayout.addView(buttonBar);
                         }
-
-                        else if(currentButtons == entryRow) {
+                        //A user clicks the same menu item that was already selected
+                        else if(currentSelectedItem == entryRow) {
                             entryRow.setBackgroundColor(0);
-                            //changeButtonVisibility(entryView,View.INVISIBLE);
-                            currentButtons = null;
+                            buttonLayout.removeView(currentBar);
+                            currentSelectedItem = null;
+                            currentBar = null;
                         }
                     }
                 });
 
                 //When loading Menu, if items already exist in favorites list the button needs to be activated
-                ImageButton favoriteButton = (ImageButton)entryView.findViewById(R.id.imageButton);
-                if(favoritesList.contains(itemTitle)) { favoriteButton.setBackgroundResource(R.drawable.favorite); }
+                ImageButton favoriteButton = (ImageButton) buttonBar.findViewById(R.id.favoriteButton);
+                if(favoritesList.contains(itemTitle)) { favoriteButton.setBackgroundResource(R.drawable.ic_action_favorite_on); }
 
-                setButtonListeners(entryView, (String) menuTypeView.getText());
+                //TODO set up like and dislike button listeners
+                setButtonListeners(buttonBar, (String) menuTypeView.getText());
 
                 TextView menuTimeView = (TextView) entryView.findViewById(R.id.meal_time);
                 menuTimeView.setText(itemType);
-
-                changeButtonVisibility(entryView,View.GONE);
 
                 entryRow.addView(entryView);
                 menuTable.addView(entryRow);
@@ -249,26 +260,17 @@ public class MenuFragment extends FavoritesFileStorage implements AdapterView.On
         }
     }
 
-    public void changeButtonVisibility(View entryView,int visible) {
-        ImageButton favorite = (ImageButton) entryView.findViewById(R.id.imageButton);
-        ImageButton like = (ImageButton) entryView.findViewById(R.id.imageButton2);
-        ImageButton dislike = (ImageButton) entryView.findViewById(R.id.imageButton3);
-        favorite.setVisibility(visible);
-        like.setVisibility(visible);
-        dislike.setVisibility(visible);
-    }
-
     public void setButtonListeners(View entryView, final String menuItemName){
-        final ImageButton favorite = (ImageButton) entryView.findViewById(R.id.imageButton);
-        final ImageButton like = (ImageButton) entryView.findViewById(R.id.imageButton2);
-        final ImageButton dislike = (ImageButton) entryView.findViewById(R.id.imageButton3);
+        final ImageButton favorite = (ImageButton) entryView.findViewById(R.id.favoriteButton);
+        final ImageButton like = (ImageButton) entryView.findViewById(R.id.thumbsUpButton);
+        final ImageButton dislike = (ImageButton) entryView.findViewById(R.id.thumbsDownButton);
 
         favorite.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View w){
                 final Drawable current = getResources().getDrawable(R.drawable.ic_action_favorite);
                 if(favorite.getBackground().getConstantState().equals(current.getConstantState())) {
-                    favorite.setBackgroundResource(R.drawable.ic_action_favorite);
+                    favorite.setBackgroundResource(R.drawable.ic_action_favorite_on);
                     favoritesList.add(menuItemName);
                 }
                 else {
@@ -287,9 +289,9 @@ public class MenuFragment extends FavoritesFileStorage implements AdapterView.On
         like.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View w){
-                Drawable current = getResources().getDrawable(R.drawable.ic_action_favorite);
+                Drawable current = getResources().getDrawable(R.drawable.ic_action_good);
                 if(like.getBackground().getConstantState().equals(current.getConstantState())) {
-                    like.setBackgroundResource(R.drawable.ic_action_good);
+                    like.setBackgroundResource(R.drawable.ic_action_good_on);
                 }
                 else { like.setBackgroundResource(R.drawable.ic_action_good); }
             }
@@ -300,7 +302,7 @@ public class MenuFragment extends FavoritesFileStorage implements AdapterView.On
             public void onClick(View w){
                 Drawable current = getResources().getDrawable(R.drawable.ic_action_bad);
                 if(dislike.getBackground().getConstantState().equals(current.getConstantState())) {
-                    dislike.setBackgroundResource(R.drawable.ic_action_bad);
+                    dislike.setBackgroundResource(R.drawable.ic_action_bad_on);
                 }
                 else { dislike.setBackgroundResource(R.drawable.ic_action_bad); }
             }

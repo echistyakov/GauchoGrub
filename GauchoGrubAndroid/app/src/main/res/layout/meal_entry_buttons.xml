@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+        <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/bottombar"
+            android:orientation="horizontal"
+            android:layout_alignParentBottom="true"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="#ff54d4ff"
+            style="@android:style/ButtonBar">
+
+            <ImageButton  android:id="@+id/thumbsUpButton"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:background="@drawable/ic_action_good"
+                android:padding="15dp"
+                android:layout_marginLeft="20px"
+                android:layout_alignParentLeft="true"
+                android:clickable="true"></ImageButton >
+
+            <ImageButton  android:id="@+id/thumbsDownButton"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:background="@drawable/ic_action_bad"
+                android:padding="15dp"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:clickable="true"></ImageButton >
+
+            <ImageButton  android:id="@+id/favoriteButton"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:background="@drawable/ic_action_favorite"
+                android:padding="15dp"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+                android:clickable="true"></ImageButton >
+
+        </RelativeLayout>
