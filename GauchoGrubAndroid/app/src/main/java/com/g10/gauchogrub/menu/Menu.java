@@ -1,10 +1,14 @@
 package com.g10.gauchogrub.menu;
+import com.google.gson.annotations.SerializedName;
+
 import java.util.ArrayList;
 
 
 public class Menu {
+    //@SerializedName("Event")
     private String menuName;
-    private ArrayList<MenuItem> menuItems;
+    //@SerializedName("MenuItems")
+    public ArrayList<MenuItem> menuItems;
 
     public Menu(String menuName) {
         this.menuName = menuName;

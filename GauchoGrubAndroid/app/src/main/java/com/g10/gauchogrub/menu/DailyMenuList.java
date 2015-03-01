@@ -1,12 +1,17 @@
 package com.g10.gauchogrub.menu;
 import java.util.ArrayList;
+import com.google.gson.annotations.SerializedName;
 
 
 public class DailyMenuList {
+    //@SerializedName("Date")
     private String date;
+    //@SerializedName("DiningCommon")
     private String diningCommon;
+    //@SerializedName("DayOfWeek")
     private int day;
-    ArrayList<Menu> Menus;
+
+    public ArrayList<Menu> Menus;
 
     public DailyMenuList(String date, String diningCommon, int day) {
         Menus = new ArrayList<Menu>();
