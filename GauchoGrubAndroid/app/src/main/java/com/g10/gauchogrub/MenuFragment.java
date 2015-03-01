@@ -1,6 +1,5 @@
 package com.g10.gauchogrub;
 
-import android.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,21 +7,27 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
+import android.widget.TabHost;
 import android.widget.TableLayout;
 import com.g10.gauchogrub.io.WebUtils;
 import com.g10.gauchogrub.io.MenuParser;
 import com.g10.gauchogrub.menu.Menu;
 import com.g10.gauchogrub.menu.MenuItem;
+
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import android.widget.TableRow;
 import android.widget.TextView;
 import android.os.AsyncTask;
 import java.util.ArrayList;
+import java.util.Date;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 
 import com.g10.gauchogrub.menu.DailyMenuList;
 
 
-public class MenuFragment extends Fragment implements AdapterView.OnItemSelectedListener, Runnable {
+public class MenuFragment extends BaseTabbedFragment implements AdapterView.OnItemSelectedListener, Runnable {
 
 
     private TableLayout menuTable;
@@ -30,7 +35,8 @@ public class MenuFragment extends Fragment implements AdapterView.OnItemSelected
     public final static Logger logger = Logger.getLogger("MenuFragment");
 
     private static String diningCommon;
-    private String date;
+    private static String date;
+    private ArrayList<String> dates;
 
 
 
@@ -39,24 +45,32 @@ public class MenuFragment extends Fragment implements AdapterView.OnItemSelected
         View rootView = inflater.inflate(R.layout.menu_fragment, container, false);
 
         this.menuTable = (TableLayout) rootView.findViewById(R.id.menu_table);
+        this.dates = new ArrayList<String>();
 
-        // Initialize Spinner (DC)
-        Spinner spinner = (Spinner)rootView.findViewById(R.id.dining_common_spinner);
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getActivity(), R.array.dining_commons_array, R.layout.dining_cams_spinner_item);
+        TabHost tabs = (TabHost)rootView.findViewById(R.id.tabHost);
+        this.setUpTabs(tabs, createTabContent(), 4);
+
+        this.fillSpinnerWithDates();
+
+        // Initialize Spinner
+        Spinner spinner = (Spinner)rootView.findViewById(R.id.schedule_spinner);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(),R.layout.dining_cams_spinner_item, this.dates);
         adapter.setDropDownViewResource(R.layout.dining_cams_spinner_item);
         spinner.setAdapter(adapter);
         spinner.setOnItemSelectedListener(this);
         spinner.setSelection(0);
 
-        // Initialize Spinner (date)
-        Spinner dateSpinner = (Spinner)rootView.findViewById(R.id.date_spinner);
-        ArrayAdapter<CharSequence> dateAdapter = ArrayAdapter.createFromResource(getActivity(), R.array.date_nav_array, R.layout.dining_cams_spinner_item);
-        dateAdapter.setDropDownViewResource(R.layout.dining_cams_spinner_item);
-        dateSpinner.setAdapter(dateAdapter);
-        dateSpinner.setOnItemSelectedListener(this);
-        dateSpinner.setSelection(0);
-
         return rootView;
+    }
+
+    public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
+        TextView dateView = (TextView) view;
+        date = dateView.getText().toString();
+        run();
+    }
+
+    public void onNothingSelected(AdapterView<?> parent) {
+        // Another interface callback
     }
 
     private void inflateMenu(DailyMenuList displayMenu) {
@@ -125,10 +139,11 @@ public class MenuFragment extends Fragment implements AdapterView.OnItemSelected
             protected DailyMenuList doInBackground(Void... v) {
                 try {
                     WebUtils w = new WebUtils();
-                    String menuString = w.createMenuString(diningCommon,"2/17/2015");
+                    String menuString = w.createMenuString(diningCommon,date);
                     MenuParser mp = new MenuParser();
                     return mp.getDailyMenuList(menuString);
-                }catch(Exception e){};
+                }catch(Exception e)
+                    {logger.log(Level.INFO, e.getMessage());}
 
                 return new DailyMenuList("","",0);
         }
@@ -139,22 +154,34 @@ public class MenuFragment extends Fragment implements AdapterView.OnItemSelected
         }.execute();
     }
 
-
-
-
-
-    public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
-        logger.info("item selected");
-        if(pos == 0) diningCommon = "Carrillo";
-        if(pos == 1) diningCommon = "De_La_Guerra";
-        if(pos == 2) diningCommon = "Ortega";
-        if(pos == 3) diningCommon = "Portolla";
+    public void setDisplayContent(int tag) {
+        String[] commons = new String[] {"Carillo","De_La_Guerra","Ortega","Portola"};
+        diningCommon = commons[tag];
         run();
     }
 
-    public void onNothingSelected(AdapterView<?> parent) {
-        // Another interface callback
+    public TabHost.TabContentFactory createTabContent() {
+        return new TabHost.TabContentFactory() {
+            @Override
+            public View createTabContent(String tag) {
+                setDisplayContent(Integer.parseInt(tag));
+                return (menuTable);
+            }
+        };
     }
 
+
+    public void fillSpinnerWithDates(){
+        DateFormat dateFormat = new SimpleDateFormat("M/dd/yyyy");
+        Date date = new Date();
+
+        //TO BE DELETED EVENTUALLY
+        dates.add("2/17/2015");
+
+        for(int i = 0; i < 7 ; i++){
+            Date tomorrow = new Date(date.getTime() + i*(1000 * 60 * 60 * 24));
+            dates.add(dateFormat.format(tomorrow));
+        }
+    }
 
 }
