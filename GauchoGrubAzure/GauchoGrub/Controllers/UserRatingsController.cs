@@ -37,6 +37,15 @@ namespace GauchoGrub.Controllers
         [ResponseType(typeof(UserRating))]
         public async Task<IHttpActionResult> PostUserRating(string userId, int menuId, int menuItemId, bool positive)
         {
+            // Verify that the rating is being submitted during the corresponding RepeatedEvent
+            RepeatedEvent re = db.Menus.Single(m => m.Id == menuId).Event;
+            TimeSpan now = DateTime.Now.TimeOfDay;
+            if (now < re.From && now > re.To)
+            {
+                return BadRequest("Rating can only be submitted during the event");
+            }
+
+            // Add or Update rating
             UserRating ur = null;
             try
             {
