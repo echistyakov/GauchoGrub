@@ -3,11 +3,12 @@ package com.g10.gauchogrub.io;
 import com.g10.gauchogrub.menu.DailyMenuList;
 import com.g10.gauchogrub.menu.Menu;
 import com.g10.gauchogrub.menu.MenuItem;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 import java.util.logging.Logger;
+import java.lang.reflect.Type;
+import com.google.gson.*;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
 
 public class MenuParser{
 
@@ -17,48 +18,9 @@ public class MenuParser{
 
         DailyMenuList myDailyMenuList = new DailyMenuList("3","",0);
         try {
-            //Initialize Parser Object
-            JSONParser jsonParser = new JSONParser();
 
-            //Parse API String into Event Array
-            JSONArray eventList = (JSONArray) jsonParser.parse(menuString);
-            int eventCount = eventList.size();
 
-            //Obtain a reference to the first Event and get General Information
-            JSONObject event = (JSONObject) eventList.get(0);
-            JSONObject eventInfo = (JSONObject) event.get("Event");
-
-            //Get Dining Common Name
-            JSONObject diningCommonJ = (JSONObject) eventInfo.get("DiningCommon");
-            String diningCommon = (String) diningCommonJ.get("Name");
-
-            //Get Day of Week
-            Long dayOfWeekL = (Long) eventInfo.get("DayOfWeek");
-            int dayOfWeek = Integer.parseInt(dayOfWeekL.toString());
-
-            //Get a Menu Date
-            String date = (String) event.get("Date");
-            date = date.split("T")[0];
-
-            //Begin Creation of Data Structures for a single API CALL
-            myDailyMenuList.setData(date,diningCommon,dayOfWeek);
-
-            for(int x = 0; x < eventCount; x++) {
-                JSONObject currentEvent = (JSONObject) eventList.get(x);
-                Menu menu = getMenu(currentEvent);
-                JSONArray menuItemList = (JSONArray) currentEvent.get("MenuItems");
-                int count = menuItemList.size();
-
-                //Create ArrayList for a single Menu at a Dining Common
-                for (int i = 0; i < count; i++) {
-                    JSONObject menuItem = (JSONObject) menuItemList.get(i);
-                    MenuItem food = getMenuItem(menuItem);
-                    menu.addMenuItem(food);
-                }
-
-                //Insert Menu into DailyMenuList
-                myDailyMenuList.addMenu(menu);
-            }
+            myDailyMenuList = deserialize(menuString,DailyMenuList.class);
 
         } catch (NullPointerException ex) {
             ex.printStackTrace();
@@ -66,28 +28,22 @@ public class MenuParser{
             ex.printStackTrace();
         }
 
-
+        System.out.println(myDailyMenuList.toString());
         return myDailyMenuList;
     }
 
-    public Menu getMenu(JSONObject currentEvent){
-        JSONObject currentEventInfo = (JSONObject) currentEvent.get("Event");
-        JSONObject menuJ = (JSONObject) currentEventInfo.get("Meal");
-        String menuName = (String) menuJ.get("Name");
 
-        return new Menu(menuName);
+    /* Deserializes given JSON into an object of type T */
+    public static <T> T deserialize(String json, Type type) {
+        Gson gson = getCustomGson();
+        return gson.fromJson(json, type);
     }
 
-    public MenuItem getMenuItem(JSONObject menuItem){
-        JSONObject menuCategoryJ = (JSONObject) menuItem.get("MenuCategory");
-        JSONObject menuItemTypeJ = (JSONObject) menuItem.get("MenuItemType");
-        String title = (String) menuItem.get("Title");
-        String menuCategory = (String) menuCategoryJ.get("Name");
-        String menuItemType = (String) menuItemTypeJ.get("Name");
-        MenuItem food = new MenuItem(title,menuCategory,menuItemType);
-
-        return food;
+    /* Custom Gson for (de)serializing custom classes */
+    public static Gson getCustomGson() {
+        return new GsonBuilder().setPrettyPrinting().create();
     }
+
 
 
 
