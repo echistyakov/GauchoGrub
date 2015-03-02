@@ -1,28 +1,19 @@
-package com.g10.gauchogrub.io;
+package com.g10.gauchogrub.utils;
 
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 
 import org.apache.http.util.ByteArrayBuffer;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.OutputStreamWriter;
-import java.io.Writer;
 import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.nio.ByteBuffer;
 import java.util.Hashtable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -126,13 +117,10 @@ public class WebUtils {
         String ur = "http://gauchogrub.azurewebsites.net/api/Menus?diningCommon=" + diningCommon + "&date=" + date;
         URL url = new URL(ur);
         String result = httpRequest(url,HttpMethod.GET,100000);
-
         return result;
     }
 
     public enum HttpMethod {
         GET, POST, DELETE, PUT
     }
-
-
 }

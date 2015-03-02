@@ -9,8 +9,8 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.TabHost;
 import android.widget.TableLayout;
-import com.g10.gauchogrub.io.WebUtils;
-import com.g10.gauchogrub.io.MenuParser;
+import com.g10.gauchogrub.utils.WebUtils;
+import com.g10.gauchogrub.utils.MenuParser;
 import com.g10.gauchogrub.menu.Menu;
 import com.g10.gauchogrub.menu.MenuItem;
 
@@ -24,21 +24,14 @@ import java.util.Date;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 
-import com.g10.gauchogrub.menu.DailyMenuList;
-
 
 public class MenuFragment extends BaseTabbedFragment implements AdapterView.OnItemSelectedListener, Runnable {
 
-
-    private TableLayout menuTable;
-
     public final static Logger logger = Logger.getLogger("MenuFragment");
-
+    private TableLayout menuTable;
     private static String diningCommon;
     private static String date;
     private ArrayList<String> dates;
-
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -73,46 +66,36 @@ public class MenuFragment extends BaseTabbedFragment implements AdapterView.OnIt
         // Another interface callback
     }
 
-    private void inflateMenu(DailyMenuList displayMenu) {
+    private void inflateMenu(ArrayList<Menu> menus) {
 
         menuTable.removeAllViews();
 
-        ArrayList<Menu> menuMeals = displayMenu.getMenus();
-
-        if(displayMenu.getMenus() == null) return;
-        for (Menu headerEntry : menuMeals) {
-            String MenuName = headerEntry.getMenuName();
-
+        if(menus == null) return;
+        for (Menu menu : menus) {
             TableRow headerRow = new TableRow(getActivity().getApplicationContext());
             headerRow.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
             View headerView = LayoutInflater.from(getActivity().getApplicationContext()).inflate(R.layout.meal_header, null);
             TextView headerTextView = (TextView) headerView.findViewById(R.id.header);
-            headerTextView.setText(MenuName);
+            headerTextView.setText(menu.event.meal.name);
             headerRow.addView(headerView);
             menuTable.addView(headerRow);
 
             String currentCategory = "Default";
 
-            for(MenuItem itemEntry : headerEntry.getMenuItems()) {
-                String itemTitle = itemEntry.getTitle();
-                String itemCategory = itemEntry.getMenuCategory();
-                String itemType = itemEntry.getMenuItemType();
+            for(MenuItem item : menu.menuItems) {
 
-                if(itemType.equals("Regular")) itemType = "";
-                if(itemType.equals("Vegetarian")) itemType = "(v)";
-                if(itemType.equals("Vegan")) itemType = "(vgn)";
 
-                if(!itemCategory.equals(currentCategory)) {
+                if(!item.menuCategory.name.equals(currentCategory)) {
                     TableRow categoryRow = new TableRow(getActivity().getApplicationContext());
                     categoryRow.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
                     View categoryView = LayoutInflater.from(getActivity().getApplicationContext()).inflate(R.layout.meal_category, null);
 
                     TextView categoryTypeView = (TextView) categoryView.findViewById(R.id.meal_cat);
-                    categoryTypeView.setText(itemCategory);
+                    categoryTypeView.setText(item.menuCategory.name);
                     categoryRow.addView(categoryView);
                     menuTable.addView(categoryRow);
 
-                    currentCategory = itemCategory;
+                    currentCategory = item.menuCategory.name;
                 }
 
                 TableRow entryRow = new TableRow(getActivity().getApplicationContext());
@@ -120,35 +103,34 @@ public class MenuFragment extends BaseTabbedFragment implements AdapterView.OnIt
                 View entryView = LayoutInflater.from(getActivity().getApplicationContext()).inflate(R.layout.meal_entry, null);
 
                 TextView menuTypeView = (TextView) entryView.findViewById(R.id.meal_type);
-                menuTypeView.setText(itemTitle);
+                menuTypeView.setText(item.title);
 
                 TextView menuTimeView = (TextView) entryView.findViewById(R.id.meal_time);
-                menuTimeView.setText(itemType);
+                menuTimeView.setText(item.menuItemType.getShortVersion());
 
                 entryRow.addView(entryView);
                 menuTable.addView(entryRow);
-
             }
         }
     }
 
     @Override
     public void run() {
-        new AsyncTask<Void, Void, DailyMenuList>() {
+        new AsyncTask<Void, Void, ArrayList<Menu>>() {
             @Override
-            protected DailyMenuList doInBackground(Void... v) {
+            protected ArrayList<Menu> doInBackground(Void... v) {
                 try {
                     WebUtils w = new WebUtils();
-                    String menuString = w.createMenuString(diningCommon,date);
+                    String menuString = w.createMenuString(diningCommon, date);
                     MenuParser mp = new MenuParser();
                     return mp.getDailyMenuList(menuString);
-                }catch(Exception e)
-                    {logger.log(Level.INFO, e.getMessage());}
-
-                return new DailyMenuList("","",0);
+                } catch(Exception e) {
+                    logger.log(Level.INFO, e.getMessage());
+                }
+                return null;
         }
             @Override
-            protected void onPostExecute(DailyMenuList result) {
+            protected void onPostExecute(ArrayList<Menu> result) {
                 inflateMenu(result);
             }
         }.execute();
@@ -170,9 +152,8 @@ public class MenuFragment extends BaseTabbedFragment implements AdapterView.OnIt
         };
     }
 
-
     public void fillSpinnerWithDates(){
-        DateFormat dateFormat = new SimpleDateFormat("M/dd/yyyy");
+        DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
         Date date = new Date();
 
         //TO BE DELETED EVENTUALLY
@@ -183,5 +164,4 @@ public class MenuFragment extends BaseTabbedFragment implements AdapterView.OnIt
             dates.add(dateFormat.format(tomorrow));
         }
     }
-
 }
