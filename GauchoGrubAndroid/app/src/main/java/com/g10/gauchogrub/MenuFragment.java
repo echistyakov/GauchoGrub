@@ -9,6 +9,8 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.TabHost;
 import android.widget.TableLayout;
+
+import com.g10.gauchogrub.utils.CacheUtils;
 import com.g10.gauchogrub.utils.WebUtils;
 import com.g10.gauchogrub.utils.MenuParser;
 import com.g10.gauchogrub.menu.Menu;
@@ -121,7 +123,11 @@ public class MenuFragment extends BaseTabbedFragment implements AdapterView.OnIt
             protected ArrayList<Menu> doInBackground(Void... v) {
                 try {
                     WebUtils w = new WebUtils();
-                    String menuString = w.createMenuString(diningCommon, date);
+                    String menuString;
+                    menuString = w.createMenuString(diningCommon, date);
+                    CacheUtils c = new CacheUtils(getActivity(), diningCommon + date.replace("/",""), menuString);
+                    c.cacheFile();
+                    menuString = c.readCachedFile();
                     MenuParser mp = new MenuParser();
                     return mp.getDailyMenuList(menuString);
                 } catch(Exception e) {
