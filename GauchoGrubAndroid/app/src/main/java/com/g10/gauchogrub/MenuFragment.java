@@ -16,6 +16,7 @@ import com.g10.gauchogrub.utils.MenuParser;
 import com.g10.gauchogrub.menu.Menu;
 import com.g10.gauchogrub.menu.MenuItem;
 
+import java.io.File;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import android.widget.TableRow;
@@ -123,11 +124,14 @@ public class MenuFragment extends BaseTabbedFragment implements AdapterView.OnIt
             protected ArrayList<Menu> doInBackground(Void... v) {
                 try {
                     WebUtils w = new WebUtils();
-                    String menuString;
-                    menuString = w.createMenuString(diningCommon, date);
-                    CacheUtils c = new CacheUtils(getActivity(), diningCommon + date.replace("/",""), menuString);
-                    c.cacheFile();
-                    menuString = c.readCachedFile();
+                    String menuString, title = diningCommon + date.replace("/","");
+                    CacheUtils c = new CacheUtils();
+                    if(new File(getActivity().getBaseContext().getCacheDir(), title).exists())
+                        menuString = c.readCachedFile(getActivity(), title);
+                    else {
+                        menuString = w.createMenuString(diningCommon, date);
+                        c.cacheFile(getActivity(), title, menuString);
+                    }
                     MenuParser mp = new MenuParser();
                     return mp.getDailyMenuList(menuString);
                 } catch(Exception e) {
