@@ -1,5 +1,7 @@
 package com.g10.gauchogrub;
 
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,14 +31,10 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 
 
-
-public class MenuFragment extends FavoritesFileStorage implements AdapterView.OnItemSelectedListener, Runnable {
-
-
-    private TableLayout menuTable;
+public class MenuFragment extends BaseFavoritesFragment implements AdapterView.OnItemSelectedListener, Runnable {
 
     public final static Logger logger = Logger.getLogger("MenuFragment");
-
+    private TableLayout menuTable;
     private static String diningCommon;
     private static String date;
     private ArrayList<String> dates;
@@ -126,10 +124,8 @@ public class MenuFragment extends FavoritesFileStorage implements AdapterView.On
                     currentCategory = item.menuCategory.name;
                 }
 
-                TableRow entryRow = new TableRow(getActivity().getApplicationContext());
+                final TableRow entryRow = new TableRow(getActivity().getApplicationContext());
                 entryRow.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
-                
-                View entryView = LayoutInflater.from(getActivity().getApplicationContext()).inflate(R.layout.meal_entry, null);
                 final View entryView = LayoutInflater.from(getActivity().getApplicationContext()).inflate(R.layout.meal_entry, null);
                 final View buttonBar = LayoutInflater.from(getActivity().getApplicationContext()).inflate(R.layout.meal_entry_buttons, null);
 
@@ -164,7 +160,7 @@ public class MenuFragment extends FavoritesFileStorage implements AdapterView.On
 
                 //When loading Menu, if items already exist in favorites list the button needs to be activated
                 ImageButton favoriteButton = (ImageButton) buttonBar.findViewById(R.id.favoriteButton);
-                if(favoritesList.contains(itemTitle)) { favoriteButton.setBackgroundResource(R.drawable.ic_action_favorite_on); }
+                if(favoritesList.contains(item.title)) { favoriteButton.setBackgroundResource(R.drawable.ic_action_favorite_on); }
 
                 //TODO set up like and dislike button listeners
                 setButtonListeners(buttonBar, (String) menuTypeView.getText());

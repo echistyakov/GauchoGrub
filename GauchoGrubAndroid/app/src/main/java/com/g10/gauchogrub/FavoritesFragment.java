@@ -1,12 +1,12 @@
 package com.g10.gauchogrub;
 
-import android.app.Fragment;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.TabHost;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -15,7 +15,7 @@ import java.util.HashSet;
 import java.util.logging.Logger;
 
 
-public class FavoritesFragment extends FavoritesFileStorage {
+public class FavoritesFragment extends BaseFavoritesFragment {
 
     HashSet<String> favoritesList;
     public final static Logger logger = Logger.getLogger("FavoritesFragment");
@@ -49,6 +49,17 @@ public class FavoritesFragment extends FavoritesFileStorage {
         }
 
         return rootView;
+    }
+
+    public TabHost.TabContentFactory createTabContent() {
+        return new TabHost.TabContentFactory() {
+            /*
+            @Override
+            public View createTabContent(String tag) {
+                setDisplayContent(Integer.parseInt(tag));
+                return ;
+            }*/
+        };
     }
 
     public void setButtonListeners(View entryView, final String favorite){
