@@ -31,7 +31,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 
 
-public class MenuFragment extends BaseFavoritesFragment implements AdapterView.OnItemSelectedListener, Runnable {
+public class MenuFragment extends BaseTabbedFragment implements AdapterView.OnItemSelectedListener, Runnable {
 
     public final static Logger logger = Logger.getLogger("MenuFragment");
     private TableLayout menuTable;
@@ -64,7 +64,7 @@ public class MenuFragment extends BaseFavoritesFragment implements AdapterView.O
         this.fillSpinnerWithDates();
 
         try {
-            favoritesList = fillFavoritesList();
+            favoritesList = fillFavoritesList(diningCommon);
         } catch(IOException e){
             e.printStackTrace();
         } catch(NullPointerException e){
@@ -109,8 +109,6 @@ public class MenuFragment extends BaseFavoritesFragment implements AdapterView.O
             String currentCategory = "Default";
 
             for(MenuItem item : menu.menuItems) {
-
-
                 if(!item.menuCategory.name.equals(currentCategory)) {
                     TableRow categoryRow = new TableRow(getActivity().getApplicationContext());
                     categoryRow.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
@@ -244,7 +242,7 @@ public class MenuFragment extends BaseFavoritesFragment implements AdapterView.O
                     favoritesList.remove(menuItemName);
                 }
                 try {
-                    writeFavorites(favoritesList);
+                    writeFavorites(favoritesList, diningCommon);
                 } catch(IOException e){ e.printStackTrace();
                 } catch(NullPointerException e){ e.printStackTrace(); }
 
