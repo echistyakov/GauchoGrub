@@ -18,6 +18,7 @@ import android.widget.ListView;
 
 import com.g10.gauchogrub.dining_cams.DiningCamsFragment;
 import com.g10.gauchogrub.notification.NotificationService;
+import com.g10.gauchogrub.utils.CacheUtils;
 
 import java.util.logging.Logger;
 
@@ -77,6 +78,7 @@ public class BaseActivity extends ActionBarActivity {
             Intent serviceIntent = new Intent("com.g10.gauchogrub.notification.NotificationService");
             this.startService(serviceIntent);
         }
+        CacheUtils.deleteOldMenus(this);
     }
 
     @Override

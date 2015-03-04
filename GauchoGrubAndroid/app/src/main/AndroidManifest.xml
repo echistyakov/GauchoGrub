@@ -34,13 +34,18 @@
         <service
             android:name=".notification.NotificationService"
             android:enabled="true"
-            android:exported="false" >
+            android:exported="true"
+            android:label="FavoritesNotifications">
         </service>
 
         <receiver
             android:name=".notification.BootReceiver"
             android:enabled="true"
-            android:exported="true" >
+            android:exported="true"
+            android:label="BootReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
         </receiver>
     </application>
 

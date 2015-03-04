@@ -2,6 +2,9 @@ package com.g10.gauchogrub.utils;
 
 import android.content.Context;
 import android.net.http.HttpResponseCache;
+import android.provider.ContactsContract;
+
+import org.joda.time.DateTime;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -13,6 +16,10 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -38,8 +45,19 @@ public class CacheUtils {
         return false;
    }
 
-    public void deleteOldMenus(){
-
+    public static void deleteOldMenus(Context context){
+        File file = new File(context.getApplicationContext().getCacheDir().toURI());
+        File[] files = file.listFiles();
+        for (File f : files) {
+            String name = f.getName();
+            DateTime yesterday = new DateTime().minusDays(3);
+            DateFormat dateFormat = new SimpleDateFormat("MMddyyyy");
+            if(name.contains(dateFormat.format(yesterday))) {
+                if(!f.delete()){
+                    f.deleteOnExit();
+                }
+            }
+        }
     }
 
     public String readCachedFile(Context context, String fileName) {
