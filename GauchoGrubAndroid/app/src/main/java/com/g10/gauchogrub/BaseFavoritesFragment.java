@@ -17,14 +17,14 @@ import java.util.logging.Logger;
  * Created by VictorPorter on 2/28/15.
  * This class reads/writes from/to a HashSet and reads/writes from/to a file called favorites, that is stored within the Application
  */
-public abstract class FavoritesFileStorage extends Fragment {
+public abstract class BaseFavoritesFragment extends BaseTabbedFragment {
 
     public final static Logger logger = Logger.getLogger("FavoritesFragment");
 
     public boolean writeFavorites(HashSet<String> favoritesList) throws IOException {
         OutputStreamWriter outStream;
         try {
-            outStream = new OutputStreamWriter(getActivity().getApplicationContext().openFileOutput("favorites.ser", Context.MODE_PRIVATE)); //new FileOutputStream(favoritesFile);
+            outStream = new OutputStreamWriter(getActivity().getApplicationContext().openFileOutput("favorites", Context.MODE_PRIVATE)); //new FileOutputStream(favoritesFile);
             for (String thisfavorite : favoritesList) {
                 outStream.write(thisfavorite + "\n");
                 logger.info("Writing String " + thisfavorite);
@@ -40,7 +40,7 @@ public abstract class FavoritesFileStorage extends Fragment {
         HashSet<String> favoritesList = new HashSet<>();
 
         try {
-            inStream = getActivity().getApplicationContext().openFileInput("favorites.ser");
+            inStream = getActivity().getApplicationContext().openFileInput("favorites");
             if (inStream != null) {
                 InputStreamReader inputStreamReader = new InputStreamReader(inStream);
                 BufferedReader bufferedReader = new BufferedReader(inputStreamReader);

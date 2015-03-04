@@ -1,6 +1,5 @@
 package com.g10.gauchogrub.dining_cams;
 
-import android.app.Fragment;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -8,16 +7,14 @@ import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ImageView;
-import android.widget.Button;
 import android.widget.TabHost;
 
+import com.g10.gauchogrub.BaseTabbedFragment;
 import com.g10.gauchogrub.R;
 
 
-public class DiningCamsFragment extends Fragment implements Runnable {
+public class DiningCamsFragment extends BaseTabbedFragment implements Runnable {
 
     private DiningCam currentCam;
     private Handler handler;
@@ -32,16 +29,16 @@ public class DiningCamsFragment extends Fragment implements Runnable {
         this.handler = new Handler();
 
         TabHost tabs = (TabHost)rootView.findViewById(R.id.tabHost);
-        this.setUpTabs(tabs);
+        this.setUpTabs(tabs, createTabContent(), 3);
 
         return rootView;
     }
 
-    public void setCam(String tag) {
+    public void setDisplayContent(int tag) {
         // An item was selected. You can retrieve the selected item using
         // parent.getItemAtPosition(pos)
         String[] camUrls = new String[]{DiningCam.Carrillo, DiningCam.DeLaGuerra, DiningCam.Ortega};
-        String camUrl = camUrls[Integer.parseInt(tag)];
+        String camUrl = camUrls[tag];
         this.currentCam = new DiningCam(camUrl);
         this.startCam();
     }
@@ -93,34 +90,12 @@ public class DiningCamsFragment extends Fragment implements Runnable {
         }
     }
 
-    public void setUpTabs(TabHost tabs){
-        String[] commons = new String[] {"Carillo","DLG","Ortega","Portola"};
-
-        //Set the initial tab content
-        TabHost.TabContentFactory contentCreate = new TabHost.TabContentFactory() {
-            @Override
+    public TabHost.TabContentFactory createTabContent(){
+        return new TabHost.TabContentFactory() {
             public View createTabContent(String tag) {
-                if(!tag.equals("3")) { setCam(tag); }
-                return (imageView);
+                setDisplayContent(Integer.parseInt(tag));
+                return imageView;
             }
         };
-        tabs.setup();
-        //Create tabs and set text & content
-        for(int i = 0; i < 4 ; i ++) {
-            TabHost.TabSpec tab = tabs.newTabSpec(i + "");
-            tab.setContent(contentCreate);
-            tab.setIndicator(commons[i]);
-            tabs.addTab(tab);
-        }
-        //Set tab listeners to change content when triggered
-        tabs.setOnTabChangedListener(new TabHost.OnTabChangeListener(){
-            @Override
-            public void onTabChanged(String tabId) {
-                if(!tabId.equals("3")) { setCam(tabId); }
-            }});
     }
-
-
-
-
 }

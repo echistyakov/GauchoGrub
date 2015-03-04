@@ -1,7 +1,7 @@
 package com.g10.gauchogrub.dining_cams;
 
 import android.graphics.Bitmap;
-import com.g10.gauchogrub.io.WebUtils;
+import com.g10.gauchogrub.utils.WebUtils;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Date;
@@ -16,7 +16,7 @@ public class DiningCam {
     public final static String Carrillo = "http://diningcams.housing.ucsb.edu/Image/Carrillo?";
     public final static String DeLaGuerra = "http://diningcams.housing.ucsb.edu/Image/DeLaGuerra?";
     public final static String Ortega = "http://diningcams.housing.ucsb.edu/Image/Ortega?";
-    // There is no DiningCam for Portolla
+    // There is no DiningCam for Portola
 
     public final static Logger logger = Logger.getLogger("DiningCam");
 
