@@ -34,6 +34,8 @@
         <service
             android:name=".notification.NotificationService"
             android:enabled="true"
+            android:process=":notificationProcess"
+            android:icon="@drawable/ic_launcher"
             android:label="FavoritesNotifications">
         </service>
 

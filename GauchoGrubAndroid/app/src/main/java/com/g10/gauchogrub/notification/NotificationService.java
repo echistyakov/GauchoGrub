@@ -39,14 +39,10 @@ public class NotificationService extends Service {
     public static Logger logger = Logger.getLogger("NotificationService");
     private PowerManager.WakeLock myWakeLock;
 
-    public NotificationService() {
-
-    }
-
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         handleIntent(intent);
-        return super.onStartCommand(intent, flags, startId);
+        return Service.START_NOT_STICKY;
     }
 
     private void handleIntent(Intent intent) {
@@ -73,7 +69,7 @@ public class NotificationService extends Service {
             }
             NotificationCompat.Builder builder = new NotificationCompat.Builder(getBaseContext())
                     .setSmallIcon(R.drawable.ic_launcher)
-                    .setContentTitle("")
+                    .setContentTitle("Favorite Foods Served Today")
                     .setContentText("")
                     .setDefaults(Notification.DEFAULT_ALL)
                     .setStyle(new NotificationCompat.BigTextStyle().bigText(fullMessage));
@@ -83,6 +79,7 @@ public class NotificationService extends Service {
             builder.setContentIntent(contentIntent);
             NotificationManager nManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
             nManager.notify(1, builder.build());
+            stopSelf();
             return null;
         }
 
