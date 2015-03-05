@@ -1,5 +1,6 @@
 package com.g10.gauchogrub;
 
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -7,6 +8,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TabHost;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -21,7 +24,12 @@ public class FavoritesFragment extends BaseTabbedFragment {
 
     HashSet<String> favoritesList;
     public final static Logger logger = Logger.getLogger("FavoritesFragment");
+
     private TableLayout favoritesTable;
+    private RelativeLayout buttonLayout;
+    private TableRow currentSelectedItem = null;
+    private View currentButtonBar;
+
     private String diningCommon = "Carillo";
 
     @Override
@@ -29,27 +37,57 @@ public class FavoritesFragment extends BaseTabbedFragment {
         favoritesList = new HashSet<>();
         View rootView = inflater.inflate(R.layout.favorites_fragment, container, false);
         favoritesTable = (TableLayout)rootView.findViewById(R.id.favorites_table);
+        buttonLayout = (RelativeLayout)rootView.findViewById(R.id.bottombar);
+
         TabHost tabs = (TabHost) rootView.findViewById(R.id.tabHost2);
         this.setUpTabs(tabs, createTabContent(), 4);
-        try {
-            favoritesList = fillFavoritesList(diningCommon);
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (NullPointerException e) {
-            e.printStackTrace();
-        }
+
         return rootView;
     }
 
     private void inflateFavorites() {
+        favoritesTable.removeAllViews();
+
         for(final String favorite : favoritesList) {
-            TableRow favoriteRow = new TableRow(getActivity().getApplicationContext());
+            final TableRow favoriteRow = new TableRow(getActivity().getApplicationContext());
             favoriteRow.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
             View entryView = LayoutInflater.from(getActivity().getApplicationContext()).inflate(R.layout.favorites_entry, null);
 
-            TextView favoriteView = (TextView)entryView.findViewById(R.id.meal_cat);
+            final View buttonBar = LayoutInflater.from(getActivity().getApplicationContext()).inflate(R.layout.meal_entry_buttons, null);
+            final TextView favoriteView = (TextView)entryView.findViewById(R.id.meal_cat);
             favoriteView.setText(favorite);
-            setButtonListeners(entryView,favorite);
+
+            favoriteView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    //A user click a different menu item than previously selected
+                    if(currentSelectedItem != favoriteRow || currentSelectedItem == null) {
+                        //Switching from one selected item to another
+                        if(currentSelectedItem != null){
+                            currentSelectedItem.setBackgroundColor(0);
+                            buttonLayout.removeView(currentButtonBar);
+                        }
+                        //This happens every time a new item is selected
+                        favoriteRow.setBackgroundColor(Color.LTGRAY);
+                        currentSelectedItem = favoriteRow;
+                        currentButtonBar = buttonBar;
+                        buttonLayout.addView(buttonBar);
+                    }
+                    //A user clicks the same menu item that was already selected
+                    else if(currentSelectedItem == favoriteRow) {
+                        favoriteRow.setBackgroundColor(0);
+                        buttonLayout.removeView(currentButtonBar);
+                        currentSelectedItem = null;
+                        currentButtonBar = null;
+                    }
+                }
+            });
+
+            setButtonListeners(buttonBar,favorite);
+
+            ImageButton favButton = (ImageButton) buttonBar.findViewById(R.id.favoriteButton);
+            favButton.setBackgroundResource(R.drawable.ic_action_favorite_on);
+
 
             favoriteRow.addView(entryView);
             favoritesTable.addView(favoriteRow);
@@ -60,13 +98,17 @@ public class FavoritesFragment extends BaseTabbedFragment {
         return new TabHost.TabContentFactory() {
             @Override
             public View createTabContent(String tag) {
-                setDisplayContent(Integer.parseInt(tag));
+                favoritesTable.removeAllViews();
                 return favoritesTable;
             }
         };
     }
 
     public void setDisplayContent(int tag) {
+        buttonLayout.removeView(currentButtonBar);
+        currentSelectedItem = null;
+        currentButtonBar = null;
+
         String[] commons = new String[] {"Carillo","De_La_Guerra","Ortega","Portola"};
         diningCommon = commons[tag];
         run();
@@ -77,7 +119,10 @@ public class FavoritesFragment extends BaseTabbedFragment {
             @Override
             protected HashSet<String> doInBackground(Void... v) {
                 try {
-                    fillFavoritesList(diningCommon);
+                    favoritesList = fillFavoritesList(diningCommon);
+                    for(String test : favoritesList){
+                        logger.info("list contains: " + test);
+                    }
                 } catch(Exception e) {
                     logger.log(Level.INFO, e.getMessage());
                 }

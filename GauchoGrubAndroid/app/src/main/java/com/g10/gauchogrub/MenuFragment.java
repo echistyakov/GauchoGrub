@@ -173,6 +173,7 @@ public class MenuFragment extends BaseTabbedFragment implements AdapterView.OnIt
         }
     }
 
+    //This runnable begins a series of calls to get and display menus
     @Override
     public void run() {
         new AsyncTask<Void, Void, ArrayList<Menu>>() {
@@ -195,12 +196,30 @@ public class MenuFragment extends BaseTabbedFragment implements AdapterView.OnIt
         }.execute();
     }
 
+
     public void setDisplayContent(int tag) {
+        //When switching Dining Commons, Remove button bar
+        buttonLayout.removeView(currentBar);
+        currentSelectedItem = null;
+        currentBar = null;
+
+        //Set Dining Common String to new Tab
         String[] commons = new String[] {"Carillo","De_La_Guerra","Ortega","Portola"};
         diningCommon = commons[tag];
+
+        //Update favorites list corresponding to the tabbed Dining Common
+        try {
+            favoritesList = fillFavoritesList(diningCommon);
+        } catch(IOException e){
+            e.printStackTrace();
+        } catch(NullPointerException e){
+            e.printStackTrace();
+        }
+
         run();
     }
 
+    //This function is called when a user clicks a different tab
     public TabHost.TabContentFactory createTabContent() {
         return new TabHost.TabContentFactory() {
             @Override
@@ -211,6 +230,7 @@ public class MenuFragment extends BaseTabbedFragment implements AdapterView.OnIt
         };
     }
 
+    //function to fill drop down menu with the next seven dates
     public void fillSpinnerWithDates(){
         DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
         Date date = new Date();
