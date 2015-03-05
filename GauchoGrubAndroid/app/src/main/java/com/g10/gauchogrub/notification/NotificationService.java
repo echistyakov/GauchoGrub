@@ -132,7 +132,7 @@ public class NotificationService extends Service {
         return notifications;
     }
 
-    public HashSet<String> fillFavoritesList(String diningCommon) {
+    private HashSet<String> fillFavoritesList(String diningCommon) {
         String tempFavorite = "";
         FileInputStream inStream = null;
         HashSet<String> favoritesList = new HashSet<>();

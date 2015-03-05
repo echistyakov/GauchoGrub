@@ -39,7 +39,8 @@ public class CacheUtils {
    }
 
     public static void deleteOldMenus(Context context){
-        File file = new File(context.getApplicationContext().getCacheDir().toURI());
+        try {
+            File file = new File(context.getCacheDir().getAbsolutePath());
             File[] files = file.listFiles();
             for (File f : files) {
                 String name = f.getName();
@@ -50,6 +51,10 @@ public class CacheUtils {
                         f.deleteOnExit();
                     }
                 }
+            }
+        }
+        catch (Exception ex) {
+            logger.log(Level.SEVERE, ex.getMessage());
         }
     }
 

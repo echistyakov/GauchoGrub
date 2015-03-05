@@ -15,10 +15,6 @@ public class BootReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         if("android.intent.action.BOOT_COMPLETED".equals(intent.getAction())) {
-            Intent serviceIntent = new Intent("com.g10.gauchogrub.notification.NotificationService");
-            context.startService(serviceIntent);
-        }
-
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         Intent timedIntent = new Intent(context, NotificationService.class);
         PendingIntent pendingIntent = PendingIntent.getService(context, 0, timedIntent, 0);
@@ -29,5 +25,6 @@ public class BootReceiver extends BroadcastReceiver {
         calendar.set(Calendar.SECOND, 0);
         alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
                 60*1000, pendingIntent);
+        }
     }
 }
