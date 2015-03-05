@@ -147,8 +147,7 @@ public class MenuFragment extends BaseTabbedFragment implements AdapterView.OnIt
     }
 
     public void setDisplayContent(int tag) {
-        String[] commons = new String[] {"Carillo","De_La_Guerra","Ortega","Portola"};
-        diningCommon = commons[tag];
+        diningCommon = diningCommons[tag];
         run();
     }
 

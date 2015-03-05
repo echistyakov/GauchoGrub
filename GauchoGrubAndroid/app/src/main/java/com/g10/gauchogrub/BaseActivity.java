@@ -1,8 +1,10 @@
 package com.g10.gauchogrub;
 
 import android.app.ActivityManager;
+import android.app.AlarmManager;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v4.widget.DrawerLayout;
@@ -20,6 +22,7 @@ import com.g10.gauchogrub.dining_cams.DiningCamsFragment;
 import com.g10.gauchogrub.notification.NotificationService;
 import com.g10.gauchogrub.utils.CacheUtils;
 
+import java.util.Calendar;
 import java.util.logging.Logger;
 
 /*
@@ -74,10 +77,18 @@ public class BaseActivity extends ActionBarActivity {
             }
         };
         navDrawerLayout.setDrawerListener(navDrawerToggle);
-        if(!notificationServiceRunning()) {
-            Intent serviceIntent = new Intent("com.g10.gauchogrub.notification.NotificationService");
-            this.startService(serviceIntent);
-        }
+        //makes sure notifications are running
+        AlarmManager alarmManager = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
+        Intent timedIntent = new Intent(this, NotificationService.class);
+        PendingIntent pendingIntent = PendingIntent.getService(this, 0, timedIntent, 0);
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.HOUR_OF_DAY, 8);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
+                60 * 1000, pendingIntent);
+        //Delete menus that are 3 days old
         CacheUtils.deleteOldMenus(this);
     }
 
