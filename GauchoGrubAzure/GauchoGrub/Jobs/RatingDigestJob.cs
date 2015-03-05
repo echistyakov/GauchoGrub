@@ -5,6 +5,7 @@ using System.Data.Entity.Migrations;
 using System.Web;
 using Quartz;
 using GauchoGrub.Models;
+using System.Diagnostics;
 
 namespace GauchoGrub.Jobs
 {
@@ -14,6 +15,7 @@ namespace GauchoGrub.Jobs
 
         public void Execute(IJobExecutionContext context)
         {
+            System.Diagnostics.Trace.WriteLine("Performing RatingDigest Job");
             foreach (UserRating ur in db.UserRatings)
             {
                 int increment = (ur.PositiveRating) ? 1 : 0;
