@@ -21,7 +21,6 @@ public class SplashScreen extends Activity {
         setContentView(R.layout.splash_layout);
 
         new Handler().postDelayed(new Runnable() {
-
             @Override
             public void run() {
                 Intent i = new Intent(SplashScreen.this, BaseActivity.class);
@@ -33,7 +32,5 @@ public class SplashScreen extends Activity {
 
             }
         }, splashInterval);
-
     }
-
 }

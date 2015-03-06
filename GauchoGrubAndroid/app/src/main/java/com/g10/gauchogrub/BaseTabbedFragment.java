@@ -5,9 +5,6 @@ import android.widget.TabHost;
 import android.widget.TabHost.TabSpec;
 import android.widget.TabHost.TabContentFactory;
 
-/**
- * Created by elswenson on 2/28/2015.
- */
 public abstract class BaseTabbedFragment extends Fragment {
 
     public abstract void setDisplayContent(int tag);

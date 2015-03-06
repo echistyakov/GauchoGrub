@@ -98,7 +98,4 @@ public class DiningCamsFragment extends BaseTabbedFragment implements Runnable {
             }
         };
     }
-
-
-
 }

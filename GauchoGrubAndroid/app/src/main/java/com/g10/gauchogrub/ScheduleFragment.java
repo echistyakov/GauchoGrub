@@ -24,12 +24,10 @@ public class ScheduleFragment extends BaseTabbedFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.schedule_fragment, container, false);
-
         this.scheduleTable = (TableLayout) rootView.findViewById(R.id.schedule_table);
         //Create page tabs
         TabHost tabs = (TabHost)rootView.findViewById(R.id.tabHost);
         this.setUpTabs(tabs, createTabContent(), 4);
-
         return rootView;
     }
 
@@ -183,5 +181,4 @@ public class ScheduleFragment extends BaseTabbedFragment {
             }
         };
     }
-
 }
