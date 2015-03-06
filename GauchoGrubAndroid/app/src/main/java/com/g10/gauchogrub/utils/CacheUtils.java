@@ -20,6 +20,8 @@ public class CacheUtils {
 
     public final static Logger logger = Logger.getLogger("CachingUtils");
 
+    private final static long MAX_SIZE = 5244880L;  // 5MB
+
     public CacheUtils() {
     }
 
@@ -37,26 +39,6 @@ public class CacheUtils {
         }
         return false;
    }
-
-    public static void deleteOldMenus(Context context){
-        try {
-            File file = new File(context.getCacheDir().getAbsolutePath());
-            File[] files = file.listFiles();
-            for (File f : files) {
-                String name = f.getName();
-                DateTime deleteFrom = new DateTime().minusDays(3);
-                DateFormat dateFormat = new SimpleDateFormat("MMddyyyy");
-                if(name.contains(dateFormat.format(deleteFrom))) {
-                    if(!f.delete()){
-                        f.deleteOnExit();
-                    }
-                }
-            }
-        }
-        catch (Exception ex) {
-            logger.log(Level.SEVERE, ex.getMessage());
-        }
-    }
 
     public String readCachedFile(Context context, String fileName) {
         FileInputStream inputStream;
@@ -83,24 +65,35 @@ public class CacheUtils {
         }
     }
 
+    private static long getDirSize(File dir) {
+        int size = 0;
+        File[] files = dir.listFiles();
+        for(File file : files) {
+            if(file.isFile()) {
+                size += file.length();
+            }
+        }
+        return size;
+    }
 
-        /*File file = new File(context.getCacheDir(), fileName);
-        if(file.exists() && file.isFile()) {
-            char c;
-            StringBuffer buffer = new StringBuffer();
-            try {
-                FileReader reader = new FileReader(file);
-                while ( (c = (char) reader.read()) != -1) {
-                    buffer.append(c);
+
+    public static void deleteOldMenus(Context context){
+        try {
+            File file = new File(context.getCacheDir().getAbsolutePath());
+            File[] files = file.listFiles();
+            for (File f : files) {
+                String name = f.getName();
+                DateTime deleteFrom = new DateTime().minusDays(1);
+                DateFormat dateFormat = new SimpleDateFormat("MMddyyyy");
+                if(name.contains(dateFormat.format(deleteFrom))) {
+                    if(!f.delete())
+                        logger.log(Level.SEVERE, "Failed to delete " + f.getName() + " from cache");
                 }
             }
-            catch (Exception ex) {
-                logger.log(Level.INFO, ex.getMessage());
-            }
-            return buffer.toString();
         }
-        return "";
-    }*/
-
+        catch (Exception ex) {
+            logger.log(Level.SEVERE, ex.getMessage());
+        }
+    }
 
 }
