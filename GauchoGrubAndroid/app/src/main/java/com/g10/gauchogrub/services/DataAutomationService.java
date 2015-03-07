@@ -65,10 +65,10 @@ public class DataAutomationService extends Service{
             DateFormat saveFormat = new SimpleDateFormat("MMddyyyy"); //TODO: Replace with static in CachingUtils class later
 
             for(int i = 0; i < 7; i++) {
-                String requestDate = requestFormat.format(day.minusDays(i));
+                String requestDate = requestFormat.format(day.plusDays(i));
                 try {
                     String menu = w.createMenuString("diningCommon", requestDate); //TODO: Replace "diningCommon" once merged with T-47
-                    String saveDate = saveFormat.format(day.minusDays(i));
+                    String saveDate = saveFormat.format(day.plusDays(i));
                     //TODO: Cache menus
 
                 }
