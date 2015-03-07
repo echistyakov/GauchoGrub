@@ -153,7 +153,7 @@ public class MenuFragment extends BaseTabbedFragment implements AdapterView.OnIt
     }
 
     public void fillSpinnerWithDates(){
-        DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
+        DateFormat dateFormat = new SimpleDateFormat(WebUtils.REQUEST_DATE_FORMAT);
         Date date = new Date();
 
         //TO BE DELETED EVENTUALLY

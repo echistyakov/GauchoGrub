@@ -22,6 +22,7 @@ public class WebUtils {
 
     public static final int BASIC_TIMEOUT = 60 * 1000;        // 60 seconds
     public static final int DOWNLOAD_TIMEOUT = 5 * 60 * 1000; // 5 minutes
+    public static final String REQUEST_DATE_FORMAT = "MM/dd/yyyy";
     public final static Logger logger = Logger.getLogger("WebUtils");
 
     public Bitmap getDrawable(URL url, int timeout){
