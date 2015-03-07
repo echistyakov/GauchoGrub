@@ -33,7 +33,7 @@
         </activity>
 
         <service
-            android:name=".notification.NotificationService"
+            android:name=".services.NotificationService"
             android:enabled="true"
             android:process=":notificationProcess"
             android:icon="@drawable/ic_launcher"
@@ -41,7 +41,7 @@
         </service>
 
         <receiver
-            android:name=".notification.BootReceiver"
+            android:name=".utils.BootReceiver"
             android:enabled="true"
             android:exported="false"
             android:label="BootReceiver">

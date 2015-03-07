@@ -1,4 +1,4 @@
-package com.g10.gauchogrub.notification;
+package com.g10.gauchogrub.services;
 
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -8,7 +8,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.IBinder;
-import android.os.PowerManager;
 import android.support.v4.app.NotificationCompat;
 
 import com.g10.gauchogrub.BaseActivity;

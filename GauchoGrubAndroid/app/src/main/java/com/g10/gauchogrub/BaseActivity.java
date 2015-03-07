@@ -19,7 +19,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.g10.gauchogrub.dining_cams.DiningCamsFragment;
-import com.g10.gauchogrub.notification.NotificationService;
+import com.g10.gauchogrub.services.NotificationService;
 import com.g10.gauchogrub.utils.CacheUtils;
 
 import java.util.Calendar;

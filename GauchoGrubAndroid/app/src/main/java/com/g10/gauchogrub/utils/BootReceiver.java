@@ -1,10 +1,12 @@
-package com.g10.gauchogrub.notification;
+package com.g10.gauchogrub.utils;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+
+import com.g10.gauchogrub.services.NotificationService;
 
 import java.util.Calendar;
 
