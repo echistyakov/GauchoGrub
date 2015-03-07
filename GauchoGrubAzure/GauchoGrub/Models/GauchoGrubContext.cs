@@ -33,6 +33,10 @@ namespace GauchoGrub.Models
         public System.Data.Entity.DbSet<GauchoGrub.Models.MenuCategory> MenuCategories { get; set; }
 
         public System.Data.Entity.DbSet<GauchoGrub.Models.MenuItemType> MenuItemTypes { get; set; }
+
+        public System.Data.Entity.DbSet<GauchoGrub.Models.Rating> Ratings { get; set; }
+
+        public System.Data.Entity.DbSet<GauchoGrub.Models.UserRating> UserRatings { get; set; }
     
     }
 }

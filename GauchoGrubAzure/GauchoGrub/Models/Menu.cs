@@ -11,6 +11,7 @@ namespace GauchoGrub.Models
     [DataContract]
     public class Menu
     {
+        [DataMember]
         public int Id { get; set; }
 
         [Required]

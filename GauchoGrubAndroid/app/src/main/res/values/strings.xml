@@ -15,6 +15,7 @@
         <item>Schedule</item>
         <item>Dining Cams</item>
         <item>Favorites</item>
+        <item>Swipes</item>
     </string-array>
     <string-array
         name="dining_commons_array">
