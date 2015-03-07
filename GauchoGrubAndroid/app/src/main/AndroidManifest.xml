@@ -2,6 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.g10.gauchogrub" >
 
+    <!--PERMISSIONS-->
+    <uses-permission android:name="android.permission.INTERNET"/>
+
     <application
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
@@ -26,9 +29,35 @@
             android:configChanges="keyboardHidden|orientation|screenSize">
         </activity>
 
+        <service
+            android:name=".services.DataAutomationService"
+            android:enabled="true"
+            android:process="cachingAutomationProcess"
+            android:icon="@drawable/ic_launcher"
+            android:label="MenuCaching" >
+        </service>
+
+        <receiver
+            android:name="com.g10.gauchogrub.utils.InternetReceiver"
+            android:enabled="true"
+            android:exported="false"
+            android:label="InternetReceiver">
+            <intent-filter>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+            </intent-filter>
+        </receiver>
+
+        <receiver
+            android:name="com.g10.gauchogrub.utils.BootReceiver"
+            android:enabled="true"
+            android:exported="false"
+            android:label="BootReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+
     </application>
 
-    <!--PERMISSIONS-->
-    <uses-permission android:name="android.permission.INTERNET"/>
 
 </manifest>
