@@ -161,7 +161,7 @@ public class MenuFragment extends BaseTabbedFragment implements AdapterView.OnIt
                 if(favoritesList.contains(item.title)) { favoriteButton.setBackgroundResource(R.drawable.ic_action_favorite_on); }
 
                 //TODO set up like and dislike button listeners
-                setButtonListeners(buttonBar, (String) menuTypeView.getText());
+                setButtonListeners(buttonBar, (String) menuTypeView.getText(), menu, item);
 
                 TextView menuTimeView = (TextView) entryView.findViewById(R.id.meal_time);
                 menuTimeView.setText(item.menuItemType.getShortVersion());
@@ -244,12 +244,15 @@ public class MenuFragment extends BaseTabbedFragment implements AdapterView.OnIt
         }
     }
 
-    public void setButtonListeners(View entryView, final String menuItemName){
+    public void setButtonListeners(View entryView, final String menuItemName, Menu menu, MenuItem item){
         final ImageButton favorite = (ImageButton) entryView.findViewById(R.id.favoriteButton);
         final ImageButton like = (ImageButton) entryView.findViewById(R.id.thumbsUpButton);
         final ImageButton dislike = (ImageButton) entryView.findViewById(R.id.thumbsDownButton);
+        final int menuId = menu.id;
+        final int menuItemId = item.id;
+        final WebUtils wb = new WebUtils();
 
-        favorite.setOnClickListener(new View.OnClickListener() {
+        favorite.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View w){
                 final Drawable current = getResources().getDrawable(R.drawable.ic_action_favorite);
@@ -276,8 +279,16 @@ public class MenuFragment extends BaseTabbedFragment implements AdapterView.OnIt
                 Drawable current = getResources().getDrawable(R.drawable.ic_action_good);
                 if(like.getBackground().getConstantState().equals(current.getConstantState())) {
                     like.setBackgroundResource(R.drawable.ic_action_good_on);
+                    dislike.setBackgroundResource(R.drawable.ic_action_bad);
+                    try {
+                        String rated = wb.postRatings("hi", menuId, menuItemId, true);
+                        logger.info("Posted String " + rated);
+                    }
+                    catch(Exception e) {
+                        logger.log(Level.INFO, "failed");
+                    }
                 }
-                else { like.setBackgroundResource(R.drawable.ic_action_good); }
+                //else { like.setBackgroundResource(R.drawable.ic_action_good); }
             }
         });
 
@@ -287,8 +298,17 @@ public class MenuFragment extends BaseTabbedFragment implements AdapterView.OnIt
                 Drawable current = getResources().getDrawable(R.drawable.ic_action_bad);
                 if(dislike.getBackground().getConstantState().equals(current.getConstantState())) {
                     dislike.setBackgroundResource(R.drawable.ic_action_bad_on);
+                    like.setBackgroundResource(R.drawable.ic_action_good);
+                    try {
+                        String rated = wb.postRatings("hi", menuId, menuItemId, false);
+                        logger.info("Posted String " + rated);
+                    }
+                    catch(Exception e) {
+                        logger.log(Level.INFO, "failed");
+                    }
+
                 }
-                else { dislike.setBackgroundResource(R.drawable.ic_action_bad); }
+                //else { dislike.setBackgroundResource(R.drawable.ic_action_bad); }
             }
         });
     }

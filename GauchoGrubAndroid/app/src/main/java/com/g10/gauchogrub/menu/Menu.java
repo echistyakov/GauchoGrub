@@ -13,4 +13,6 @@ public class Menu {
     public RepeatedEvent event;
     @SerializedName("MenuItems")
     public ArrayList<MenuItem> menuItems;
+    @SerializedName("Id")
+    public int id;
 }

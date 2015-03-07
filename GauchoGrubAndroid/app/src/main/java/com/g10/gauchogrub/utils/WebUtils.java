@@ -120,6 +120,13 @@ public class WebUtils {
         return result;
     }
 
+    public String postRatings(String userId, int menuId, int menuItemId, boolean positive) throws Exception{
+        String ur = "http://gauchogrub.azurewebsites.net/api/UserRatings?userId=" + userId + "&menuId=" + menuId + "&menuItemId=" + menuItemId + "&positive=" + positive;
+        URL url = new URL(ur);
+        String result = httpRequest(url,HttpMethod.POST,100000);
+        return result;
+    }
+
     public enum HttpMethod {
         GET, POST, DELETE, PUT
     }
