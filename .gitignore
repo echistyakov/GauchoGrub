@@ -10,6 +10,7 @@
 /GauchoGrubAzure/GauchoGrub/bin
 /GauchoGrubAzure/GauchoGrub.Deployment/bin
 /GauchoGrubAzure/GauchoGrub/obj
+/GauchoGrubAzure/GauchoGrub/Properties/PublishProfiles
 *.mdf
 *.ldf
 GauchoGrubAzure/GauchoGrub.v12.suo

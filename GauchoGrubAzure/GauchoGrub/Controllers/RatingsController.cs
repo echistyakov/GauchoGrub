@@ -25,9 +25,9 @@ namespace GauchoGrub.Controllers
 
         // GET: api/Ratings/5
         [ResponseType(typeof(Rating))]
-        public async Task<IHttpActionResult> GetRating(int id)
+        public async Task<IHttpActionResult> GetRating(int menuItemId)
         {
-            Rating rating = await db.Ratings.FindAsync(id);
+            Rating rating = db.Ratings.Single(r => r.MenuItemId == menuItemId);
             if (rating == null)
             {
                 return NotFound();
