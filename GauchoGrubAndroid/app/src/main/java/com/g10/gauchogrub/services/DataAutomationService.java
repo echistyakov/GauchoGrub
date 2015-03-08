@@ -23,6 +23,13 @@ public class DataAutomationService extends Service{
 
     public static Logger logger = Logger.getLogger("DataAutomationService");
 
+    /**
+     * onStartCommand is the sequence of actions followed when the service is started
+     * @param intent the intent object that the service receives
+     * @param flags not used
+     * @param startId not used
+     * @return Service.START_NOT_STICKY indicates the service will not attempt to restart itself
+     */
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         new CleanCacheTask().execute();
@@ -30,11 +37,20 @@ public class DataAutomationService extends Service{
         return Service.START_NOT_STICKY;
     }
 
+    /**
+     * onBind is a required method that will bind the service if desired
+     * @param intent the intent object that the service receives
+     * @return null prevents binding of the service
+     */
     @Override
     public IBinder onBind(Intent intent) {
         return null;
     }
 
+    /**
+     * CleanCacheTask is a private inner class that is an AsyncTask to run
+     * a cache-cleaning process in a separate thread.
+     */
     private class CleanCacheTask extends AsyncTask<Void, Void, Void> {
         @Override
         protected Void doInBackground(Void... params) {
@@ -56,6 +72,11 @@ public class DataAutomationService extends Service{
         }
     }
 
+
+    /**
+     * UpdateDownloadsTask is a private inner class that is an AsyncTask to run
+     * a menu-downloading process in a separate thread.
+     */
     private class UpdateDownloadsTask extends AsyncTask<Void, Void, Void> {
         @Override
         protected Void doInBackground(Void... params) {

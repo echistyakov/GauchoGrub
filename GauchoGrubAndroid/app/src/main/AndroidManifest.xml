@@ -2,10 +2,12 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.g10.gauchogrub" >
 
+
     <!--PERMISSIONS-->
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
-
+    <uses-permission android:name="android.permission.CLEAR_APP_CACHE"/>
+    
     <application
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
@@ -39,9 +41,7 @@
         </service>
 
         <receiver
-            android:name="com.g10.gauchogrub.utils.InternetReceiver"
-            android:enabled="true"
-            android:exported="false"
+            android:name=".utils.InternetReceiver"
             android:label="InternetReceiver">
             <intent-filter>
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
@@ -49,16 +49,14 @@
         </receiver>
 
         <receiver
-            android:name="com.g10.gauchogrub.utils.BootReceiver"
-            android:enabled="true"
-            android:exported="false"
+            android:name=".utils.BootReceiver"
             android:label="BootReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.QUICKBOOT_POWERON"/>
             </intent-filter>
         </receiver>
 
     </application>
-
 
 </manifest>

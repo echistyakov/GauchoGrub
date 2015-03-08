@@ -13,6 +13,9 @@ import com.g10.gauchogrub.services.DataAutomationService;
 import java.util.Calendar;
 
 public class BootReceiver extends BroadcastReceiver {
+    /**
+     * BootReceiver() is an empty default
+     */
     public BootReceiver() {
     }
 
