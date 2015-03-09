@@ -9,6 +9,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
 import com.g10.gauchogrub.services.DataAutomationService;
+import com.g10.gauchogrub.services.NotificationService;
 
 import java.util.Calendar;
 
@@ -25,12 +26,23 @@ public class BootReceiver extends BroadcastReceiver {
         ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo netinfo = cm.getActiveNetworkInfo();
         Intent timedIntent = new Intent(context, DataAutomationService.class);
+
+        //sets up notification service
+        Intent notificationIntent = new Intent(context, NotificationService.class);
+        PendingIntent pendingNotificationIntent = PendingIntent.getService(context, 0, notificationIntent, 0);
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.HOUR_OF_DAY, 8);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        alarmManager.setRepeating(AlarmManager.RTC, calendar.getTimeInMillis(),
+                AlarmManager.INTERVAL_DAY, pendingNotificationIntent);
+
+
         if( netinfo != null && netinfo.isConnected()){
             context.startService(timedIntent);
         }
         else
         {
-            Calendar calendar = Calendar.getInstance();
             calendar.set(Calendar.HOUR_OF_DAY, 5);
             calendar.set(Calendar.MINUTE, 0);
             calendar.set(Calendar.SECOND, 0);

@@ -165,11 +165,7 @@ public class MenuFragment extends BaseTabbedFragment implements AdapterView.OnIt
                                 ratingTextView.setText(netRatings+"");
                             }
 
-
                             /* Backup - used for getting a rating on item clicked in menu
-
-
-
                             try {
                                 getRating(ratingTextView,id);
                             } catch (Exception e) {
