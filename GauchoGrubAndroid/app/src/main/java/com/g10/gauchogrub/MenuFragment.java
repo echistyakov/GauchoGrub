@@ -3,6 +3,7 @@ package com.g10.gauchogrub;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +19,9 @@ import com.g10.gauchogrub.utils.MenuParser;
 import com.g10.gauchogrub.menu.Menu;
 import com.g10.gauchogrub.menu.MenuItem;
 
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.Scanner;
 import java.util.logging.Level;
 import java.io.IOException;
 import java.util.HashSet;
@@ -85,6 +89,7 @@ public class MenuFragment extends BaseTabbedFragment implements AdapterView.OnIt
     public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
         TextView dateView = (TextView) view;
         date = dateView.getText().toString();
+        buttonLayout.removeAllViews();
         run();
     }
 
@@ -130,13 +135,30 @@ public class MenuFragment extends BaseTabbedFragment implements AdapterView.OnIt
                 TextView menuTypeView = (TextView) entryView.findViewById(R.id.meal_type);
                 menuTypeView.setText(item.title);
 
+                //final int Id = item.menuItemID;
+
+                Log.d("MenuFragment","hello" + item.title);
+                final TextView ratingTextView = (TextView) buttonBar.findViewById(R.id.ratingView);
+                final int id = item.menuItemID;
+
+
                 menuTypeView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         //A user click a different menu item than previously selected
-                        if(currentSelectedItem != entryRow || currentSelectedItem == null) {
+                        if (currentSelectedItem != entryRow || currentSelectedItem == null) {
+                            // get rating to display on buttonBar
+
+                            try {
+                                getRating(ratingTextView,id);
+                            } catch (Exception e) {
+                                ratingTextView.setText("Rating not found");
+                                e.printStackTrace();
+                            }
+
+
                             //Switching from one selected item to another
-                            if(currentSelectedItem != null){
+                            if (currentSelectedItem != null) {
                                 currentSelectedItem.setBackgroundColor(0);
                                 buttonLayout.removeView(currentBar);
                             }
@@ -147,7 +169,7 @@ public class MenuFragment extends BaseTabbedFragment implements AdapterView.OnIt
                             buttonLayout.addView(buttonBar);
                         }
                         //A user clicks the same menu item that was already selected
-                        else if(currentSelectedItem == entryRow) {
+                        else if (currentSelectedItem == entryRow) {
                             entryRow.setBackgroundColor(0);
                             buttonLayout.removeView(currentBar);
                             currentSelectedItem = null;
@@ -251,20 +273,22 @@ public class MenuFragment extends BaseTabbedFragment implements AdapterView.OnIt
 
         favorite.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View w){
+            public void onClick(View w) {
                 final Drawable current = getResources().getDrawable(R.drawable.ic_action_favorite);
-                if(favorite.getBackground().getConstantState().equals(current.getConstantState())) {
+                if (favorite.getBackground().getConstantState().equals(current.getConstantState())) {
                     favorite.setBackgroundResource(R.drawable.ic_action_favorite_on);
                     favoritesList.add(menuItemName);
-                }
-                else {
+                } else {
                     favorite.setBackgroundResource(R.drawable.ic_action_favorite);
                     favoritesList.remove(menuItemName);
                 }
                 try {
                     writeFavorites(favoritesList, diningCommon);
-                } catch(IOException e){ e.printStackTrace();
-                } catch(NullPointerException e){ e.printStackTrace(); }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (NullPointerException e) {
+                    e.printStackTrace();
+                }
 
 
             }
@@ -292,4 +316,46 @@ public class MenuFragment extends BaseTabbedFragment implements AdapterView.OnIt
             }
         });
     }
+
+        public int getOverallRating(String ratingString){
+            logger.info("hi" + ratingString);
+            int start1 = ratingString.indexOf(':')+1;
+            int end1 = ratingString.indexOf(',');
+            int start2 = ratingString.indexOf(':',end1)+1;
+            int end2 = ratingString.indexOf('}',start2);
+            int total = Integer.parseInt(ratingString.substring(start1, end1));
+            int positive = Integer.parseInt(ratingString.substring(start2,end2));
+            int negative = total - positive;
+            return positive - negative;
+        }
+
+
+    public void getRating(final TextView ratingView, final int menuItemID) throws Exception{
+        new AsyncTask<Void, Void, String>() {
+            @Override
+            protected String doInBackground(Void... v) {
+                try {
+                    WebUtils util = new WebUtils();
+                    return getOverallRating(util.getRating(menuItemID)) + "";
+                }
+                catch (Exception ex){
+                    ex.printStackTrace();
+                    return "rating not found";
+                }
+            }
+            @Override
+            protected void onPostExecute(String rating){
+                int x = Integer.parseInt(rating);
+                if (x >= 0) {
+                    ratingView.setTextColor(Color.rgb(8,124,39));
+                    rating = "+" + rating;
+                }
+                else { ratingView.setTextColor(Color.RED); }
+                ratingView.setText(rating);
+            }
+        }.execute();
+    }
+
+
+
 }
