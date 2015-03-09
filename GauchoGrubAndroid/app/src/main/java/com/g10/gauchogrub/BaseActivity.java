@@ -119,6 +119,8 @@ public class BaseActivity extends ActionBarActivity {
         } else if (position == 2){
             fragment = new DiningCamsFragment();
         } else if (position == 3){
+            fragment = new FavoritesFragment();
+        } else if (position == 4){
             fragment = new SwipesFragment();
         }
 
