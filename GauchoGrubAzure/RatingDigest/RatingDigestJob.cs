@@ -12,7 +12,7 @@ namespace RatingDigest
     {
         public static void Main()
         {
-            // Execute job synchronously
+            // Execute job
             new RatingDigestJob().Start();
         }
 
@@ -64,6 +64,7 @@ namespace RatingDigest
             return rating;
         }
 
+        // Tries adding a rating to DB
         private void TryAddRating(Rating r, GauchoGrubContext db)
         {
             try
