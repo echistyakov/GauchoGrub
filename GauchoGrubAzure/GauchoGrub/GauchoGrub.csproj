@@ -196,9 +196,9 @@
     <Compile Include="Controllers\DiningCommonsController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\MenusController.cs" />
-    <Compile Include="Controllers\RatingsController.cs" />
     <Compile Include="Controllers\RepeatedEventsController.cs" />
     <Compile Include="Controllers\UserRatingsController.cs" />
+    <Compile Include="DTO\MenuItemDTO.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
