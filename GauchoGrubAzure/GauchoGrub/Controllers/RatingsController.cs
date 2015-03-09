@@ -27,7 +27,7 @@ namespace GauchoGrub.Controllers
         [ResponseType(typeof(Rating))]
         public async Task<IHttpActionResult> GetRating(int menuItemId)
         {
-            Rating rating = db.Ratings.Single(r => r.MenuItemId == menuItemId);
+            Rating rating = db.Ratings.Where(r => r.MenuItemId == menuItemId).First();
             if (rating == null)
             {
                 return NotFound();

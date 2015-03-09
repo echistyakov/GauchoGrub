@@ -20,10 +20,12 @@ namespace GauchoGrub.Models
         public int MenuItemId { get; set; }  // Foreign Key
 
         [Required]
+        [DataMember]
         [DefaultValue(0)]
         public int TotalRatings { get; set; }  // TotalRatings for a specific MenuItem during a specific Menu
 
         [Required]
+        [DataMember]
         [DefaultValue(0)]
         public int PositiveRatings { get; set; }  // PositiveRatings for a specific MenuItem during a specific Menu
     }
