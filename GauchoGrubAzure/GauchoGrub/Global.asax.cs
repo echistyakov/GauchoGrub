@@ -19,8 +19,6 @@ namespace GauchoGrub
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
             GlobalConfiguration.Configuration.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Always;
-            // Schedule jobs
-            //JobScheduler.Start();
         }
     }
 }

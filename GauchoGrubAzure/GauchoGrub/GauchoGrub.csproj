@@ -196,7 +196,6 @@
     <Compile Include="Controllers\DiningCommonsController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\MenusController.cs" />
-    <Compile Include="Controllers\RatingsController.cs" />
     <Compile Include="Controllers\RepeatedEventsController.cs" />
     <Compile Include="Controllers\UserRatingsController.cs" />
     <Compile Include="Global.asax.cs">
@@ -249,9 +248,6 @@
     <Content Include="Areas\HelpPage\Views\Help\DisplayTemplates\ApiGroup.cshtml" />
     <Content Include="Areas\HelpPage\Views\Help\Api.cshtml" />
     <Content Include="ApplicationInsights.config" />
-    <None Include="job_scheduling_data_2_0.xsd">
-      <SubType>Designer</SubType>
-    </None>
     <None Include="Properties\PublishProfiles\gauchogrub - FTP.pubxml" />
     <None Include="Properties\PublishProfiles\gauchogrub - Web Deploy.pubxml" />
     <None Include="Properties\PublishProfiles\gauchogrub.pubxml" />

@@ -57,7 +57,7 @@ namespace RatingDigest
             {
                 rating = db.Ratings.Single(r => r.MenuId == menuId && r.MenuItemId == menuItemId);
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 rating = new Rating { MenuId = menuId, MenuItemId = menuItemId, PositiveRatings = 0, TotalRatings = 0 };
             }
@@ -71,7 +71,7 @@ namespace RatingDigest
             {
                 db.Ratings.Add(r);
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 // Do nothing
             }
