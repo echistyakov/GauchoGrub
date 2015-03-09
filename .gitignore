@@ -11,6 +11,9 @@
 /GauchoGrubAzure/GauchoGrub.Deployment/bin
 /GauchoGrubAzure/GauchoGrub/obj
 /GauchoGrubAzure/GauchoGrub/Properties/PublishProfiles
+/GauchoGrubAzure/GauchoGrub.v12.suo
 *.mdf
 *.ldf
-GauchoGrubAzure/GauchoGrub.v12.suo
+/GauchoGrubAzure/RatingDigest/bin
+/GauchoGrubAzure/RatingDigest/obj
+/GauchoGrubAzure/RatingDigest/Properties/PublishProfiles

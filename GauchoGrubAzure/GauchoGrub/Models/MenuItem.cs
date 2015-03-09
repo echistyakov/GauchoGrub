@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
@@ -35,5 +36,13 @@ namespace GauchoGrub.Models
         public String Title { get; set; }
 
         public ICollection<Menu> Menus { get; set; }  // Navigation property (Many-to-Many relationship)
+
+        [DataMember]
+        [DefaultValue(0)]
+        public int TotalRatings { get; set; }
+
+        [DataMember]
+        [DefaultValue(0)]
+        public int TotalPositiveRatings { get; set; }
     }
 }
