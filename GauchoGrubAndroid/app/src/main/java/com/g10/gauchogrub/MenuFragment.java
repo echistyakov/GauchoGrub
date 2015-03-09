@@ -140,6 +140,11 @@ public class MenuFragment extends BaseTabbedFragment implements AdapterView.OnIt
                 Log.d("MenuFragment","hello" + item.title);
                 final TextView ratingTextView = (TextView) buttonBar.findViewById(R.id.ratingView);
                 final int id = item.menuItemID;
+                final int totalPositiveRatings = item.totalPositiveRatings;
+                final int totalRating = item.totalRatings;
+
+                final int negativeRatings = totalRating - totalPositiveRatings;
+                final int netRatings = totalPositiveRatings - negativeRatings;
 
 
                 menuTypeView.setOnClickListener(new View.OnClickListener() {
@@ -147,7 +152,21 @@ public class MenuFragment extends BaseTabbedFragment implements AdapterView.OnIt
                     public void onClick(View v) {
                         //A user click a different menu item than previously selected
                         if (currentSelectedItem != entryRow || currentSelectedItem == null) {
-                            // get rating to display on buttonBar
+
+                            // display rating on buttonBar
+                            if (netRatings>=0) {
+                                ratingTextView.setTextColor(Color.rgb(8,124,39));
+                                ratingTextView.setText("+"+netRatings);
+
+                            } else {
+                                ratingTextView.setTextColor(Color.RED);
+                                ratingTextView.setText(netRatings+"");
+                            }
+
+
+                            /* Backup - used for getting a rating on item clicked in menu
+
+
 
                             try {
                                 getRating(ratingTextView,id);
@@ -155,7 +174,7 @@ public class MenuFragment extends BaseTabbedFragment implements AdapterView.OnIt
                                 ratingTextView.setText("Rating not found");
                                 e.printStackTrace();
                             }
-
+                            */
 
                             //Switching from one selected item to another
                             if (currentSelectedItem != null) {
