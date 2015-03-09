@@ -3,11 +3,13 @@ package com.g10.gauchogrub.utils;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
 
 import org.apache.http.util.ByteArrayBuffer;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
+import java.net.MalformedURLException;
 import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.io.IOException;
@@ -22,6 +24,7 @@ public class WebUtils {
 
     public static final int BASIC_TIMEOUT = 60 * 1000;        // 60 seconds
     public static final int DOWNLOAD_TIMEOUT = 5 * 60 * 1000; // 5 minutes
+    public static final String REQUEST_DATE_FORMAT = "MM/dd/yyyy";
     public final static Logger logger = Logger.getLogger("WebUtils");
 
     public Bitmap getDrawable(URL url, int timeout){
@@ -119,6 +122,19 @@ public class WebUtils {
         String result = httpRequest(url,HttpMethod.GET,100000);
         return result;
     }
+
+    public String getRating(final int menuItemID) throws Exception{
+                    String test = menuItemID + "";
+                    String ur = "http://gauchogrub.azurewebsites.net/api/Ratings?menuItemId=" + test;
+                    URL url = new URL(ur);
+                    String result = httpRequest(url,HttpMethod.GET,100000);
+                    return result;
+
+    }
+
+
+
+
 
     public enum HttpMethod {
         GET, POST, DELETE, PUT

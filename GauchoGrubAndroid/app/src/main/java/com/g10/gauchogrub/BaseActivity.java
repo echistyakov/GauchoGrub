@@ -139,6 +139,10 @@ public class BaseActivity extends ActionBarActivity {
             fragment = new ScheduleFragment();
         } else if (position == 2){
             fragment = new DiningCamsFragment();
+        } else if (position == 3){
+            fragment = new FavoritesFragment();
+        } else if (position == 4){
+            fragment = new SwipesFragment();
         }
 
         // Insert the fragment by replacing any existing fragment
