@@ -7,7 +7,8 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:background="#ff54d4ff"
-            style="@android:style/ButtonBar">
+            style="@android:style/ButtonBar"
+    android:clickable="false">
 
             <ImageButton  android:id="@+id/thumbsUpButton"
                 android:layout_width="35dp"

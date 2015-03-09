@@ -22,6 +22,7 @@ public class WebUtils {
 
     public static final int BASIC_TIMEOUT = 60 * 1000;        // 60 seconds
     public static final int DOWNLOAD_TIMEOUT = 5 * 60 * 1000; // 5 minutes
+    public static final String REQUEST_DATE_FORMAT = "MM/dd/yyyy";
     public final static Logger logger = Logger.getLogger("WebUtils");
 
     public Bitmap getDrawable(URL url, int timeout){
@@ -120,11 +121,11 @@ public class WebUtils {
         return result;
     }
 
-    public String postRatings(String userId, int menuId, int menuItemId, boolean positive) throws Exception{
+    public void postRatings(String userId, int menuId, int menuItemId, boolean positive) throws Exception{
         String ur = "http://gauchogrub.azurewebsites.net/api/UserRatings?userId=" + userId + "&menuId=" + menuId + "&menuItemId=" + menuItemId + "&positive=" + positive;
         URL url = new URL(ur);
-        String result = httpRequest(url,HttpMethod.POST,100000);
-        return result;
+        httpRequest(url,HttpMethod.POST,100000);
+
     }
 
     public enum HttpMethod {

@@ -3,6 +3,7 @@ package com.g10.gauchogrub;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,6 +31,9 @@ import java.util.Date;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 
+import android.provider.Settings.Secure;
+
+
 
 public class MenuFragment extends BaseTabbedFragment implements AdapterView.OnItemSelectedListener, Runnable {
 
@@ -38,6 +42,7 @@ public class MenuFragment extends BaseTabbedFragment implements AdapterView.OnIt
     private static String diningCommon;
     private static String date;
     private ArrayList<String> dates;
+    private String androidId;
 
     //Current Selected Menu Item
     private TableRow currentSelectedItem = null;
@@ -232,7 +237,7 @@ public class MenuFragment extends BaseTabbedFragment implements AdapterView.OnIt
 
     //function to fill drop down menu with the next seven dates
     public void fillSpinnerWithDates(){
-        DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
+        DateFormat dateFormat = new SimpleDateFormat(WebUtils.REQUEST_DATE_FORMAT);
         Date date = new Date();
 
         //TO BE DELETED EVENTUALLY
@@ -248,9 +253,12 @@ public class MenuFragment extends BaseTabbedFragment implements AdapterView.OnIt
         final ImageButton favorite = (ImageButton) entryView.findViewById(R.id.favoriteButton);
         final ImageButton like = (ImageButton) entryView.findViewById(R.id.thumbsUpButton);
         final ImageButton dislike = (ImageButton) entryView.findViewById(R.id.thumbsDownButton);
+
         final int menuId = menu.id;
         final int menuItemId = item.id;
         final WebUtils wb = new WebUtils();
+
+        final AndroidId idClass = new AndroidId();
 
         favorite.setOnClickListener(new View.OnClickListener(){
             @Override
@@ -276,13 +284,14 @@ public class MenuFragment extends BaseTabbedFragment implements AdapterView.OnIt
         like.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View w){
+                logger.info("clicked like");
                 Drawable current = getResources().getDrawable(R.drawable.ic_action_good);
                 if(like.getBackground().getConstantState().equals(current.getConstantState())) {
-                    like.setBackgroundResource(R.drawable.ic_action_good_on);
-                    dislike.setBackgroundResource(R.drawable.ic_action_bad);
+                    like.setImageResource(R.drawable.ic_action_good_on);
+                    dislike.setImageResource(R.drawable.ic_action_bad);
                     try {
-                        String rated = wb.postRatings("hi", menuId, menuItemId, true);
-                        logger.info("Posted String " + rated);
+                        wb.postRatings(idClass.getAndroidId(), menuId, menuItemId, true);
+                        logger.log(Level.INFO,"Posted rating good ");
                     }
                     catch(Exception e) {
                         logger.log(Level.INFO, "failed");
@@ -295,13 +304,14 @@ public class MenuFragment extends BaseTabbedFragment implements AdapterView.OnIt
         dislike.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View w){
+                logger.info("clicked dislike ");
                 Drawable current = getResources().getDrawable(R.drawable.ic_action_bad);
                 if(dislike.getBackground().getConstantState().equals(current.getConstantState())) {
-                    dislike.setBackgroundResource(R.drawable.ic_action_bad_on);
-                    like.setBackgroundResource(R.drawable.ic_action_good);
+                    dislike.setImageResource(R.drawable.ic_action_bad_on);
+                    like.setImageResource(R.drawable.ic_action_good);
                     try {
-                        String rated = wb.postRatings("hi", menuId, menuItemId, false);
-                        logger.info("Posted String " + rated);
+                        wb.postRatings(idClass.getAndroidId(), menuId, menuItemId, false);
+                        logger.log(Level.INFO,"Posted rating bad");
                     }
                     catch(Exception e) {
                         logger.log(Level.INFO, "failed");

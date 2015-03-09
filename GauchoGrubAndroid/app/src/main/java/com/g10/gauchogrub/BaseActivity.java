@@ -2,6 +2,7 @@ package com.g10.gauchogrub;
 
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.provider.Settings;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -31,10 +32,15 @@ public class BaseActivity extends ActionBarActivity {
     private static CharSequence navTitle;
     private static CharSequence navDrawerTitle;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        String androidId = Settings.Secure.getString(this.getContentResolver(), Settings.Secure.ANDROID_ID);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.base_layout);
+
+        //set android_id
+        new AndroidId(androidId);
 
         // Create a drawer
         navTitle = navDrawerTitle = getTitle();
@@ -110,6 +116,7 @@ public class BaseActivity extends ActionBarActivity {
     /** Swaps fragments in the main content view */
     private void selectItem(int position) {
         Logger.getLogger(Logger.GLOBAL_LOGGER_NAME).info(String.format("Item {} selected in NavDrawer", position));
+
         // Create a new fragment
         Fragment fragment = null;
         if (position == 0) {
