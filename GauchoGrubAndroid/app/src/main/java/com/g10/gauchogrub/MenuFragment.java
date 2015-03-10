@@ -3,8 +3,6 @@ package com.g10.gauchogrub;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.util.Log;
-import android.provider.Settings;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,9 +18,6 @@ import com.g10.gauchogrub.utils.MenuParser;
 import com.g10.gauchogrub.menu.Menu;
 import com.g10.gauchogrub.menu.MenuItem;
 
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.Scanner;
 import java.util.logging.Level;
 import java.io.IOException;
 import java.util.HashSet;
@@ -34,8 +29,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-
-import android.provider.Settings.Secure;
 
 public class MenuFragment extends BaseTabbedFragment implements AdapterView.OnItemSelectedListener, Runnable {
 
@@ -168,14 +161,13 @@ public class MenuFragment extends BaseTabbedFragment implements AdapterView.OnIt
                 if(favoritesList.contains(item.title)) { favoriteButton.setBackgroundResource(R.drawable.ic_action_favorite_on); }
 
                 //TODO set up like and dislike button listeners
-                setButtonListeners(buttonBar, (String) menuTypeView.getText());
+                setButtonListeners(buttonBar, (String) menuTypeView.getText(), menu, item);
 
                 TextView menuTimeView = (TextView) entryView.findViewById(R.id.meal_time);
                 menuTimeView.setText(item.menuItemType.getShortVersion());
 
                 entryRow.addView(entryView);
                 menuTable.addView(entryRow);
-
             }
         }
     }
