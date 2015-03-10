@@ -81,26 +81,8 @@ public class BaseActivity extends ActionBarActivity {
             }
         };
         navDrawerLayout.setDrawerListener(navDrawerToggle);
-        //makes sure notifications are running
-        AlarmManager alarmManager = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
-        Intent timedIntent = new Intent(this, NotificationService.class);
-        PendingIntent pendingIntent = PendingIntent.getService(this, 0, timedIntent, 0);
 
-        Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.HOUR_OF_DAY, 8);
-        calendar.set(Calendar.MINUTE, 0);
-        calendar.set(Calendar.SECOND, 0);
-        alarmManager.setRepeating(AlarmManager.RTC, calendar.getTimeInMillis(),
-                60*1000, pendingIntent);
 
-        Intent automationIntent = new Intent(this, DataAutomationService.class);
-        PendingIntent pendingAutomationIntent = PendingIntent.getService(this, 0, automationIntent, 0);
-        try {
-            pendingAutomationIntent.send();
-        }
-        catch (PendingIntent.CanceledException ex) {
-            ex.printStackTrace();
-        }
     }
 
     @Override
