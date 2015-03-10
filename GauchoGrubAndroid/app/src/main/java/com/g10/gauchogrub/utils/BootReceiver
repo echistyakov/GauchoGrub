@@ -25,7 +25,9 @@ public class BootReceiver extends BroadcastReceiver {
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo netinfo = cm.getActiveNetworkInfo();
+        //Prepares intent for data automation service
         Intent timedIntent = new Intent(context, DataAutomationService.class);
+        PendingIntent pendingIntent = PendingIntent.getService(context, 0, timedIntent, 0);
 
         //sets up notification service
         Intent notificationIntent = new Intent(context, NotificationService.class);
@@ -35,10 +37,11 @@ public class BootReceiver extends BroadcastReceiver {
         calendar.set(Calendar.MINUTE, 0);
         calendar.set(Calendar.SECOND, 0);
         alarmManager.setRepeating(AlarmManager.RTC, calendar.getTimeInMillis(),
-                60*1000, pendingNotificationIntent);
+                AlarmManager.INTERVAL_DAY, pendingNotificationIntent);
 
-
+        //sets up data automation service
         if( netinfo != null && netinfo.isConnectedOrConnecting()){
+            alarmManager.set(AlarmManager.RTC_WAKEUP, 2*60*1000, pendingIntent);
             context.startService(timedIntent);
         }
         else
@@ -46,9 +49,8 @@ public class BootReceiver extends BroadcastReceiver {
             calendar.set(Calendar.HOUR_OF_DAY, 5);
             calendar.set(Calendar.MINUTE, 0);
             calendar.set(Calendar.SECOND, 0);
-            PendingIntent pendingIntent = PendingIntent.getService(context, 0, timedIntent, 0);
             alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
-                    60*1000, pendingIntent);
+                    AlarmManager.INTERVAL_DAY, pendingIntent);
         }
 
     }

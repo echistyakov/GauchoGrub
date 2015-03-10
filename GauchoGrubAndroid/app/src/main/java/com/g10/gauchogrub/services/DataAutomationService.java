@@ -61,14 +61,16 @@ public class DataAutomationService extends Service{
             for(File f : cachedFiles) {
                 Date dateModified = new Date(f.lastModified());
                 cal.add(Calendar.DATE, -1);
-                Date yesterday = new Date(cal.get(Calendar.DATE));
+                Date yesterday = new Date(cal.getTimeInMillis());
                 //Checks if it is the favorites file
                 if(dateModified.before(yesterday) && !f.getName().contains("Favorites")) {
                     try {
                         f.delete();
                     }
                     catch (Exception ex) {
-                        logger.log(Level.INFO, ex.getMessage());
+                        logger.info(ex.getMessage());
+                        System.out.println("CLEAN CACHE TASK FAILED HERE");
+                        ex.printStackTrace();
                     }
                 }
             }
@@ -86,7 +88,6 @@ public class DataAutomationService extends Service{
         protected Void doInBackground(Void... params) {
             WebUtils w = new WebUtils();
             CacheUtils c = new CacheUtils();
-            Date day = new Date();
             DateFormat requestFormat = new SimpleDateFormat(WebUtils.REQUEST_DATE_FORMAT);
             //for each of the 7 days
             for(int i = 0; i < 7; i++) {
@@ -94,17 +95,17 @@ public class DataAutomationService extends Service{
                 for(int j = 0; j < 4; j++) {
                     Calendar cal = Calendar.getInstance();
                     cal.add(Calendar.DATE, i);
-                    String requestDate = requestFormat.format(new Date(cal.get(Calendar.DATE)));
+                    String requestDate = requestFormat.format(new Date(cal.getTimeInMillis()));
                     try {
                         String menu = w.createMenuString(DiningCommon.DATA_USE_DINING_COMMONS[j], requestDate);
-                        String saveDate = requestFormat.format(new Date(cal.get(Calendar.DATE))).replace("/","");
+                        String saveDate = requestFormat.format(new Date(cal.getTimeInMillis())).replace("/","");
+
                         String fileName = DiningCommon.DATA_USE_DINING_COMMONS[j] + saveDate;
                         c.cacheFile(getBaseContext(), fileName, menu);
                     }
                     catch (Exception ex) {
                         logger.log(Level.INFO, ex.getMessage());
                     }
-
                 }
             }
             return null;
