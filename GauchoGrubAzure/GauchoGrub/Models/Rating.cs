@@ -33,6 +33,6 @@ namespace GauchoGrub.Models
         [Required]
         [DataMember]
         [DefaultValue(0)]
-        public int PositiveRatings { get; set; }  // PositiveRatings for a specific MenuItem during a specific Menu
+        public int PositiveRatings { get; set; }  // PositiveRatings for a specific MenuItem during a specific Menu        
     }
 }

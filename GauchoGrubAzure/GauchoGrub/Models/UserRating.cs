@@ -29,5 +29,12 @@ namespace GauchoGrub.Models
 
         [Required]
         public bool PositiveRating { get; set; }  // True if rating is positive
+
+        // For logging purposes
+        public override string ToString()
+        {
+            return String.Format("Id - {0}, MenuId - {1}, MenuItemId - {2}, Positive - {3}",
+                this.Id, this.MenuId, this.MenuItemId, this.PositiveRating);
+        }
     }
 }
