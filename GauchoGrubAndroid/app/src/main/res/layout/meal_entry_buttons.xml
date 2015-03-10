@@ -10,23 +10,30 @@
             style="@android:style/ButtonBar"
     android:clickable="false">
 
+
             <ImageButton  android:id="@+id/thumbsUpButton"
                 android:layout_width="35dp"
                 android:layout_height="35dp"
                 android:background="@drawable/ic_action_good"
                 android:padding="15dp"
-                android:layout_marginLeft="20px"
-                android:layout_alignParentLeft="true"
-                android:clickable="true"></ImageButton >
+                android:clickable="true"
+                android:layout_centerVertical="true"
+                android:layout_toLeftOf="@+id/thumbsDownButton"
+                android:layout_toStartOf="@+id/thumbsDownButton"
+                android:layout_marginRight="35dp"
+                android:layout_marginEnd="35dp"></ImageButton >
 
             <ImageButton  android:id="@+id/thumbsDownButton"
                 android:layout_width="35dp"
                 android:layout_height="35dp"
                 android:background="@drawable/ic_action_bad"
                 android:padding="15dp"
+                android:clickable="true"
                 android:layout_alignParentTop="true"
-                android:layout_centerHorizontal="true"
-                android:clickable="true"></ImageButton >
+                android:layout_toLeftOf="@+id/favoriteButton"
+                android:layout_toStartOf="@+id/favoriteButton"
+                android:layout_marginRight="35dp"
+                android:layout_marginEnd="35dp"></ImageButton >
 
             <ImageButton  android:id="@+id/favoriteButton"
                 android:layout_width="35dp"
@@ -38,4 +45,13 @@
                 android:layout_alignParentEnd="true"
                 android:clickable="true"></ImageButton >
 
-        </RelativeLayout>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#000000"
+        android:id="@+id/ratingView"
+        android:paddingLeft="70dp"
+        android:textSize="20dp" />
+
+
+</RelativeLayout>

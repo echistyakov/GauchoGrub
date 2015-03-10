@@ -3,6 +3,7 @@ package com.g10.gauchogrub;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.provider.Settings;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,6 +20,9 @@ import com.g10.gauchogrub.utils.MenuParser;
 import com.g10.gauchogrub.menu.Menu;
 import com.g10.gauchogrub.menu.MenuItem;
 
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.Scanner;
 import java.util.logging.Level;
 import java.io.IOException;
 import java.util.HashSet;
@@ -33,8 +37,6 @@ import java.text.SimpleDateFormat;
 
 import android.provider.Settings.Secure;
 
-
-
 public class MenuFragment extends BaseTabbedFragment implements AdapterView.OnItemSelectedListener, Runnable {
 
     public final static Logger logger = Logger.getLogger("MenuFragment");
@@ -42,7 +44,6 @@ public class MenuFragment extends BaseTabbedFragment implements AdapterView.OnIt
     private static String diningCommon;
     private static String date;
     private ArrayList<String> dates;
-    private String androidId;
 
     //Current Selected Menu Item
     private TableRow currentSelectedItem = null;
@@ -90,6 +91,7 @@ public class MenuFragment extends BaseTabbedFragment implements AdapterView.OnIt
     public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
         TextView dateView = (TextView) view;
         date = dateView.getText().toString();
+        buttonLayout.removeAllViews();
         run();
     }
 
@@ -126,28 +128,14 @@ public class MenuFragment extends BaseTabbedFragment implements AdapterView.OnIt
 
                     currentCategory = item.menuCategory.name;
                 }
-                /*
-                TableRow blankRow1 = new TableRow(getActivity().getApplicationContext());
-                TableRow blankRow2 = new TableRow(getActivity().getApplicationContext());
-                blankRow1.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
-                blankRow2.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
-                View categoryView = LayoutInflater.from(getActivity().getApplicationContext()).inflate(R.layout.meal_category, null);
-                TextView categoryTypeView = (TextView) categoryView.findViewById(R.id.meal_cat);
-                categoryTypeView.setText(" ");
-                blankRow1.addView(categoryView);
-                menuTable.addView(blankRow1);
-                blankRow2.addView(categoryView);
-                menuTable.addView(blankRow2);*/
 
                 final TableRow entryRow = new TableRow(getActivity().getApplicationContext());
                 entryRow.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
                 final View entryView = LayoutInflater.from(getActivity().getApplicationContext()).inflate(R.layout.meal_entry, null);
                 final View buttonBar = LayoutInflater.from(getActivity().getApplicationContext()).inflate(R.layout.meal_entry_buttons, null);
+
                 TextView menuTypeView = (TextView) entryView.findViewById(R.id.meal_type);
                 menuTypeView.setText(item.title);
-
-                TextView menuTypeView1 = (TextView) entryView.findViewById(R.id.meal_type);
-                menuTypeView1.setText(item.title);
 
                 menuTypeView.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -164,8 +152,6 @@ public class MenuFragment extends BaseTabbedFragment implements AdapterView.OnIt
                             currentSelectedItem = entryRow;
                             currentBar = buttonBar;
                             buttonLayout.addView(buttonBar);
-
-
                         }
                         //A user clicks the same menu item that was already selected
                         else if(currentSelectedItem == entryRow) {
@@ -182,7 +168,7 @@ public class MenuFragment extends BaseTabbedFragment implements AdapterView.OnIt
                 if(favoritesList.contains(item.title)) { favoriteButton.setBackgroundResource(R.drawable.ic_action_favorite_on); }
 
                 //TODO set up like and dislike button listeners
-                setButtonListeners(buttonBar, (String) menuTypeView.getText(), menu, item);
+                setButtonListeners(buttonBar, (String) menuTypeView.getText());
 
                 TextView menuTimeView = (TextView) entryView.findViewById(R.id.meal_time);
                 menuTimeView.setText(item.menuItemType.getShortVersion());
@@ -278,20 +264,22 @@ public class MenuFragment extends BaseTabbedFragment implements AdapterView.OnIt
 
         favorite.setOnClickListener(new View.OnClickListener(){
             @Override
-            public void onClick(View w){
+            public void onClick(View w) {
                 final Drawable current = getResources().getDrawable(R.drawable.ic_action_favorite);
-                if(favorite.getBackground().getConstantState().equals(current.getConstantState())) {
+                if (favorite.getBackground().getConstantState().equals(current.getConstantState())) {
                     favorite.setBackgroundResource(R.drawable.ic_action_favorite_on);
                     favoritesList.add(menuItemName);
-                }
-                else {
+                } else {
                     favorite.setBackgroundResource(R.drawable.ic_action_favorite);
                     favoritesList.remove(menuItemName);
                 }
                 try {
                     writeFavorites(favoritesList, diningCommon);
-                } catch(IOException e){ e.printStackTrace();
-                } catch(NullPointerException e){ e.printStackTrace(); }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (NullPointerException e) {
+                    e.printStackTrace();
+                }
 
 
             }
