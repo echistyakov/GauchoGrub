@@ -20,41 +20,50 @@
         android:id="@+id/rankingsTable"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_alignParentBottom="true">
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="false"
+        android:paddingLeft="50sp"
+        android:paddingTop="100sp">
 
         <TableRow
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent">
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Todays Best BreakFast:"
-                android:id="@+id/textView2" />
+                android:text="Todays Highest Rated BreakFast:"
+                android:id="@+id/textView2"
+                android:textColor="#ff009cff"
+                android:textSize="20dp" />
         </TableRow>
 
 
         <TableRow
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent">
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Todays Best Lunch:"
-                android:id="@+id/textView3" />
+                android:text="Todays Highest Rated Lunch:"
+                android:id="@+id/textView3"
+                android:textColor="#ff009cff"
+                android:textSize="20dp" />
         </TableRow>
 
 
         <TableRow
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent">
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Todays Best Dinner:"
-                android:id="@+id/textView4" />
+                android:text="Todays Highest Rated Dinner:"
+                android:id="@+id/textView4"
+                android:textColor="#ff009cff"
+                android:textSize="20dp" />
         </TableRow>
 
     </TableLayout>

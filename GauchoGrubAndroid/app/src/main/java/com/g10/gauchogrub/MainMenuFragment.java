@@ -1,6 +1,7 @@
 package com.g10.gauchogrub;
 
 import android.app.Fragment;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -9,18 +10,18 @@ import android.view.ViewGroup;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
-
 import com.g10.gauchogrub.menu.Menu;
 import com.g10.gauchogrub.menu.MenuItem;
 import com.g10.gauchogrub.utils.MenuParser;
 import com.g10.gauchogrub.utils.WebUtils;
+import java.util.AbstractMap.SimpleEntry;
 import java.util.ArrayList;
 import java.util.logging.Logger;
 
 public class MainMenuFragment extends Fragment {
 
     public final static Logger logger = Logger.getLogger("MainMenuFragment");
-    ArrayList<ArrayList<Integer>> allRankings;
+    ArrayList<ArrayList<Double>> allRankings;
     String[] commons = new String[] {"Carillo","De_La_Guerra","Ortega","Portola"};
     WebUtils w = new WebUtils();
     MenuParser mp = new MenuParser();
@@ -31,54 +32,58 @@ public class MainMenuFragment extends Fragment {
         allRankings = new ArrayList<>();
         ratingsTable = (TableLayout)rootView.findViewById(R.id.rankingsTable);
 
-        int maxBreakfastRating, maxLunchRating, maxDinnerRating;
         getTodaysRankings();
 
         return rootView;
     }
 
-    public void inflateRatingsTable(ArrayList<ArrayList<Integer>> allRatings){
-        final View ratingView = LayoutInflater.from(getActivity().getApplicationContext()).inflate(R.layout.top_ratings, null);
-        logger.info("entered inflate ratings table");
+    public void inflateRatingsTable(){
+        int count = 1;
+        ArrayList<SimpleEntry<Integer,Double>> maxRating = findHighestMealRatings();
 
-        TableRow bestBreakFastRow = (TableRow)ratingView.findViewById(R.id.bestMeal);
+        for(int i = 0; i <= 2; i++) {
+            TableRow ratingRow = new TableRow(getActivity().getApplicationContext());
+            ratingRow.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
 
-        TextView bestBreakFastView = new TextView(getActivity().getApplicationContext());
-        bestBreakFastView.setText("Hello");
-        bestBreakFastRow.addView(bestBreakFastView);
-        ratingsTable.addView(ratingView);
+            TextView ratingTextView = new TextView(getActivity().getApplicationContext());
+            ratingTextView.setTextColor(Color.rgb(255,255,200));
+            ratingTextView.setText(commons[maxRating.get(i).getKey()] + " with an average item rating of " + String.format("%.2f",(maxRating.get(i).getValue())));
+            ratingRow.addView(ratingTextView);
+            ratingsTable.addView(ratingRow, count);
+            count += 2;
+        }
 
     }
 
     public void getTodaysRankings() {
-        new AsyncTask<Void, Void, ArrayList<ArrayList<Integer>>>() {
+        new AsyncTask<Void, Void, ArrayList<ArrayList<Double>>>() {
             @Override
-            protected ArrayList<ArrayList<Integer>> doInBackground(Void... v) {
+            protected ArrayList<ArrayList<Double>> doInBackground(Void... v) {
                     for(int i = 0; i <=3; i++) {
                         String menuString;
                         try {
-                            menuString = w.createMenuString(commons[i], "03/10/2015");
+                            menuString = w.createMenuString(commons[i], "03/11/2015");
                         } catch (Exception e) { e.printStackTrace(); menuString = "";
                         logger.info("caught api exception");}
 
                         ArrayList<Menu> todaysMenus = mp.getDailyMenuList(menuString);
-                        ArrayList<Integer> todaysRankings = getRankings(todaysMenus);
+                        ArrayList<Double> todaysRankings = getRankings(todaysMenus);
                         allRankings.add(todaysRankings);
                     }
                     return allRankings;
             }
             @Override
-            protected void onPostExecute(ArrayList<ArrayList<Integer>> result) {
+            protected void onPostExecute(ArrayList<ArrayList<Double>> result) {
                 logger.info("entered post execute");
-                inflateRatingsTable(result);
+                inflateRatingsTable();
             }
         }.execute();
 
     }
 
-    public ArrayList<Integer> getRankings(ArrayList<Menu> menus) {
-        int totalRating = 0, itemCount = 0;
-        ArrayList<Integer> dayRatings = new ArrayList<>();
+    public ArrayList<Double> getRankings(ArrayList<Menu> menus) {
+        double totalRating = 0, itemCount = 0;
+        ArrayList<Double> dayRatings = new ArrayList<>();
         if(menus == null){ return dayRatings; }
 
         for(Menu menu : menus){
@@ -100,12 +105,64 @@ public class MainMenuFragment extends Fragment {
         return totalPositiveRatings - negativeRatings;
     }
 
-    public void addRanking(ArrayList<Integer> todaysRanking){
-        allRankings.add(todaysRanking);
-        logger.info("Added new day rankings: ");
-        for(int i = 0; i < todaysRanking.size(); i++){
-            logger.info(todaysRanking.get(i) + "");
+    public ArrayList<SimpleEntry<Integer,Double>> findHighestMealRatings() {
+        double maxBreakFastRating = allRankings.get(0).get(0);
+        double maxLunchRating = allRankings.get(0).get(1);
+        double maxDinnerRating = allRankings.get(0).get(2);
+        int dcTrack = 0, dcTrack1 = 0, dcTrack2 = 0;
+        ArrayList<SimpleEntry<Integer,Double>> maxRatingList = new ArrayList<>();
+        ArrayList<Integer> nullCheck = new ArrayList<>();
+
+        for(int j = 0; j <= 3; j++) {
+            if(allRankings.get(j).size() == 0){
+                nullCheck.add(j);
+                logger.info(commons[j] + " is null");
+            }
         }
+
+        for (int i = 1; i <= 3; i++) {
+            if(!nullCheck.contains((i))) {
+                //Compute Max BreakFast Rating
+                if (i != 1) {
+                    double currentBreakFastRating = allRankings.get(i).get(0);
+                    if (currentBreakFastRating > maxBreakFastRating) {
+                        maxBreakFastRating = currentBreakFastRating;
+                        dcTrack = i;
+                    }
+                }
+                //Compute Max Lunch Rating
+                double currentLunchRating;
+                if (i == 1) {
+                    currentLunchRating = allRankings.get(i).get(0);
+                } else {
+                    currentLunchRating = allRankings.get(i).get(1);
+                }
+                if (currentLunchRating > maxLunchRating) {
+                    maxLunchRating = currentLunchRating;
+                    dcTrack1 = i;
+                }
+
+                //Compute Max Dinner Rating
+                double currentDinnerRating;
+                if (i == 1) {
+                    currentDinnerRating = allRankings.get(i).get(1);
+                } else {
+                    currentDinnerRating = allRankings.get(i).get(2);
+                }
+                if (currentDinnerRating > maxDinnerRating) {
+                    maxDinnerRating = currentDinnerRating;
+                    dcTrack2 = i;
+                }
+            }
+        }
+        SimpleEntry<Integer,Double> maxBreakFast = new SimpleEntry<>(dcTrack,maxBreakFastRating);
+        SimpleEntry<Integer,Double> maxLunch = new SimpleEntry<>(dcTrack1,maxLunchRating);
+        SimpleEntry<Integer,Double> maxDinner = new SimpleEntry<>(dcTrack2,maxDinnerRating);
+        maxRatingList.add(maxBreakFast);
+        maxRatingList.add(maxLunch);
+        maxRatingList.add(maxDinner);
+
+        return maxRatingList;
     }
 
 }
