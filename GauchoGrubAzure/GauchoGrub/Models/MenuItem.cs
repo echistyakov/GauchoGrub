@@ -9,6 +9,11 @@ using System.Web;
 
 namespace GauchoGrub.Models
 {
+    /*
+     * MenuItem - model for representing food items.
+     * Properties include: menu category, menu item type, rating count (total/positive).
+     * Has a many-to-many relationship with Menus.
+     */
     [DataContract]
     public class MenuItem
     {
@@ -31,7 +36,6 @@ namespace GauchoGrub.Models
 
         [Required]
         [DataMember]
-        //[Index(IsUnique = true)]  // Extra duplication prevention
         [MaxLength(450)]  // Unique constraint won't work without length limitation
         public String Title { get; set; }
 

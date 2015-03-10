@@ -14,33 +14,27 @@ using GauchoGrub.Models;
 
 namespace GauchoGrub.Controllers
 {
+    /*
+     * UserRatingsController - controller for the UserRating model.
+     */
     public class UserRatingsController : ApiController
     {
         private GauchoGrubContext db = new GauchoGrubContext();
 
-        // POST: api/UserRatings
-        [ResponseType(typeof(UserRating))]
-        public async Task<IHttpActionResult> PostUserRating(UserRating userRating)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            db.UserRatings.Add(userRating);
-            await db.SaveChangesAsync();
-
-            return CreatedAtRoute("DefaultApi", new { id = userRating.Id }, userRating);
-        }
-
-        // GET: api/UserRatings?userId={string}&menuId={id}&menuItemId={id}&rating={-1,0,1}
+        /*
+         * Saves/updates or deletes a UserRating from DB.
+         * UserId is a unique identification string that helps prevent rating duplication.
+         * MenuId and MenuItemId identify the item being rated.
+         * Rating: -1 for negative, 0 for neutral (delete rating), 1 for positive.
+         * POST: api/UserRatings?userId={string}&menuId={id}&menuItemId={id}&rating={-1,0,1}
+         */
         [ResponseType(typeof(UserRating))]
         public async Task<IHttpActionResult> PostUserRating(string userId, int menuId, int menuItemId, int rating)
         {
             // Delete rating
             if (rating == 0)
             {
-                DeleteUserRating(userId, menuId, menuItemId);
+                TryDeleteUserRating(userId, menuId, menuItemId);
             }
             // Add or Update rating
             else
@@ -66,7 +60,10 @@ namespace GauchoGrub.Controllers
             return db.UserRatings.Count(e => e.Id == id) > 0;
         }
 
-        private void DeleteUserRating(string userId, int menuId, int menuItemId)
+        /*
+         * Private helper - attempts to delete a UserRating from DB.
+         */
+        private void TryDeleteUserRating(string userId, int menuId, int menuItemId)
         {
             try
             {
@@ -79,6 +76,9 @@ namespace GauchoGrub.Controllers
             }
         }
 
+        /*
+         * Private helper - adds a new UserRating or updates it in DB.
+         */
         private void AddOrUpdateUserRating(string userId, int menuId, int menuItemId, int rating)
         {
             bool positive = (rating == 1) ? true : false;

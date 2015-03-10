@@ -8,6 +8,12 @@ using System.Web;
 
 namespace GauchoGrub.Models
 {
+    /*
+     * Rating - model for representing MenuItem ratings.
+     * Ratings are stored with respect to a specific Menu and specific MenuItem.
+     * This allows to track day-to-day, menu-to-menu variations in MenuItem rating.
+     * Note: overall (not Menu specific) ratings are stored with the MenuItem model
+     */
     [DataContract]
     public class Rating
     {

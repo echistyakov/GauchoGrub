@@ -13,17 +13,26 @@ using GauchoGrub.Models;
 
 namespace GauchoGrub.Controllers
 {
+    /*
+     * MenusController - controller for the Menu model.
+     */
     public class MenusController : ApiController
     {
         private GauchoGrubContext db = new GauchoGrubContext();
 
-        // GET: api/Menus
+        /*
+         * Returns a list of all Menus.
+         * GET: api/Menus
+         */
         public IQueryable<Menu> GetMenus()
         {
             return db.Menus;
         }
 
-        // GET: api/Menus/5
+        /*
+         * Returns a Menu with the specified Id.
+         * GET: api/Menus/5
+         */
         [ResponseType(typeof(Menu))]
         public async Task<IHttpActionResult> GetMenu(int id)
         {
@@ -32,15 +41,17 @@ namespace GauchoGrub.Controllers
             {
                 return NotFound();
             }
-
             return Ok(menu);
         }
 
-        // GET: api/Menus?diningCommon=Ortega&date=02/18/2015
+        /*
+         * Returns a list Menu in the specified DiningCommon on the specified Date.
+         * GET: api/Menus?diningCommon=Ortega&date=02/18/2015
+         */
         [ResponseType(typeof(List<Menu>))]
         public async Task<List<Menu>> GetMenus(string diningCommon, DateTime date)
         {
-            int diningCommonId = db.DiningCommons.Where(d => d.Name.Equals(diningCommon)).First().Id;
+            int diningCommonId = db.DiningCommons.Single(d => d.Name.ToLower().Equals(diningCommon.ToLower())).Id;
             return db.Menus
                 .Where(m => m.Date.Equals(date) && m.Event.DiningCommonId.Equals(diningCommonId))
                 .Include(m => m.Event)

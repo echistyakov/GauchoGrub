@@ -7,7 +7,6 @@ namespace GauchoGrub.Models
 {
     public class SpecialEvent
     {
-        // NotImplemented: for holidays and/or finals week etc
-        // DiningCommonsId, Date
+        // Not Implemented: event for holidays and/or finals week, etc.
     }
 }
