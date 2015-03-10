@@ -27,6 +27,8 @@ public class WebUtils {
     public static final String REQUEST_DATE_FORMAT = "MM/dd/yyyy";
     public final static Logger logger = Logger.getLogger("WebUtils");
 
+
+
     public Bitmap getDrawable(URL url, int timeout){
         HttpURLConnection connection = null;
         Bitmap image = null;
@@ -50,7 +52,7 @@ public class WebUtils {
         return image;
     }
 
-    /* A synchronous method that performs an HTTP request returning data received from the sever as a String */
+    /* Asynchronous method that performs an HTTP request returning data received from the sever as a String */
     public String httpRequest(URL url, HttpMethod method, int timeout) throws IOException {
         return httpRequest(url, method, timeout, new Hashtable<String, String>());
     }
@@ -129,12 +131,7 @@ public class WebUtils {
                     URL url = new URL(ur);
                     String result = httpRequest(url,HttpMethod.GET,100000);
                     return result;
-
     }
-
-
-
-
 
     public enum HttpMethod {
         GET, POST, DELETE, PUT

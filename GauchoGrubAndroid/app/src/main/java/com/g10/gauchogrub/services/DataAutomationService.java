@@ -5,16 +5,17 @@ import android.app.Service;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.IBinder;
-import android.provider.MediaStore;
 
+import com.g10.gauchogrub.menu.DiningCommon;
+import com.g10.gauchogrub.utils.CacheUtils;
 import com.g10.gauchogrub.utils.WebUtils;
 
 import org.joda.time.DateTime;
 
 import java.io.File;
-import java.lang.reflect.Field;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -54,17 +55,22 @@ public class DataAutomationService extends Service{
     private class CleanCacheTask extends AsyncTask<Void, Void, Void> {
         @Override
         protected Void doInBackground(Void... params) {
+            Calendar cal = Calendar.getInstance();
             File cacheDir = new File(getApplicationContext().getCacheDir().getAbsolutePath());
             File[] cachedFiles = cacheDir.listFiles();
             for(File f : cachedFiles) {
-                DateTime dateModified = new DateTime(f.lastModified());
-                DateTime yesterday = DateTime.now().minusDays(1);
-                if(dateModified.isBefore(yesterday)) {
+                Date dateModified = new Date(f.lastModified());
+                cal.add(Calendar.DATE, -1);
+                Date yesterday = new Date(cal.getTimeInMillis());
+                //Checks if it is the favorites file
+                if(dateModified.before(yesterday) && !f.getName().contains("Favorites")) {
                     try {
                         f.delete();
                     }
                     catch (Exception ex) {
-                        logger.log(Level.INFO, ex.getMessage());
+                        logger.info(ex.getMessage());
+                        System.out.println("CLEAN CACHE TASK FAILED HERE");
+                        ex.printStackTrace();
                     }
                 }
             }
@@ -81,20 +87,25 @@ public class DataAutomationService extends Service{
         @Override
         protected Void doInBackground(Void... params) {
             WebUtils w = new WebUtils();
-            DateTime day = DateTime.now();
-            DateFormat requestFormat = new SimpleDateFormat("MM/dd/yyyy");
-            DateFormat saveFormat = new SimpleDateFormat("MMddyyyy"); //TODO: Replace with static in CachingUtils class later
-
+            CacheUtils c = new CacheUtils();
+            DateFormat requestFormat = new SimpleDateFormat(WebUtils.REQUEST_DATE_FORMAT);
+            //for each of the 7 days
             for(int i = 0; i < 7; i++) {
-                String requestDate = requestFormat.format(day.plusDays(i));
-                try {
-                    String menu = w.createMenuString("diningCommon", requestDate); //TODO: Replace "diningCommon" once merged with T-47
-                    String saveDate = saveFormat.format(day.plusDays(i));
-                    //TODO: Cache menus
+                //for each dining common
+                for(int j = 0; j < 4; j++) {
+                    Calendar cal = Calendar.getInstance();
+                    cal.add(Calendar.DATE, i);
+                    String requestDate = requestFormat.format(new Date(cal.getTimeInMillis()));
+                    try {
+                        String menu = w.createMenuString(DiningCommon.DATA_USE_DINING_COMMONS[j], requestDate);
+                        String saveDate = requestFormat.format(new Date(cal.getTimeInMillis())).replace("/","");
 
-                }
-                catch (Exception ex) {
-                    logger.log(Level.INFO, ex.getMessage());
+                        String fileName = DiningCommon.DATA_USE_DINING_COMMONS[j] + saveDate;
+                        c.cacheFile(getBaseContext(), fileName, menu);
+                    }
+                    catch (Exception ex) {
+                        logger.log(Level.INFO, ex.getMessage());
+                    }
                 }
             }
             return null;

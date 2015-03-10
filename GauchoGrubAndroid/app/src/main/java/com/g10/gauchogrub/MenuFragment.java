@@ -14,14 +14,15 @@ import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TabHost;
 import android.widget.TableLayout;
+
+import com.g10.gauchogrub.menu.DiningCommon;
+import com.g10.gauchogrub.utils.CacheUtils;
 import com.g10.gauchogrub.utils.WebUtils;
 import com.g10.gauchogrub.utils.MenuParser;
 import com.g10.gauchogrub.menu.Menu;
 import com.g10.gauchogrub.menu.MenuItem;
 
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.Scanner;
+import java.io.File;
 import java.util.logging.Level;
 import java.io.IOException;
 import java.util.HashSet;
@@ -163,11 +164,7 @@ public class MenuFragment extends BaseTabbedFragment implements AdapterView.OnIt
                                 ratingTextView.setText(netRatings+"");
                             }
 
-
                             /* Backup - used for getting a rating on item clicked in menu
-
-
-
                             try {
                                 getRating(ratingTextView,id);
                             } catch (Exception e) {
@@ -209,7 +206,6 @@ public class MenuFragment extends BaseTabbedFragment implements AdapterView.OnIt
 
                 entryRow.addView(entryView);
                 menuTable.addView(entryRow);
-
             }
         }
     }
@@ -222,7 +218,14 @@ public class MenuFragment extends BaseTabbedFragment implements AdapterView.OnIt
             protected ArrayList<Menu> doInBackground(Void... v) {
                 try {
                     WebUtils w = new WebUtils();
-                    String menuString = w.createMenuString(diningCommon, date);
+                    String menuString, title = diningCommon + date.replace("/","");
+                    CacheUtils c = new CacheUtils();
+                    if(new File(getActivity().getBaseContext().getCacheDir(), title).exists())
+                        menuString = c.readCachedFile(getActivity(), title);
+                    else {
+                        menuString = w.createMenuString(diningCommon, date);
+                        c.cacheFile(getActivity(), title, menuString);
+                    }
                     MenuParser mp = new MenuParser();
                     return mp.getDailyMenuList(menuString);
                 } catch(Exception e) {
@@ -237,7 +240,6 @@ public class MenuFragment extends BaseTabbedFragment implements AdapterView.OnIt
         }.execute();
     }
 
-
     public void setDisplayContent(int tag) {
         //When switching Dining Commons, Remove button bar
         buttonLayout.removeView(currentBar);
@@ -245,8 +247,7 @@ public class MenuFragment extends BaseTabbedFragment implements AdapterView.OnIt
         currentBar = null;
 
         //Set Dining Common String to new Tab
-        String[] commons = new String[] {"Carillo","De_La_Guerra","Ortega","Portola"};
-        diningCommon = commons[tag];
+        diningCommon = DiningCommon.DATA_USE_DINING_COMMONS[tag];
 
         //Update favorites list corresponding to the tabbed Dining Common
         try {
