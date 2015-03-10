@@ -301,19 +301,22 @@ public class MenuFragment extends BaseTabbedFragment implements AdapterView.OnIt
             @Override
             public void onClick(View w){
                 Drawable current = getResources().getDrawable(R.drawable.ic_action_good);
-                if(like.getBackground().getConstantState().equals(current.getConstantState())) {
-                    like.setImageResource(R.drawable.ic_action_good_on);
-                    dislike.setImageResource(R.drawable.ic_action_bad);
-                    try {
-                        postRating(userId, menuId, menuItemId, true);
-                        logger.log(Level.INFO,"Posted rating: good ");
-                    }
-                    catch(Exception e) {
-                        logger.log(Level.INFO, "failed");
-                        e.printStackTrace();
+                try {
+                    if (like.getBackground().getConstantState().equals(current.getConstantState())) {
+                        like.setBackgroundResource(R.drawable.ic_action_good_on);
+
+                        postRating(userId, menuId, menuItemId, 1);
+                        logger.log(Level.INFO, "Posted rating: positive ");
+                    } else {
+                        like.setBackgroundResource(R.drawable.ic_action_good);
+                        postRating(userId, menuId, menuItemId, 0);
+                        logger.log(Level.INFO, "Posted rating: neutral ");
                     }
                 }
-                //else { like.setBackgroundResource(R.drawable.ic_action_good); }
+                catch(Exception e) {
+                    logger.log(Level.INFO, "failed");
+                    e.printStackTrace();
+                }
             }
         });
 
@@ -321,38 +324,40 @@ public class MenuFragment extends BaseTabbedFragment implements AdapterView.OnIt
             @Override
             public void onClick(View w){
                 Drawable current = getResources().getDrawable(R.drawable.ic_action_bad);
-                if(dislike.getBackground().getConstantState().equals(current.getConstantState())) {
-                    dislike.setImageResource(R.drawable.ic_action_bad_on);
-                    like.setImageResource(R.drawable.ic_action_good);
-                    try {
+                try {
+                    if (dislike.getBackground().getConstantState().equals(current.getConstantState())) {
+                        dislike.setBackgroundResource(R.drawable.ic_action_bad_on);
 
-                        logger.log(Level.INFO,"Posted rating: bad");
+                        postRating(userId, menuId, menuItemId, -1);
+                        logger.log(Level.INFO, "Posted rating: negative ");
+                    } else {
+                        dislike.setBackgroundResource(R.drawable.ic_action_bad);
+                        postRating(userId, menuId, menuItemId, 0);
+                        logger.log(Level.INFO, "Posted rating: neutral ");
                     }
-                    catch(Exception e) {
-                        logger.log(Level.INFO, "failed");
-                        e.printStackTrace();
-                    }
-
                 }
-                //else { dislike.setBackgroundResource(R.drawable.ic_action_bad); }
+                catch(Exception e) {
+                    logger.log(Level.INFO, "failed");
+                    e.printStackTrace();
+                }
             }
         });
 
 
     }
 
-    public void postRating(String id, int m, int mi, boolean value) {
+    public void postRating(String id, int m, int mi, int x) {
         final String userId = id;
         final int menuId = m;
         final int menuItemId = mi;
-        final boolean b = value;
+        final int value = x;
 
         new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... v) {
                 try {
                     WebUtils w = new WebUtils();
-                    w.postRatings(userId, menuId, menuItemId, b);
+                    w.postRatings(userId, menuId, menuItemId, value);
 
                 } catch(Exception e) {
                     logger.log(Level.INFO, e.getMessage());
