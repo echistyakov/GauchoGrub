@@ -13,17 +13,10 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-
 import com.g10.gauchogrub.dining_cams.DiningCamsFragment;
 import com.g10.gauchogrub.utils.MenuParser;
 import com.g10.gauchogrub.utils.WebUtils;
-//import com.g10.gauchogrub.menu.Menu;
-//import com.g10.gauchogrub.menu.MenuItem;
-
-
-
 import java.util.ArrayList;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /*
@@ -39,7 +32,6 @@ public class BaseActivity extends ActionBarActivity {
     private static ActionBarDrawerToggle navDrawerToggle;
     private static CharSequence navTitle;
     private static CharSequence navDrawerTitle;
-    private WebUtils util;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,6 +71,7 @@ public class BaseActivity extends ActionBarActivity {
             }
         };
         navDrawerLayout.setDrawerListener(navDrawerToggle);
+
     }
 
     @Override
@@ -132,6 +125,8 @@ public class BaseActivity extends ActionBarActivity {
             fragment = new FavoritesFragment();
         } else if (position == 4){
             fragment = new SwipesFragment();
+        } else if (position == 5){
+            fragment = new MainMenuFragment();
         }
 
         // Insert the fragment by replacing any existing fragment
@@ -152,40 +147,5 @@ public class BaseActivity extends ActionBarActivity {
             selectItem(position);
         }
     }
-
-    public void getTodaysMenus(final String diningCommon) {
-        new AsyncTask<Void, Void, ArrayList<com.g10.gauchogrub.menu.Menu>>() {
-            @Override
-            protected ArrayList<com.g10.gauchogrub.menu.Menu> doInBackground(Void... v) {
-                try {
-                    WebUtils w = new WebUtils();
-                    String menuString = w.createMenuString(diningCommon, "03/09/2015");
-                    MenuParser mp = new MenuParser();
-                    int currentRanking = getRanking(mp.getDailyMenuList(menuString));
-                } catch (Exception e) {
-                }
-                return null;
-            }
-        }.execute();
-    }
-
-    public int getRanking(ArrayList<Menu> menus) {
-        int totalRating = 0, itemCount = 0;
-        for(Menu menu : menus){
-            for(MenuItem item : menu.menuItems) {
-                itemCount++;
-                totalRating = totalRating + getItemRating(item);
-            }
-        }
-        return totalRating/itemCount;
-    }
-
-    public int getItemRating(MenuItem item){
-        int totalPositiveRatings = item.totalPositiveRatings;
-        int totalRating = item.totalRatings;
-        int negativeRatings = totalRating - totalPositiveRatings;
-        return totalPositiveRatings - negativeRatings;
-    }
-
 
 }
