@@ -2,6 +2,7 @@ package com.g10.gauchogrub;
 
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.os.AsyncTask;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -14,7 +15,15 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.g10.gauchogrub.dining_cams.DiningCamsFragment;
+import com.g10.gauchogrub.utils.MenuParser;
+import com.g10.gauchogrub.utils.WebUtils;
+//import com.g10.gauchogrub.menu.Menu;
+//import com.g10.gauchogrub.menu.MenuItem;
 
+
+
+import java.util.ArrayList;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /*
@@ -30,6 +39,7 @@ public class BaseActivity extends ActionBarActivity {
     private static ActionBarDrawerToggle navDrawerToggle;
     private static CharSequence navTitle;
     private static CharSequence navDrawerTitle;
+    private WebUtils util;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -142,4 +152,40 @@ public class BaseActivity extends ActionBarActivity {
             selectItem(position);
         }
     }
+
+    public void getTodaysMenus(final String diningCommon) {
+        new AsyncTask<Void, Void, ArrayList<com.g10.gauchogrub.menu.Menu>>() {
+            @Override
+            protected ArrayList<com.g10.gauchogrub.menu.Menu> doInBackground(Void... v) {
+                try {
+                    WebUtils w = new WebUtils();
+                    String menuString = w.createMenuString(diningCommon, "03/09/2015");
+                    MenuParser mp = new MenuParser();
+                    int currentRanking = getRanking(mp.getDailyMenuList(menuString));
+                } catch (Exception e) {
+                }
+                return null;
+            }
+        }.execute();
+    }
+
+    public int getRanking(ArrayList<Menu> menus) {
+        int totalRating = 0, itemCount = 0;
+        for(Menu menu : menus){
+            for(MenuItem item : menu.menuItems) {
+                itemCount++;
+                totalRating = totalRating + getItemRating(item);
+            }
+        }
+        return totalRating/itemCount;
+    }
+
+    public int getItemRating(MenuItem item){
+        int totalPositiveRatings = item.totalPositiveRatings;
+        int totalRating = item.totalRatings;
+        int negativeRatings = totalRating - totalPositiveRatings;
+        return totalPositiveRatings - negativeRatings;
+    }
+
+
 }
