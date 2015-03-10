@@ -7,6 +7,8 @@ import android.app.FragmentManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -19,6 +21,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.g10.gauchogrub.dining_cams.DiningCamsFragment;
+import com.g10.gauchogrub.services.DataAutomationService;
 import com.g10.gauchogrub.services.NotificationService;
 import com.g10.gauchogrub.utils.CacheUtils;
 
@@ -83,13 +86,11 @@ public class BaseActivity extends ActionBarActivity {
         PendingIntent pendingIntent = PendingIntent.getService(this, 0, timedIntent, 0);
 
         Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.HOUR_OF_DAY, 8);
+        calendar.set(Calendar.HOUR_OF_DAY, 20);
         calendar.set(Calendar.MINUTE, 0);
         calendar.set(Calendar.SECOND, 0);
         alarmManager.setRepeating(AlarmManager.RTC, calendar.getTimeInMillis(),
-                AlarmManager.INTERVAL_DAY, pendingIntent);
-        //Delete menus that are 3 days old
-        CacheUtils.deleteOldMenus(this);
+                5*1000, pendingIntent);
     }
 
     @Override

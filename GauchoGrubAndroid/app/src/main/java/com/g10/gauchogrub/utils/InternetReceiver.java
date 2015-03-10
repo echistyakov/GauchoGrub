@@ -17,13 +17,10 @@ public class InternetReceiver extends BroadcastReceiver {
         ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo netInfo = cm.getActiveNetworkInfo();
         Intent automationIntent = new Intent(context, DataAutomationService.class);
-        if (netInfo != null && netInfo.isConnected()) {
+        if (netInfo != null && netInfo.isConnectedOrConnecting()) {
             WifiManager wifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
             if(wifiManager.isWifiEnabled())
                 context.startService(automationIntent);
-        }
-        else {
-            context.stopService(automationIntent);
         }
     }
 

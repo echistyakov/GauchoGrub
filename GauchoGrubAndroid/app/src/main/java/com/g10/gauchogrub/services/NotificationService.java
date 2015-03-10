@@ -11,8 +11,8 @@ import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
 
 import com.g10.gauchogrub.BaseActivity;
-import com.g10.gauchogrub.BaseTabbedFragment;
 import com.g10.gauchogrub.R;
+import com.g10.gauchogrub.menu.DiningCommon;
 import com.g10.gauchogrub.menu.Menu;
 import com.g10.gauchogrub.menu.MenuItem;
 import com.g10.gauchogrub.utils.CacheUtils;
@@ -111,12 +111,12 @@ public class NotificationService extends Service {
         ArrayList<String> notifications = new ArrayList<String>();
         try {
             for(int i = 0; i < 4; i++) {
-                HashSet<String> favorites = fillFavoritesList(BaseTabbedFragment.diningCommons[i]);
-                //For each cached file
+                HashSet<String> favorites = fillFavoritesList(DiningCommon.DATA_USE_DINING_COMMONS[i]);
+                //For each stored file
                 for (File f : files) {
                     //if JSON File is for today && right diningCommon
                     if (f.getName().contains(dateFormat.format(date)) &&
-                            f.getName().contains(BaseTabbedFragment.diningCommons[i])) {
+                            f.getName().contains(DiningCommon.DATA_USE_DINING_COMMONS[i])) {
                         //Parse Menus
                         MenuParser menuParser = new MenuParser();
                         ArrayList<Menu> menus = menuParser.getDailyMenuList(c.readCachedFile(this, f.getName()));
@@ -130,7 +130,7 @@ public class NotificationService extends Service {
                                     if (menuItem.title.equals(favorite)) {
                                         //Adds to the ArrayList
                                         notifications.add("Favorite " + favorite
-                                                + " is being served at " + BaseTabbedFragment.diningCommons[i]
+                                                + " is being served at " + DiningCommon.DATA_USE_DINING_COMMONS[i]
                                                 + " during " + m.event.meal);
                                     }
                                 }

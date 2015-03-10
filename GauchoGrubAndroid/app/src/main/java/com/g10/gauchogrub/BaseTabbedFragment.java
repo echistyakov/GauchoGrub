@@ -7,6 +7,8 @@ import android.widget.TabHost;
 import android.widget.TabHost.TabSpec;
 import android.widget.TabHost.TabContentFactory;
 
+import com.g10.gauchogrub.menu.DiningCommon;
+
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -19,13 +21,6 @@ import java.util.logging.Logger;
 
 public abstract class BaseTabbedFragment extends Fragment {
 
-    public final static String CARILLO = "Carillo";
-    public final static String DLG = "DLG";
-    public final static String ORTEGA = "Ortega";
-    public final static String PORTOLA = "Portola";
-    public final static String[] diningCommons = {CARILLO, DLG, ORTEGA, PORTOLA};
-
-
     public final static Logger logger = Logger.getLogger("BaseTabbedFragment");
 
     public abstract void setDisplayContent(int tag);
@@ -33,13 +28,12 @@ public abstract class BaseTabbedFragment extends Fragment {
     public abstract TabContentFactory createTabContent();
 
     public void setUpTabs(TabHost tabs, TabContentFactory contentCreate, int numTabs){
-        String[] commons = new String[] {CARILLO, DLG, ORTEGA, PORTOLA};
         tabs.setup();
         //Create tabs and set text & content
         for(int i = 0; i < numTabs ; i ++) {
             TabSpec tab = tabs.newTabSpec(i + "");
             tab.setContent(contentCreate);
-            tab.setIndicator(commons[i]);
+            tab.setIndicator(DiningCommon.READABLE_DINING_COMMONS[i]);
             tabs.addTab(tab);
         }
         //Set tab listeners to change content when triggered

@@ -31,24 +31,24 @@ public class BootReceiver extends BroadcastReceiver {
         Intent notificationIntent = new Intent(context, NotificationService.class);
         PendingIntent pendingNotificationIntent = PendingIntent.getService(context, 0, notificationIntent, 0);
         Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.HOUR_OF_DAY, 8);
+        calendar.set(Calendar.HOUR_OF_DAY, 20);
         calendar.set(Calendar.MINUTE, 0);
         calendar.set(Calendar.SECOND, 0);
         alarmManager.setRepeating(AlarmManager.RTC, calendar.getTimeInMillis(),
-                AlarmManager.INTERVAL_DAY, pendingNotificationIntent);
+                5*1000, pendingNotificationIntent);
 
 
-        if( netinfo != null && netinfo.isConnected()){
+        if( netinfo != null && netinfo.isConnectedOrConnecting()){
             context.startService(timedIntent);
         }
         else
         {
-            calendar.set(Calendar.HOUR_OF_DAY, 5);
+            calendar.set(Calendar.HOUR_OF_DAY, 20);
             calendar.set(Calendar.MINUTE, 0);
             calendar.set(Calendar.SECOND, 0);
             PendingIntent pendingIntent = PendingIntent.getService(context, 0, timedIntent, 0);
             alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
-                    AlarmManager.INTERVAL_DAY, pendingIntent);
+                    5*1000, pendingIntent);
         }
 
     }

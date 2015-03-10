@@ -14,6 +14,8 @@ import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TabHost;
 import android.widget.TableLayout;
+
+import com.g10.gauchogrub.menu.DiningCommon;
 import com.g10.gauchogrub.utils.CacheUtils;
 import com.g10.gauchogrub.utils.WebUtils;
 import com.g10.gauchogrub.utils.MenuParser;
@@ -21,9 +23,6 @@ import com.g10.gauchogrub.menu.Menu;
 import com.g10.gauchogrub.menu.MenuItem;
 
 import java.io.File;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.Scanner;
 import java.util.logging.Level;
 import java.io.IOException;
 import java.util.HashSet;
@@ -248,8 +247,7 @@ public class MenuFragment extends BaseTabbedFragment implements AdapterView.OnIt
         currentBar = null;
 
         //Set Dining Common String to new Tab
-        String[] commons = new String[] {"Carillo","De_La_Guerra","Ortega","Portola"};
-        diningCommon = commons[tag];
+        diningCommon = DiningCommon.DATA_USE_DINING_COMMONS[tag];
 
         //Update favorites list corresponding to the tabbed Dining Common
         try {
