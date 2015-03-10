@@ -135,15 +135,10 @@ public class MenuFragment extends BaseTabbedFragment implements AdapterView.OnIt
                 TextView menuTypeView = (TextView) entryView.findViewById(R.id.meal_type);
                 menuTypeView.setText(item.title);
 
-                //final int Id = item.menuItemID;
-
-                Log.d("MenuFragment","hello" + item.title);
                 final TextView ratingTextView = (TextView) buttonBar.findViewById(R.id.ratingView);
-                final int id = item.menuItemID;
-                final int totalPositiveRatings = item.totalPositiveRatings;
-                final int totalRating = item.totalRatings;
-
-                final int negativeRatings = totalRating - totalPositiveRatings;
+                int totalPositiveRatings = item.totalPositiveRatings;
+                int totalRating = item.totalRatings;
+                int negativeRatings = totalRating - totalPositiveRatings;
                 final int netRatings = totalPositiveRatings - negativeRatings;
 
 
@@ -162,12 +157,7 @@ public class MenuFragment extends BaseTabbedFragment implements AdapterView.OnIt
                                 ratingTextView.setTextColor(Color.RED);
                                 ratingTextView.setText(netRatings+"");
                             }
-
-
                             /* Backup - used for getting a rating on item clicked in menu
-
-
-
                             try {
                                 getRating(ratingTextView,id);
                             } catch (Exception e) {
@@ -175,7 +165,6 @@ public class MenuFragment extends BaseTabbedFragment implements AdapterView.OnIt
                                 e.printStackTrace();
                             }
                             */
-
                             //Switching from one selected item to another
                             if (currentSelectedItem != null) {
                                 currentSelectedItem.setBackgroundColor(0);
@@ -199,7 +188,7 @@ public class MenuFragment extends BaseTabbedFragment implements AdapterView.OnIt
 
                 //When loading Menu, if items already exist in favorites list the button needs to be activated
                 ImageButton favoriteButton = (ImageButton) buttonBar.findViewById(R.id.favoriteButton);
-                if(favoritesList.contains(item.title)) { favoriteButton.setBackgroundResource(R.drawable.ic_action_favorite_on); }
+                if(favoritesList.contains(item.title)) { favoriteButton.setBackgroundResource(R.drawable.favorite_on_xxhdpi); }
 
                 //TODO set up like and dislike button listeners
                 setButtonListeners(buttonBar, (String) menuTypeView.getText());
@@ -276,9 +265,6 @@ public class MenuFragment extends BaseTabbedFragment implements AdapterView.OnIt
         DateFormat dateFormat = new SimpleDateFormat(WebUtils.REQUEST_DATE_FORMAT);
         Date date = new Date();
 
-        //TO BE DELETED EVENTUALLY
-        dates.add("2/17/2015");
-
         for(int i = 0; i < 7 ; i++){
             Date tomorrow = new Date(date.getTime() + i*(1000 * 60 * 60 * 24));
             dates.add(dateFormat.format(tomorrow));
@@ -290,15 +276,17 @@ public class MenuFragment extends BaseTabbedFragment implements AdapterView.OnIt
         final ImageButton like = (ImageButton) entryView.findViewById(R.id.thumbsUpButton);
         final ImageButton dislike = (ImageButton) entryView.findViewById(R.id.thumbsDownButton);
 
+        final TextView ratingView = (TextView) entryView.findViewById(R.id.ratingView);
+
         favorite.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View w) {
-                final Drawable current = getResources().getDrawable(R.drawable.ic_action_favorite);
+                final Drawable current = getResources().getDrawable(R.drawable.favorite_off_xxhdpi);
                 if (favorite.getBackground().getConstantState().equals(current.getConstantState())) {
-                    favorite.setBackgroundResource(R.drawable.ic_action_favorite_on);
+                    favorite.setBackgroundResource(R.drawable.favorite_on_xxhdpi);
                     favoritesList.add(menuItemName);
                 } else {
-                    favorite.setBackgroundResource(R.drawable.ic_action_favorite);
+                    favorite.setBackgroundResource(R.drawable.favorite_off_xxhdpi);
                     favoritesList.remove(menuItemName);
                 }
                 try {
@@ -308,30 +296,52 @@ public class MenuFragment extends BaseTabbedFragment implements AdapterView.OnIt
                 } catch (NullPointerException e) {
                     e.printStackTrace();
                 }
-
-
             }
         });
 
         like.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View w){
-                Drawable current = getResources().getDrawable(R.drawable.ic_action_good);
-                if(like.getBackground().getConstantState().equals(current.getConstantState())) {
-                    like.setBackgroundResource(R.drawable.ic_action_good_on);
+            public void onClick(View w) {
+                String temp = (String) ratingView.getText(), posOrNeg = "";
+                int start1 = 0;
+                if(ratingView.getCurrentTextColor() == Color.rgb(8,124,39)) {
+                    posOrNeg = "+";
+                    start1 = temp.indexOf('+') + 1;
                 }
-                else { like.setBackgroundResource(R.drawable.ic_action_good); }
+                int rating = Integer.parseInt(temp.substring(start1));
+
+                Drawable current = getResources().getDrawable(R.drawable.upvote_off_xxhdpi);
+                if(like.getBackground().getConstantState().equals(current.getConstantState())) {
+                    like.setBackgroundResource(R.drawable.upvote_on_xxhdpi);
+                    ratingView.setText(posOrNeg + (rating + 1));
+                }
+                else {
+                    like.setBackgroundResource(R.drawable.upvote_off_xxhdpi);
+                    ratingView.setText(posOrNeg + (rating - 1));
+                }
             }
         });
 
         dislike.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View w){
-                Drawable current = getResources().getDrawable(R.drawable.ic_action_bad);
-                if(dislike.getBackground().getConstantState().equals(current.getConstantState())) {
-                    dislike.setBackgroundResource(R.drawable.ic_action_bad_on);
+                String temp = (String) ratingView.getText(), posOrNeg = "";
+                int start1 = 0;
+                if(ratingView.getCurrentTextColor() == Color.rgb(8,124,39)) {
+                    posOrNeg = "+";
+                    start1 = temp.indexOf('+') + 1;
                 }
-                else { dislike.setBackgroundResource(R.drawable.ic_action_bad); }
+                int rating = Integer.parseInt(temp.substring(start1));
+
+                Drawable current = getResources().getDrawable(R.drawable.downvote_off_xxhdpi);
+                if(dislike.getBackground().getConstantState().equals(current.getConstantState())) {
+                    dislike.setBackgroundResource(R.drawable.downvote_on_xxhdpi);
+                    ratingView.setText(posOrNeg + (rating - 1));
+                }
+                else {
+                    dislike.setBackgroundResource(R.drawable.downvote_off_xxhdpi);
+                    ratingView.setText(posOrNeg + (rating + 1));
+                }
             }
         });
     }
