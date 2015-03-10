@@ -90,7 +90,7 @@ public class BaseActivity extends ActionBarActivity {
         calendar.set(Calendar.MINUTE, 0);
         calendar.set(Calendar.SECOND, 0);
         alarmManager.setRepeating(AlarmManager.RTC, calendar.getTimeInMillis(),
-                5*1000, pendingIntent);
+                60*1000, pendingIntent);
     }
 
     @Override

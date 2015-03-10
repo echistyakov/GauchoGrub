@@ -29,6 +29,8 @@ import java.io.InputStreamReader;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -44,8 +46,7 @@ public class NotificationService extends Service {
     }
 
     /**
-     * NotificationTask is an AsyncTask that will run the notification data retrieval,
-     *
+     * NotificationTask is an AsyncTask that will run the notification data retrieval and notify the user.
      */
     private class NotificationTask extends AsyncTask<Void, Void, Void> {
         @Override
@@ -53,62 +54,52 @@ public class NotificationService extends Service {
 
             //Creates string with all favorites that appear today, names, dining commons, and meals
             //in format; "MenuItemName is being served at DiningCommonName during MealName"
-            ArrayList<String> favorites = getFavoritesToday();
-            String fullMessage = "";
-            for (String s : favorites) {
-                fullMessage = fullMessage.concat(s + "\n");
-            }
+            HashMap<String, ArrayList<String>> favorites = getFavoritesToday();
             NotificationCompat.Builder builder;
-            Intent targetIntent = new Intent(getBaseContext(), BaseActivity.class);
-            PendingIntent contentIntent = PendingIntent.getActivity(getBaseContext(), 0,
-                    targetIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-
-            if(favorites.size() < 1)
+            int i = 0;
+            if (favorites.size() <= 0)
                 stopSelf();
             // Sends out up to 5 individual notifications (don't want to send the user
             // too many notifications)
-            if (favorites.size() <= 5) {
-                for (int i = 1; i <= favorites.size(); i++) {
-                    Intent tIntent = new Intent(getBaseContext(), BaseActivity.class);
-                    PendingIntent cIntent = PendingIntent.getActivity(getBaseContext(), 0,
-                            tIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-                    builder = new NotificationCompat.Builder(getBaseContext())
-                            .setSmallIcon(R.drawable.ic_launcher)
-                            .setContentTitle("Favorite Food Served Today")
-                            .setContentText(favorites.get(i))
-                            .setDefaults(Notification.DEFAULT_ALL);
-                    builder.setContentIntent(cIntent);
-                    NotificationManager nManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-                    nManager.notify(1, builder.build());
+            Intent baseIntent = new Intent(getBaseContext(), BaseActivity.class);
+            PendingIntent bIntent = PendingIntent.getActivity(getBaseContext(), 0,
+                    baseIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+            for (String meal : favorites.keySet()) {
+                NotificationCompat.InboxStyle style = new NotificationCompat.InboxStyle();
+                for (String line : favorites.get(meal)) {
+                    style.addLine(line + "\n");
+                    logger.info(line);
                 }
-                stopSelf();
-                return null;
+                builder = new NotificationCompat.Builder(getBaseContext())
+                        .setSmallIcon(R.drawable.ic_launcher)
+                        .setGroup(meal)
+                        .setGroupSummary(true)
+                        .setContentTitle("Favorites Today - " + meal)
+                        .setContentText("Expand for details")
+                        .setStyle(style
+                                .setBigContentTitle("Favorites Today - " + meal));
+                builder.setContentIntent(bIntent);
+                NotificationManager nManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+                nManager.notify(i++, builder.build());
             }
-            //if more than 5 favorites, sends all together in a single expandable notification
-            builder = new NotificationCompat.Builder(getBaseContext())
-                    .setSmallIcon(R.drawable.ic_launcher)
-                    .setContentTitle("Favorite Foods Served Today")
-                    .setContentText("Expand this notification for info on the "
-                            + favorites.size() + " favorited items being served today.")
-                    .setDefaults(Notification.DEFAULT_ALL)
-                    .setStyle(new NotificationCompat.BigTextStyle().bigText(fullMessage));
-            builder.setContentIntent(contentIntent);
-            NotificationManager nManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-            nManager.notify(1, builder.build());
             stopSelf();
             return null;
         }
     }
 
-    private ArrayList<String> getFavoritesToday() {
+    /**
+     * Creates a Hashmap where each key corresponds to a Meal name, and its value is an arraylist of all notification strings for that meal.
+     * @return a Hashmap of strings mapped to arraylists of strings.
+     */
+    private HashMap<String, ArrayList <String>> getFavoritesToday() {
         //Gets all cached files
         CacheUtils c = new CacheUtils();
-        DateTime date = new DateTime();
+        Date date = new Date();
         DateFormat dateFormat = new SimpleDateFormat("MMddyyyy");
         File file = new File(getApplicationContext().getCacheDir().getAbsolutePath());
         File[] files = file.listFiles();
         //List of DiningCommons
-        ArrayList<String> notifications = new ArrayList<String>();
+        HashMap <String, ArrayList<String>> notifications = new HashMap<>();
         try {
             for(int i = 0; i < 4; i++) {
                 HashSet<String> favorites = fillFavoritesList(DiningCommon.DATA_USE_DINING_COMMONS[i]);
@@ -129,9 +120,13 @@ public class NotificationService extends Service {
                                     //Checks that the item is in the favorites
                                     if (menuItem.title.equals(favorite)) {
                                         //Adds to the ArrayList
-                                        notifications.add("Favorite " + favorite
-                                                + " is being served at " + DiningCommon.DATA_USE_DINING_COMMONS[i]
-                                                + " during " + m.event.meal);
+                                        String mealName = m.event.meal.name;
+                                        String addString = favorite + " - " + DiningCommon.READABLE_DINING_COMMONS[i];
+                                        //For first item of that meal type
+                                        if(!notifications.containsKey(m.event.meal.name)) {
+                                            notifications.put(mealName, new ArrayList<String>());
+                                        }
+                                        notifications.get(mealName).add(addString);
                                     }
                                 }
                             }
