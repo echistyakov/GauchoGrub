@@ -201,6 +201,14 @@ public class MenuFragment extends BaseTabbedFragment implements AdapterView.OnIt
 
             }
         }
+        for(int i = 0; i <= 1; i++){
+            TableRow extraRow  = new TableRow(getActivity().getApplicationContext());
+            extraRow.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
+            final View entryView = LayoutInflater.from(getActivity().getApplicationContext()).inflate(R.layout.meal_entry, null);
+            extraRow.addView(entryView);
+            menuTable.addView(extraRow);
+        }
+
     }
 
     //This runnable begins a series of calls to get and display menus
