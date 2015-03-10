@@ -6,6 +6,9 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TableLayout;
+import android.widget.TableRow;
+import android.widget.TextView;
 
 import com.g10.gauchogrub.menu.Menu;
 import com.g10.gauchogrub.menu.MenuItem;
@@ -21,41 +24,54 @@ public class MainMenuFragment extends Fragment {
     String[] commons = new String[] {"Carillo","De_La_Guerra","Ortega","Portola"};
     WebUtils w = new WebUtils();
     MenuParser mp = new MenuParser();
+    TableLayout ratingsTable;
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.main_menu_fragment, container, false);
         allRankings = new ArrayList<>();
+        ratingsTable = (TableLayout)rootView.findViewById(R.id.rankingsTable);
 
-        //for(int i = 0; i <= 3; i++){
-        //    getTodaysRankings(commons[i]);
-        // }
-        getTodaysRankings("Carillo");
-        //logger.info("Breakfast Rating at Carillo = " + allRankings.get(0).get(0));
+        int maxBreakfastRating, maxLunchRating, maxDinnerRating;
+        getTodaysRankings();
 
         return rootView;
     }
 
-    public void getTodaysRankings(final String diningCommon) {
-        new AsyncTask<Void, Void, ArrayList<Integer>>() {
-            @Override
-            protected ArrayList<Integer> doInBackground(Void... v) {
-                try {
-                    String menuString = w.createMenuString(diningCommon, "03/10/2015");
-                    ArrayList<Menu> todaysMenus = mp.getDailyMenuList(menuString);
-                    logger.info("Got Menu List");
-                    ArrayList<Integer> todaysRankings = getRankings(todaysMenus);
-                    logger.info("Got todays Rankings");
-                    return todaysRankings;
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                return null;
-            }
-            @Override
-            protected void onPostExecute(ArrayList<Integer> todaysRankings) {
-                addRanking(todaysRankings);
-            }
+    public void inflateRatingsTable(ArrayList<ArrayList<Integer>> allRatings){
+        final View ratingView = LayoutInflater.from(getActivity().getApplicationContext()).inflate(R.layout.top_ratings, null);
+        logger.info("entered inflate ratings table");
 
+        TableRow bestBreakFastRow = (TableRow)ratingView.findViewById(R.id.bestMeal);
+
+        TextView bestBreakFastView = new TextView(getActivity().getApplicationContext());
+        bestBreakFastView.setText("Hello");
+        bestBreakFastRow.addView(bestBreakFastView);
+        ratingsTable.addView(ratingView);
+
+    }
+
+    public void getTodaysRankings() {
+        new AsyncTask<Void, Void, ArrayList<ArrayList<Integer>>>() {
+            @Override
+            protected ArrayList<ArrayList<Integer>> doInBackground(Void... v) {
+                    for(int i = 0; i <=3; i++) {
+                        String menuString;
+                        try {
+                            menuString = w.createMenuString(commons[i], "03/10/2015");
+                        } catch (Exception e) { e.printStackTrace(); menuString = "";
+                        logger.info("caught api exception");}
+
+                        ArrayList<Menu> todaysMenus = mp.getDailyMenuList(menuString);
+                        ArrayList<Integer> todaysRankings = getRankings(todaysMenus);
+                        allRankings.add(todaysRankings);
+                    }
+                    return allRankings;
+            }
+            @Override
+            protected void onPostExecute(ArrayList<ArrayList<Integer>> result) {
+                logger.info("entered post execute");
+                inflateRatingsTable(result);
+            }
         }.execute();
 
     }
@@ -63,6 +79,8 @@ public class MainMenuFragment extends Fragment {
     public ArrayList<Integer> getRankings(ArrayList<Menu> menus) {
         int totalRating = 0, itemCount = 0;
         ArrayList<Integer> dayRatings = new ArrayList<>();
+        if(menus == null){ return dayRatings; }
+
         for(Menu menu : menus){
             for(MenuItem item : menu.menuItems) {
                 itemCount++;
