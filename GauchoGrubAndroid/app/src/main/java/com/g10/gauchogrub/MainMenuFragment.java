@@ -46,8 +46,9 @@ public class MainMenuFragment extends Fragment {
             ratingRow.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
 
             TextView ratingTextView = new TextView(getActivity().getApplicationContext());
-            ratingTextView.setTextColor(Color.rgb(255,255,200));
-            ratingTextView.setText(commons[maxRating.get(i).getKey()] + " with an average item rating of " + String.format("%.2f",(maxRating.get(i).getValue())));
+            ratingTextView.setTextColor(Color.rgb(255,108,52));
+            ratingTextView.setTextSize(16);
+            ratingTextView.setText(commons[maxRating.get(i).getKey()] + " (" + String.format("%.2f",(maxRating.get(i).getValue())) + " avg. likes per food item)");
             ratingRow.addView(ratingTextView);
             ratingsTable.addView(ratingRow, count);
             count += 2;
