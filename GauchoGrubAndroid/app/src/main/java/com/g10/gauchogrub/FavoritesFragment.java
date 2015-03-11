@@ -41,9 +41,9 @@ public class FavoritesFragment extends BaseTabbedFragment {
         View rootView = inflater.inflate(R.layout.favorites_fragment, container, false);
         favoritesTable = (TableLayout)rootView.findViewById(R.id.favorites_table);
         buttonLayout = (RelativeLayout)rootView.findViewById(R.id.bottombar);
-
         TabHost tabs = (TabHost) rootView.findViewById(R.id.tabHost2);
         this.setUpTabs(tabs, createTabContent(), 4);
+        run();
 
         return rootView;
     }
