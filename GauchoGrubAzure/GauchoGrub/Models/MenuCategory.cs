@@ -8,6 +8,10 @@ using System.Web;
 
 namespace GauchoGrub.Models
 {
+    /*
+     * MenuCategory - model for representing Menu categories.
+     * Examples: Grill, Soups, Salads, Bakery, etc.
+     */
     [DataContract]
     public class MenuCategory
     {
@@ -16,7 +20,7 @@ namespace GauchoGrub.Models
         [Required]
         [DataMember]
         [Index(IsUnique = true)] // Extra duplication prevention
-        [MaxLength(450)] // Unique constraint won't work without length limitation
+        [MaxLength(450)]         // Unique constraint won't work without length limitation
         public String Name { get; set; }
     }
 }

@@ -6,7 +6,6 @@ using System.Web.Http;
 using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
-using GauchoGrub.Jobs;
 
 namespace GauchoGrub
 {
@@ -20,8 +19,6 @@ namespace GauchoGrub
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
             GlobalConfiguration.Configuration.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Always;
-            // Schedule jobs
-            JobScheduler.Start();
         }
     }
 }

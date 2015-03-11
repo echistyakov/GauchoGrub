@@ -50,7 +50,7 @@ public class WebUtils {
         return image;
     }
 
-    /* A synchronous method that performs an HTTP request returning data received from the sever as a String */
+    /* Asynchronous method that performs an HTTP request returning data received from the sever as a String */
     public String httpRequest(URL url, HttpMethod method, int timeout) throws IOException {
         return httpRequest(url, method, timeout, new Hashtable<String, String>());
     }
@@ -128,6 +128,12 @@ public class WebUtils {
         URL url = new URL(ur);
         httpRequest(url,HttpMethod.POST,100000);
 
+    public String getRating(final int menuItemID) throws Exception{
+                    String test = menuItemID + "";
+                    String ur = "http://gauchogrub.azurewebsites.net/api/Ratings?menuItemId=" + test;
+                    URL url = new URL(ur);
+                    String result = httpRequest(url,HttpMethod.GET,100000);
+                    return result;
     }
 
     public enum HttpMethod {

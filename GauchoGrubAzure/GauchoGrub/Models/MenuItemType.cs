@@ -8,7 +8,10 @@ using System.Web;
 
 namespace GauchoGrub.Models
 {
-    // Regular, Vegetarian, Vegan
+    /*
+     * MenuItemType - model for representing food item types.
+     * Type examples: Regular, Vegetarian, Vegan
+     */
     [DataContract]
     public class MenuItemType
     {
@@ -17,7 +20,7 @@ namespace GauchoGrub.Models
         [Required]
         [DataMember]
         [Index(IsUnique = true)] // Extra duplication prevention
-        [MaxLength(450)] // Unique constraint won't work without length limitation
+        [MaxLength(450)]         // Unique constraint won't work without length limitation
         public String Name { get; set; }
     }
 }

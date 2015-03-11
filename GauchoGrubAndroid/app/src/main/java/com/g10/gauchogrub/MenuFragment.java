@@ -13,11 +13,15 @@ import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TabHost;
 import android.widget.TableLayout;
+
+import com.g10.gauchogrub.menu.DiningCommon;
+import com.g10.gauchogrub.utils.CacheUtils;
 import com.g10.gauchogrub.utils.WebUtils;
 import com.g10.gauchogrub.utils.MenuParser;
 import com.g10.gauchogrub.menu.Menu;
 import com.g10.gauchogrub.menu.MenuItem;
 
+import java.io.File;
 import java.util.logging.Level;
 import java.io.IOException;
 import java.util.HashSet;
@@ -130,13 +134,45 @@ public class MenuFragment extends BaseTabbedFragment implements AdapterView.OnIt
                 TextView menuTypeView = (TextView) entryView.findViewById(R.id.meal_type);
                 menuTypeView.setText(item.title);
 
+                //final int Id = item.menuItemID;
+
+                Log.d("MenuFragment","hello" + item.title);
+                final TextView ratingTextView = (TextView) buttonBar.findViewById(R.id.ratingView);
+                final int id = item.menuItemID;
+                final int totalPositiveRatings = item.totalPositiveRatings;
+                final int totalRating = item.totalRatings;
+
+                final int negativeRatings = totalRating - totalPositiveRatings;
+                final int netRatings = totalPositiveRatings - negativeRatings;
+
+
                 menuTypeView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         //A user click a different menu item than previously selected
-                        if(currentSelectedItem != entryRow || currentSelectedItem == null) {
+                        if (currentSelectedItem != entryRow || currentSelectedItem == null) {
+
+                            // display rating on buttonBar
+                            if (netRatings>=0) {
+                                ratingTextView.setTextColor(Color.rgb(8,124,39));
+                                ratingTextView.setText("+"+netRatings);
+
+                            } else {
+                                ratingTextView.setTextColor(Color.RED);
+                                ratingTextView.setText(netRatings+"");
+                            }
+
+                            /* Backup - used for getting a rating on item clicked in menu
+                            try {
+                                getRating(ratingTextView,id);
+                            } catch (Exception e) {
+                                ratingTextView.setText("Rating not found");
+                                e.printStackTrace();
+                            }
+                            */
+
                             //Switching from one selected item to another
-                            if(currentSelectedItem != null){
+                            if (currentSelectedItem != null) {
                                 currentSelectedItem.setBackgroundColor(0);
                                 buttonLayout.removeView(currentBar);
                             }
@@ -147,7 +183,7 @@ public class MenuFragment extends BaseTabbedFragment implements AdapterView.OnIt
                             buttonLayout.addView(buttonBar);
                         }
                         //A user clicks the same menu item that was already selected
-                        else if(currentSelectedItem == entryRow) {
+                        else if (currentSelectedItem == entryRow) {
                             entryRow.setBackgroundColor(0);
                             buttonLayout.removeView(currentBar);
                             currentSelectedItem = null;
@@ -180,7 +216,14 @@ public class MenuFragment extends BaseTabbedFragment implements AdapterView.OnIt
             protected ArrayList<Menu> doInBackground(Void... v) {
                 try {
                     WebUtils w = new WebUtils();
-                    String menuString = w.createMenuString(diningCommon, date);
+                    String menuString, title = diningCommon + date.replace("/","");
+                    CacheUtils c = new CacheUtils();
+                    if(new File(getActivity().getBaseContext().getCacheDir(), title).exists())
+                        menuString = c.readCachedFile(getActivity(), title);
+                    else {
+                        menuString = w.createMenuString(diningCommon, date);
+                        c.cacheFile(getActivity(), title, menuString);
+                    }
                     MenuParser mp = new MenuParser();
                     return mp.getDailyMenuList(menuString);
                 } catch(Exception e) {
@@ -195,7 +238,6 @@ public class MenuFragment extends BaseTabbedFragment implements AdapterView.OnIt
         }.execute();
     }
 
-
     public void setDisplayContent(int tag) {
         //When switching Dining Commons, Remove button bar
         buttonLayout.removeView(currentBar);
@@ -203,8 +245,7 @@ public class MenuFragment extends BaseTabbedFragment implements AdapterView.OnIt
         currentBar = null;
 
         //Set Dining Common String to new Tab
-        String[] commons = new String[] {"Carillo","De_La_Guerra","Ortega","Portola"};
-        diningCommon = commons[tag];
+        diningCommon = DiningCommon.DATA_USE_DINING_COMMONS[tag];
 
         //Update favorites list corresponding to the tabbed Dining Common
         try {
@@ -322,8 +363,6 @@ public class MenuFragment extends BaseTabbedFragment implements AdapterView.OnIt
                 }
             }
         });
-
-
     }
 
     public void postRating(String id, int m, int mi, int x) {
