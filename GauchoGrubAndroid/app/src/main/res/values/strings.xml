@@ -11,11 +11,12 @@
     <string name="drawer_close">Close Drawer</string>
     <string-array
         name="nav_drawer_array">
-        <item>Menus</item>
-        <item>Schedule</item>
-        <item>Dining Cams</item>
+        <item>Main Menu</item>
+        <item>Food Menus</item>
+        <item>Schedules</item>
         <item>Favorites</item>
         <item>Swipes</item>
+        <item>Dining Cams</item>
     </string-array>
     <string-array
         name="dining_commons_array">

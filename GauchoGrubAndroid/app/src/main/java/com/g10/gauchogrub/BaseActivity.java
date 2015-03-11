@@ -5,6 +5,10 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.provider.Settings;
 import android.content.Context;
+import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.os.AsyncTask;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -15,10 +19,15 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-
 import com.g10.gauchogrub.dining_cams.DiningCamsFragment;
+import com.g10.gauchogrub.utils.MenuParser;
+import com.g10.gauchogrub.utils.WebUtils;
+import java.util.ArrayList;
+import com.g10.gauchogrub.services.DataAutomationService;
 import com.g10.gauchogrub.services.NotificationService;
+import com.g10.gauchogrub.utils.CacheUtils;
 
+import java.util.Calendar;
 import java.util.logging.Logger;
 
 /*
@@ -77,6 +86,7 @@ public class BaseActivity extends ActionBarActivity {
             }
         };
         navDrawerLayout.setDrawerListener(navDrawerToggle);
+        selectItem(0);
     }
 
     @Override
@@ -118,19 +128,20 @@ public class BaseActivity extends ActionBarActivity {
     /** Swaps fragments in the main content view */
     private void selectItem(int position) {
         Logger.getLogger(Logger.GLOBAL_LOGGER_NAME).info(String.format("Item {} selected in NavDrawer", position));
-
         // Create a new fragment
         Fragment fragment = null;
         if (position == 0) {
-            fragment = new MenuFragment();
+            fragment = new MainMenuFragment();
         } else if (position == 1){
-            fragment = new ScheduleFragment();
+            fragment = new MenuFragment();
         } else if (position == 2){
-            fragment = new DiningCamsFragment();
+            fragment = new ScheduleFragment();
         } else if (position == 3){
             fragment = new FavoritesFragment();
         } else if (position == 4){
             fragment = new SwipesFragment();
+        } else if (position == 5){
+            fragment = new DiningCamsFragment();
         }
 
         // Insert the fragment by replacing any existing fragment
