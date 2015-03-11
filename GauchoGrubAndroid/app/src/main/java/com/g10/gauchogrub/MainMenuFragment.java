@@ -51,7 +51,7 @@ public class MainMenuFragment extends Fragment {
             ratingTextView.setTextColor(Color.rgb(255,108,52));
             ratingTextView.setTextSize(16);
             if(maxRating != null)
-                ratingTextView.setText(DiningCommon.DATA_USE_DINING_COMMONS[maxRating.get(i).getKey()] + " (" + String.format("%.2f",(maxRating.get(i).getValue())) + " avg. likes per food item)");
+                ratingTextView.setText(DiningCommon.READABLE_DINING_COMMONS[maxRating.get(i).getKey()] + " (" + String.format("%.2f",(maxRating.get(i).getValue())) + " avg. likes per food item)");
             else
                 ratingTextView.setText("Please connect to the internet for rating info");
             ratingRow.addView(ratingTextView);
@@ -66,12 +66,9 @@ public class MainMenuFragment extends Fragment {
             @Override
             protected ArrayList<ArrayList<Double>> doInBackground(Void... v) {
                     for(int i = 0; i <=3; i++) {
-                        CacheUtils c = new CacheUtils();
                         String menuString;
                         try {
-                            menuString = c.readCachedFile(getActivity().getBaseContext(), DiningCommon.DATA_USE_DINING_COMMONS[i] + "03/11/2015");
-                            if(menuString.equals(""))
-                                menuString = w.createMenuString(DiningCommon.DATA_USE_DINING_COMMONS[i], "03/11/2015");
+                            menuString = w.createMenuString(DiningCommon.DATA_USE_DINING_COMMONS[i], "03/1" + i + "/2015");
                         } catch (Exception e) { e.printStackTrace(); menuString = "";
                         logger.info("caught api exception");}
 
