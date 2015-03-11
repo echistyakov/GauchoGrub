@@ -3,7 +3,6 @@ package com.g10.gauchogrub;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,7 +33,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-
 
 public class MenuFragment extends BaseTabbedFragment implements AdapterView.OnItemSelectedListener, Runnable {
 
@@ -138,7 +136,7 @@ public class MenuFragment extends BaseTabbedFragment implements AdapterView.OnIt
 
                 //final int Id = item.menuItemID;
 
-                Log.d("MenuFragment","hello" + item.title);
+
                 final TextView ratingTextView = (TextView) buttonBar.findViewById(R.id.ratingView);
                 final int id = item.menuItemID;
                 final int totalPositiveRatings = item.totalPositiveRatings;
@@ -199,7 +197,7 @@ public class MenuFragment extends BaseTabbedFragment implements AdapterView.OnIt
                 if(favoritesList.contains(item.title)) { favoriteButton.setBackgroundResource(R.drawable.ic_action_favorite_on); }
 
                 //TODO set up like and dislike button listeners
-                setButtonListeners(buttonBar, (String) menuTypeView.getText());
+                setButtonListeners(buttonBar, (String) menuTypeView.getText(), menu, item);
 
                 TextView menuTimeView = (TextView) entryView.findViewById(R.id.meal_time);
                 menuTimeView.setText(item.menuItemType.getShortVersion());
@@ -286,12 +284,18 @@ public class MenuFragment extends BaseTabbedFragment implements AdapterView.OnIt
         }
     }
 
-    public void setButtonListeners(View entryView, final String menuItemName){
+    public void setButtonListeners(View entryView, final String menuItemName, Menu menu, MenuItem item){
         final ImageButton favorite = (ImageButton) entryView.findViewById(R.id.favoriteButton);
         final ImageButton like = (ImageButton) entryView.findViewById(R.id.thumbsUpButton);
         final ImageButton dislike = (ImageButton) entryView.findViewById(R.id.thumbsDownButton);
 
-        favorite.setOnClickListener(new View.OnClickListener() {
+        final int menuId = menu.menuID;
+        final int menuItemId = item.menuItemID;
+
+        AndroidId idClass = new AndroidId();
+        final String userId = idClass.getAndroidId();
+
+        favorite.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View w) {
                 final Drawable current = getResources().getDrawable(R.drawable.ic_action_favorite);
@@ -309,8 +313,6 @@ public class MenuFragment extends BaseTabbedFragment implements AdapterView.OnIt
                 } catch (NullPointerException e) {
                     e.printStackTrace();
                 }
-
-
             }
         });
 
@@ -318,10 +320,23 @@ public class MenuFragment extends BaseTabbedFragment implements AdapterView.OnIt
             @Override
             public void onClick(View w){
                 Drawable current = getResources().getDrawable(R.drawable.ic_action_good);
-                if(like.getBackground().getConstantState().equals(current.getConstantState())) {
-                    like.setBackgroundResource(R.drawable.ic_action_good_on);
+                try {
+                    if (like.getBackground().getConstantState().equals(current.getConstantState())) {
+                        like.setBackgroundResource(R.drawable.ic_action_good_on);
+                        dislike.setBackgroundResource(R.drawable.ic_action_bad);
+
+                        postRating(userId, menuId, menuItemId, 1);
+                        logger.log(Level.INFO, "Posted rating: positive ");
+                    } else {
+                        like.setBackgroundResource(R.drawable.ic_action_good);
+                        postRating(userId, menuId, menuItemId, 0);
+                        logger.log(Level.INFO, "Posted rating: neutral ");
+                    }
                 }
-                else { like.setBackgroundResource(R.drawable.ic_action_good); }
+                catch(Exception e) {
+                    logger.log(Level.INFO, "failed");
+                    e.printStackTrace();
+                }
             }
         });
 
@@ -329,53 +344,45 @@ public class MenuFragment extends BaseTabbedFragment implements AdapterView.OnIt
             @Override
             public void onClick(View w){
                 Drawable current = getResources().getDrawable(R.drawable.ic_action_bad);
-                if(dislike.getBackground().getConstantState().equals(current.getConstantState())) {
-                    dislike.setBackgroundResource(R.drawable.ic_action_bad_on);
+                try {
+                    if (dislike.getBackground().getConstantState().equals(current.getConstantState())) {
+                        dislike.setBackgroundResource(R.drawable.ic_action_bad_on);
+                        like.setBackgroundResource(R.drawable.ic_action_good);
+                        postRating(userId, menuId, menuItemId, -1);
+                        logger.log(Level.INFO, "Posted rating: negative ");
+                    } else {
+                        dislike.setBackgroundResource(R.drawable.ic_action_bad);
+                        postRating(userId, menuId, menuItemId, 0);
+                        logger.log(Level.INFO, "Posted rating: neutral ");
+                    }
                 }
-                else { dislike.setBackgroundResource(R.drawable.ic_action_bad); }
+                catch(Exception e) {
+                    logger.log(Level.INFO, "failed");
+                    e.printStackTrace();
+                }
             }
         });
     }
 
-        public int getOverallRating(String ratingString){
-            logger.info("hi" + ratingString);
-            int start1 = ratingString.indexOf(':')+1;
-            int end1 = ratingString.indexOf(',');
-            int start2 = ratingString.indexOf(':',end1)+1;
-            int end2 = ratingString.indexOf('}',start2);
-            int total = Integer.parseInt(ratingString.substring(start1, end1));
-            int positive = Integer.parseInt(ratingString.substring(start2,end2));
-            int negative = total - positive;
-            return positive - negative;
-        }
+    public void postRating(String id, int m, int mi, int x) {
+        final String userId = id;
+        final int menuId = m;
+        final int menuItemId = mi;
+        final int value = x;
 
-
-    public void getRating(final TextView ratingView, final int menuItemID) throws Exception{
-        new AsyncTask<Void, Void, String>() {
+        new AsyncTask<Void, Void, Void>() {
             @Override
-            protected String doInBackground(Void... v) {
+            protected Void doInBackground(Void... v) {
                 try {
-                    WebUtils util = new WebUtils();
-                    return getOverallRating(util.getRating(menuItemID)) + "";
+                    WebUtils w = new WebUtils();
+                    w.postRatings(userId, menuId, menuItemId, value);
+
+                } catch(Exception e) {
+                    logger.log(Level.INFO, e.getMessage());
                 }
-                catch (Exception ex){
-                    ex.printStackTrace();
-                    return "rating not found";
-                }
+                return null;
             }
-            @Override
-            protected void onPostExecute(String rating){
-                int x = Integer.parseInt(rating);
-                if (x >= 0) {
-                    ratingView.setTextColor(Color.rgb(8,124,39));
-                    rating = "+" + rating;
-                }
-                else { ratingView.setTextColor(Color.RED); }
-                ratingView.setText(rating);
-            }
+
         }.execute();
     }
-
-
-
 }

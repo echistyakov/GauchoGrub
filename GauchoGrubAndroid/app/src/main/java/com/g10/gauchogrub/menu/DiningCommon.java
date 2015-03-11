@@ -3,7 +3,7 @@ package com.g10.gauchogrub.menu;
 public class DiningCommon extends NamedEnum {
 
     public static final String DATA_USE_CARILLO = "Carillo";
-    public static final String DATA_USE_DLG = "De_La_Guerra";
+    public static final String DATA_USE_DLG = "De%20La%20Guerra";
     public static final String DATA_USE_ORTEGA = "Ortega";
     public static final String DATA_USE_PORTOLA = "Portola";
     public static final String[] DATA_USE_DINING_COMMONS = {DATA_USE_CARILLO, DATA_USE_DLG, DATA_USE_ORTEGA, DATA_USE_PORTOLA};

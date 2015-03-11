@@ -1,11 +1,9 @@
 package com.g10.gauchogrub;
 
 import android.app.ActivityManager;
-import android.app.AlarmManager;
 import android.app.Fragment;
 import android.app.FragmentManager;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
+import android.provider.Settings;
 import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
@@ -48,8 +46,12 @@ public class BaseActivity extends ActionBarActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        String androidId = Settings.Secure.getString(this.getContentResolver(), Settings.Secure.ANDROID_ID);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.base_layout);
+
+        //set android_id
+        new AndroidId(androidId);
 
         // Create a drawer
         navTitle = navDrawerTitle = getTitle();
@@ -159,5 +161,15 @@ public class BaseActivity extends ActionBarActivity {
         public void onItemClick(AdapterView parent, View view, int position, long id) {
             selectItem(position);
         }
+    }
+
+    private boolean notificationServiceRunning() {
+        ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if (NotificationService.class.getName().equals(service.service.getClassName())) {
+                return true;
+            }
+        }
+        return false;
     }
 }
