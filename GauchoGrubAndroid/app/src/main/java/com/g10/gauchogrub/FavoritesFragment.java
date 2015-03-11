@@ -51,13 +51,13 @@ public class FavoritesFragment extends BaseTabbedFragment {
     private void inflateFavorites() {
         favoritesTable.removeAllViews();
 
-        for(final String favorite : favoritesList) {
+        for(String favorite : favoritesList) {
             final TableRow favoriteRow = new TableRow(getActivity().getApplicationContext());
             favoriteRow.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
             View entryView = LayoutInflater.from(getActivity().getApplicationContext()).inflate(R.layout.favorites_entry, null);
 
             final View buttonBar = LayoutInflater.from(getActivity().getApplicationContext()).inflate(R.layout.meal_entry_buttons, null);
-            final TextView favoriteView = (TextView)entryView.findViewById(R.id.meal_cat);
+            TextView favoriteView = (TextView)entryView.findViewById(R.id.meal_cat);
             favoriteView.setText(favorite);
 
             favoriteView.setOnClickListener(new View.OnClickListener() {
@@ -90,8 +90,6 @@ public class FavoritesFragment extends BaseTabbedFragment {
 
             ImageButton favButton = (ImageButton) buttonBar.findViewById(R.id.favoriteButton);
             favButton.setBackgroundResource(R.drawable.ic_action_favorite_on);
-
-
             favoriteRow.addView(entryView);
             favoritesTable.addView(favoriteRow);
         }

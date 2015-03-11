@@ -2,8 +2,6 @@ package com.g10.gauchogrub.utils;
 
 import android.content.Context;
 
-import org.joda.time.DateTime;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -11,8 +9,6 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -71,5 +67,4 @@ public class CacheUtils {
             return "";
         }
     }
-
 }

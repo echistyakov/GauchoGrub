@@ -1,6 +1,5 @@
 package com.g10.gauchogrub.services;
 
-import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
@@ -17,8 +16,6 @@ import com.g10.gauchogrub.menu.Menu;
 import com.g10.gauchogrub.menu.MenuItem;
 import com.g10.gauchogrub.utils.CacheUtils;
 import com.g10.gauchogrub.utils.MenuParser;
-
-import org.joda.time.DateTime;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -166,8 +163,6 @@ public class NotificationService extends Service {
         }
         return favoritesList;
     }
-
-
 
     @Override
     public IBinder onBind(Intent intent) {
