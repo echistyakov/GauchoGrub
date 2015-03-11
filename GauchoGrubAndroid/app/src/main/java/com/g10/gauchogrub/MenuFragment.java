@@ -352,16 +352,4 @@ public class MenuFragment extends BaseTabbedFragment implements AdapterView.OnIt
             }
         });
     }
-
-        public int getOverallRating(String ratingString){
-            logger.info("hi" + ratingString);
-            int start1 = ratingString.indexOf(':')+1;
-            int end1 = ratingString.indexOf(',');
-            int start2 = ratingString.indexOf(':',end1)+1;
-            int end2 = ratingString.indexOf('}',start2);
-            int total = Integer.parseInt(ratingString.substring(start1, end1));
-            int positive = Integer.parseInt(ratingString.substring(start2,end2));
-            int negative = total - positive;
-            return positive - negative;
-        }
 }
