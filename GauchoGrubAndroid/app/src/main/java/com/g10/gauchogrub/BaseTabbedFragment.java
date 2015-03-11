@@ -2,7 +2,6 @@ package com.g10.gauchogrub;
 
 import android.app.Fragment;
 import android.content.Context;
-import android.util.Log;
 import android.widget.TabHost;
 import android.widget.TabHost.TabSpec;
 import android.widget.TabHost.TabContentFactory;

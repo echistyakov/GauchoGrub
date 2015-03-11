@@ -313,8 +313,6 @@ public class MenuFragment extends BaseTabbedFragment implements AdapterView.OnIt
                 } catch (NullPointerException e) {
                     e.printStackTrace();
                 }
-
-
             }
         });
 

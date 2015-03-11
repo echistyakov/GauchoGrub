@@ -10,8 +10,6 @@ import com.g10.gauchogrub.menu.DiningCommon;
 import com.g10.gauchogrub.utils.CacheUtils;
 import com.g10.gauchogrub.utils.WebUtils;
 
-import org.joda.time.DateTime;
-
 import java.io.File;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -111,7 +109,4 @@ public class DataAutomationService extends Service{
             return null;
         }
     }
-
-
-
 }
