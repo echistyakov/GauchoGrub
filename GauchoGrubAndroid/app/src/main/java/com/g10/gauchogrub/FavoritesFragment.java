@@ -14,6 +14,9 @@ import android.widget.TabHost;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+
+import com.g10.gauchogrub.menu.DiningCommon;
+
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.logging.Level;
@@ -30,7 +33,7 @@ public class FavoritesFragment extends BaseTabbedFragment {
     private TableRow currentSelectedItem = null;
     private View currentButtonBar;
 
-    private String diningCommon = "Carillo";
+    private String diningCommon = DiningCommon.DATA_USE_CARILLO;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -108,9 +111,7 @@ public class FavoritesFragment extends BaseTabbedFragment {
         buttonLayout.removeView(currentButtonBar);
         currentSelectedItem = null;
         currentButtonBar = null;
-
-        String[] commons = new String[] {"Carillo","De_La_Guerra","Ortega","Portola"};
-        diningCommon = commons[tag];
+        diningCommon = DiningCommon.DATA_USE_DINING_COMMONS[tag];
         run();
     }
 

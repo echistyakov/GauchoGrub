@@ -8,6 +8,12 @@ using System.Web;
 
 namespace GauchoGrub.Models
 {
+    /*
+     * Menu - model for representing a menu.
+     * Menu is related to a specific RepeatedEvent, DiningCommon,
+     * has a specific Date and contains a list of MenuItems.
+     * Has a many-to-many relationship with MenuItems.
+     */
     [DataContract]
     public class Menu
     {
