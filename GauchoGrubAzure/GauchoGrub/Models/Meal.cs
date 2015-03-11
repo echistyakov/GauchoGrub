@@ -8,7 +8,10 @@ using System.Web;
 
 namespace GauchoGrub.Models
 {
-    // Breakfast, Brunch, Lunch, Dinner, Late Night, Sack Meal
+    /*
+     * Meal - model for representing Meals (or Meal types).
+     * Meal examples: Breakfast, Brunch, Lunch, Dinner, Late Night, Sack Meal
+     */
     [DataContract]
     public class Meal
     {
@@ -17,7 +20,7 @@ namespace GauchoGrub.Models
         [Required]
         [DataMember]
         [Index(IsUnique = true)] // Extra duplication prevention
-        [MaxLength(450)] // Unique constraint won't work without length limitation
+        [MaxLength(450)]         // Unique constraint won't work without length limitation
         public String Name { get; set; }
     }
 }

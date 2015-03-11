@@ -13,17 +13,26 @@ using GauchoGrub.Models;
 
 namespace GauchoGrub.Controllers
 {
+    /*
+     * DiningCommonsController - controller for the DiningCommon model.
+     */
     public class DiningCommonsController : ApiController
     {
         private GauchoGrubContext db = new GauchoGrubContext();
 
-        // GET: api/DiningCommons
+        /*
+         * Returns a list of all DiningCommons.
+         * GET: api/DiningCommons
+         */
         public IQueryable<DiningCommon> GetDiningCommons()
         {
             return db.DiningCommons;
         }
 
-        // GET: api/DiningCommons/5
+        /*
+         * Returns a DiningCommon witht the specified Id.
+         * GET: api/DiningCommons/5
+         */
         [ResponseType(typeof(DiningCommon))]
         public async Task<IHttpActionResult> GetDiningCommon(int id)
         {
