@@ -8,7 +8,24 @@
     <FrameLayout
         android:id="@+id/content_frame"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent" >
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:weightSum="1">
+
+            <TextView
+                android:layout_width="327dp"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="Large Text"
+                android:id="@+id/HomeTitleTextView"
+                android:layout_gravity="center_horizontal"
+                android:layout_weight="0.03" />
+        </LinearLayout>
+    </FrameLayout>
 
     <ListView android:id="@+id/left_drawer"
         android:layout_width="240dp"

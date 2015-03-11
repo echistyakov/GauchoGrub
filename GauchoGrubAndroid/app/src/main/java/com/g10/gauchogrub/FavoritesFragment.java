@@ -89,7 +89,9 @@ public class FavoritesFragment extends BaseTabbedFragment {
             setButtonListeners(buttonBar,favorite);
 
             ImageButton favButton = (ImageButton) buttonBar.findViewById(R.id.favoriteButton);
-            favButton.setBackgroundResource(R.drawable.ic_action_favorite_on);
+            favButton.setBackgroundResource(R.drawable.favorite_on_xxhdpi);
+
+
             favoriteRow.addView(entryView);
             favoritesTable.addView(favoriteRow);
         }
@@ -139,13 +141,13 @@ public class FavoritesFragment extends BaseTabbedFragment {
         favoriteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View w) {
-                final Drawable current = getResources().getDrawable(R.drawable.ic_action_favorite_on);
+                final Drawable current = getResources().getDrawable(R.drawable.favorite_on_xxhdpi);
                 if (favoriteButton.getBackground().getConstantState().equals(current.getConstantState())) {
                     favoritesList.remove(favorite);
-                    favoriteButton.setBackgroundResource(R.drawable.ic_action_favorite);
+                    favoriteButton.setBackgroundResource(R.drawable.favorite_off_xxhdpi);
                 } else {
                     favoritesList.add(favorite);
-                    favoriteButton.setBackgroundResource(R.drawable.ic_action_favorite_on);
+                    favoriteButton.setBackgroundResource(R.drawable.favorite_on_xxhdpi);
                 }
                 try {
                     writeFavorites(favoritesList, diningCommon);

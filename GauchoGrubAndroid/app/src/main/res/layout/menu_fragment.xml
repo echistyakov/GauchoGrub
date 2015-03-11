@@ -28,6 +28,15 @@
                 android:layout_height="wrap_content"
                 android:background="#ff54d4ff"></TabWidget>
 
+            <Spinner
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/schedule_spinner"
+                android:spinnerMode="dropdown"
+                android:touchscreenBlocksFocus="false"
+                android:textAlignment="center"
+                android:background="#ffffa500" />
+
             <FrameLayout
                 android:id="@android:id/tabcontent"
                 android:layout_width="fill_parent"
@@ -39,18 +48,6 @@
                     android:layout_height="fill_parent"
                     android:orientation="vertical">
 
-                    <Spinner
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/schedule_spinner"
-                        android:spinnerMode="dropdown"
-                        android:touchscreenBlocksFocus="false"
-                        android:background="#ffffae08"
-                        android:textAlignment="center"
-                        android:layout_gravity="center_horizontal"
-                        android:layout_margin="10dp"
-                        android:paddingTop="3dp"
-                        android:paddingBottom="3dp" />
                 </LinearLayout>
 
                 <LinearLayout

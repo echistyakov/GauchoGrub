@@ -14,31 +14,31 @@
             <ImageButton  android:id="@+id/thumbsUpButton"
                 android:layout_width="35dp"
                 android:layout_height="35dp"
-                android:background="@drawable/ic_action_good"
+                android:background="@drawable/upvote_off_xxhdpi"
                 android:padding="15dp"
                 android:clickable="true"
+                android:layout_marginRight="23dp"
+                android:layout_marginEnd="23dp"
                 android:layout_centerVertical="true"
                 android:layout_toLeftOf="@+id/thumbsDownButton"
-                android:layout_toStartOf="@+id/thumbsDownButton"
-                android:layout_marginRight="35dp"
-                android:layout_marginEnd="35dp"></ImageButton >
+                android:layout_toStartOf="@+id/thumbsDownButton"></ImageButton >
 
             <ImageButton  android:id="@+id/thumbsDownButton"
                 android:layout_width="35dp"
                 android:layout_height="35dp"
-                android:background="@drawable/ic_action_bad"
+                android:background="@drawable/downvote_off_xxhdpi"
                 android:padding="15dp"
                 android:clickable="true"
-                android:layout_alignParentTop="true"
+                android:layout_marginRight="25dp"
+                android:layout_marginEnd="25dp"
+                android:layout_alignTop="@+id/thumbsUpButton"
                 android:layout_toLeftOf="@+id/favoriteButton"
-                android:layout_toStartOf="@+id/favoriteButton"
-                android:layout_marginRight="35dp"
-                android:layout_marginEnd="35dp"></ImageButton >
+                android:layout_toStartOf="@+id/favoriteButton"></ImageButton >
 
             <ImageButton  android:id="@+id/favoriteButton"
                 android:layout_width="35dp"
                 android:layout_height="35dp"
-                android:background="@drawable/ic_action_favorite"
+                android:background="@drawable/favorite_off_xxhdpi"
                 android:padding="15dp"
                 android:layout_alignParentTop="true"
                 android:layout_alignParentRight="true"
@@ -51,7 +51,13 @@
         android:textColor="#000000"
         android:id="@+id/ratingView"
         android:paddingLeft="70dp"
-        android:textSize="20dp" />
+        android:textSize="25dp"
+        android:textStyle="bold"
+        android:layout_marginRight="37dp"
+        android:layout_marginEnd="37dp"
+        android:layout_alignParentTop="true"
+        android:layout_toLeftOf="@+id/thumbsUpButton"
+        android:layout_toStartOf="@+id/thumbsUpButton" />
 
 
 </RelativeLayout>
