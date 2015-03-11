@@ -352,9 +352,8 @@ public class MenuFragment extends BaseTabbedFragment implements AdapterView.OnIt
                     start1 = temp.indexOf('+') + 1;
                 }
                 int rating = Integer.parseInt(temp.substring(start1));
-                Drawable current = getResources().getDrawable(R.drawable.ic_action_bad);
+                Drawable current = getResources().getDrawable(R.drawable.downvote_off_xxhdpi);
                 try {
-                    if (dislike.getBackground().getConstantState().equals(current.getConstantState())) {
                         like.setBackgroundResource(R.drawable.upvote_off_xxhdpi);
                         postRating(userId, menuId, menuItemId, -1);
                         dislike.setBackgroundResource(R.drawable.downvote_on_xxhdpi);
