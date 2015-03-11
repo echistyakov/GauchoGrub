@@ -8,6 +8,11 @@ using System.Web;
 
 namespace GauchoGrub.Models
 {
+    /*
+     * RepeatedEvent - model for representing recurring events.
+     * RepeatedEvent is related to a specific Dining Common and Meal.
+     * It is assumed to repeat every week on a specific day and during specified time.
+     */
     [DataContract]
     public class RepeatedEvent
     {

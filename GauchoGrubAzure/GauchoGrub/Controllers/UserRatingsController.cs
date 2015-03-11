@@ -14,52 +14,35 @@ using GauchoGrub.Models;
 
 namespace GauchoGrub.Controllers
 {
+    /*
+     * UserRatingsController - controller for the UserRating model.
+     */
     public class UserRatingsController : ApiController
     {
         private GauchoGrubContext db = new GauchoGrubContext();
 
-        // POST: api/UserRatings
+        /*
+         * Saves/updates or deletes a UserRating from DB.
+         * UserId is a unique identification string that helps prevent rating duplication.
+         * MenuId and MenuItemId identify the item being rated.
+         * Rating: -1 for negative, 0 for neutral (delete rating), 1 for positive.
+         * POST: api/UserRatings?userId={string}&menuId={id}&menuItemId={id}&rating={-1,0,1}
+         */
         [ResponseType(typeof(UserRating))]
-        public async Task<IHttpActionResult> PostUserRating(UserRating userRating)
+        public async Task<IHttpActionResult> PostUserRating(string userId, int menuId, int menuItemId, int rating)
         {
-            if (!ModelState.IsValid)
+            // Delete rating
+            if (rating == 0)
             {
-                return BadRequest(ModelState);
+                TryDeleteUserRating(userId, menuId, menuItemId);
             }
-
-            db.UserRatings.Add(userRating);
-            await db.SaveChangesAsync();
-
-            return CreatedAtRoute("DefaultApi", new { id = userRating.Id }, userRating);
-        }
-
-        // GET: api/UserRatings?userId={string}&menuId={id}&menuItemId={id}&positive={bool}
-        [ResponseType(typeof(UserRating))]
-        public async Task<IHttpActionResult> PostUserRating(string userId, int menuId, int menuItemId, bool positive)
-        {
-            // Verify that the rating is being submitted during the corresponding RepeatedEvent
-            RepeatedEvent re = db.Menus.Single(m => m.Id == menuId).Event;
-            TimeSpan now = DateTime.Now.TimeOfDay;
-            if (now < re.From && now > re.To)
-            {
-                return BadRequest("Rating can only be submitted during the event");
-            }
-
             // Add or Update rating
-            UserRating ur = null;
-            try
+            else
             {
-                ur = db.UserRatings.Single(r => r.UserId.Equals(userId) && r.MenuId == menuId && r.MenuItemId == menuItemId);
-                ur.PositiveRating = positive;
+                AddOrUpdateUserRating(userId, menuId, menuItemId, rating);
             }
-            catch (Exception e)
-            {
-                ur = new UserRating { UserId = userId, MenuId = menuId, MenuItemId = menuItemId, PositiveRating = positive };
-            }
-
-            db.UserRatings.AddOrUpdate(ur);
-            db.SaveChanges();
-
+            
+            await db.SaveChangesAsync();
             return Ok();
         }
 
@@ -75,6 +58,41 @@ namespace GauchoGrub.Controllers
         private bool UserRatingExists(int id)
         {
             return db.UserRatings.Count(e => e.Id == id) > 0;
+        }
+
+        /*
+         * Private helper - attempts to delete a UserRating from DB.
+         */
+        private void TryDeleteUserRating(string userId, int menuId, int menuItemId)
+        {
+            try
+            {
+                UserRating ur = db.UserRatings.Single(r => r.UserId.Equals(userId) && r.MenuId == menuId && r.MenuItemId == menuItemId);
+                db.UserRatings.Remove(ur);
+            }
+            catch (Exception)
+            {
+                // Rating was not in the DB, pass silently
+            }
+        }
+
+        /*
+         * Private helper - adds a new UserRating or updates it in DB.
+         */
+        private void AddOrUpdateUserRating(string userId, int menuId, int menuItemId, int rating)
+        {
+            bool positive = (rating == 1) ? true : false;
+            UserRating ur = null;
+            try
+            {
+                ur = db.UserRatings.Single(r => r.UserId.Equals(userId) && r.MenuId == menuId && r.MenuItemId == menuItemId);
+                ur.PositiveRating = positive;
+            }
+            catch (Exception)
+            {
+                ur = new UserRating { UserId = userId, MenuId = menuId, MenuItemId = menuItemId, PositiveRating = positive };
+            }
+            db.UserRatings.AddOrUpdate(ur);
         }
     }
 }

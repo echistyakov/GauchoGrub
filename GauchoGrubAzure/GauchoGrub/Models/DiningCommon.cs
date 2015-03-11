@@ -8,6 +8,9 @@ using System.Web;
 
 namespace GauchoGrub.Models
 {
+    /*
+     * DiningCommon - model for representing Dining Commons.
+     */
     [DataContract]
     public class DiningCommon
     {
@@ -16,7 +19,7 @@ namespace GauchoGrub.Models
         [Required]
         [DataMember]
         [Index(IsUnique = true)] // Extra duplication prevention
-        [MaxLength(450)] // Unique constraint won't work without length limitation
+        [MaxLength(450)]         // Unique constraint won't work without length limitation
         public String Name { get; set; }
     }
 }

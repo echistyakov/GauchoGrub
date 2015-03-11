@@ -13,17 +13,26 @@ using GauchoGrub.Models;
 
 namespace GauchoGrub.Controllers
 {
+    /*
+     * RepeatedEventsController - controller for the RepeatedEvent model.
+     */
     public class RepeatedEventsController : ApiController
     {
         private GauchoGrubContext db = new GauchoGrubContext();
 
-        // GET: api/RepeatedEvents
+        /*
+         * Returns a list of all RepeatedEvents.
+         * GET: api/RepeatedEvents
+         */
         public IQueryable<RepeatedEvent> GetRepeatedEvents()
         {
             return db.RepeatedEvents;
         }
 
-        // GET: api/RepeatedEvents/5
+        /*
+         * Returns a RepeatedEvent with the specified Id.
+         * GET: api/RepeatedEvents/5
+         */
         [ResponseType(typeof(RepeatedEvent))]
         public async Task<IHttpActionResult> GetRepeatedEvent(int id)
         {
@@ -32,7 +41,6 @@ namespace GauchoGrub.Controllers
             {
                 return NotFound();
             }
-
             return Ok(repeatedEvent);
         }
 
