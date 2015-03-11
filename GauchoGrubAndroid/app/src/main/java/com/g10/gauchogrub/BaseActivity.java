@@ -1,15 +1,10 @@
 package com.g10.gauchogrub;
 
 import android.app.ActivityManager;
-import android.app.AlarmManager;
 import android.app.Fragment;
 import android.app.FragmentManager;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
+import android.provider.Settings;
 import android.content.Context;
-import android.content.Intent;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -22,11 +17,8 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.g10.gauchogrub.dining_cams.DiningCamsFragment;
-import com.g10.gauchogrub.services.DataAutomationService;
 import com.g10.gauchogrub.services.NotificationService;
-import com.g10.gauchogrub.utils.CacheUtils;
 
-import java.util.Calendar;
 import java.util.logging.Logger;
 
 /*
@@ -45,8 +37,12 @@ public class BaseActivity extends ActionBarActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        String androidId = Settings.Secure.getString(this.getContentResolver(), Settings.Secure.ANDROID_ID);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.base_layout);
+
+        //set android_id
+        new AndroidId(androidId);
 
         // Create a drawer
         navTitle = navDrawerTitle = getTitle();
@@ -81,8 +77,6 @@ public class BaseActivity extends ActionBarActivity {
             }
         };
         navDrawerLayout.setDrawerListener(navDrawerToggle);
-
-
     }
 
     @Override
@@ -124,6 +118,7 @@ public class BaseActivity extends ActionBarActivity {
     /** Swaps fragments in the main content view */
     private void selectItem(int position) {
         Logger.getLogger(Logger.GLOBAL_LOGGER_NAME).info(String.format("Item {} selected in NavDrawer", position));
+
         // Create a new fragment
         Fragment fragment = null;
         if (position == 0) {
@@ -166,5 +161,4 @@ public class BaseActivity extends ActionBarActivity {
         }
         return false;
     }
-
 }

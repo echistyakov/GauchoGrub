@@ -3,6 +3,7 @@
     package="com.g10.gauchogrub" >
 
     <!-- PERMISSIONS -->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.CLEAR_APP_CACHE"/>
@@ -14,7 +15,6 @@
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
-
         <!-- Splash Screen -->
         <activity
             android:name=".SplashScreen"
@@ -60,6 +60,7 @@
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
+    
 
         <receiver
             android:name=".utils.InternetReceiver"

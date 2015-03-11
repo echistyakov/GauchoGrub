@@ -1,6 +1,5 @@
 package com.g10.gauchogrub.utils;
 
-
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
@@ -27,5 +26,4 @@ public class InternetReceiver extends BroadcastReceiver {
                 alarmManager.set(AlarmManager.RTC_WAKEUP, 30*1000, pendingAutomationIntent);
         }
     }
-
 }
