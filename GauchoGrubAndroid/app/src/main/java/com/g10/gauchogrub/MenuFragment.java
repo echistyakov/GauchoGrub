@@ -158,14 +158,6 @@ public class MenuFragment extends BaseTabbedFragment implements AdapterView.OnIt
                                 ratingTextView.setTextColor(Color.RED);
                                 ratingTextView.setText(netRatings+"");
                             }
-                            /* Backup - used for getting a rating on item clicked in menu
-                            try {
-                                getRating(ratingTextView,id);
-                            } catch (Exception e) {
-                                ratingTextView.setText("Rating not found");
-                                e.printStackTrace();
-                            }
-                            */
                             //Switching from one selected item to another
                             if (currentSelectedItem != null) {
                                 currentSelectedItem.setBackgroundColor(0);
@@ -372,34 +364,4 @@ public class MenuFragment extends BaseTabbedFragment implements AdapterView.OnIt
             int negative = total - positive;
             return positive - negative;
         }
-
-
-    public void getRating(final TextView ratingView, final int menuItemID) throws Exception{
-        new AsyncTask<Void, Void, String>() {
-            @Override
-            protected String doInBackground(Void... v) {
-                try {
-                    WebUtils util = new WebUtils();
-                    return getOverallRating(util.getRating(menuItemID)) + "";
-                }
-                catch (Exception ex){
-                    ex.printStackTrace();
-                    return "rating not found";
-                }
-            }
-            @Override
-            protected void onPostExecute(String rating){
-                int x = Integer.parseInt(rating);
-                if (x >= 0) {
-                    ratingView.setTextColor(Color.rgb(8,124,39));
-                    rating = "+" + rating;
-                }
-                else { ratingView.setTextColor(Color.RED); }
-                ratingView.setText(rating);
-            }
-        }.execute();
-    }
-
-
-
 }
