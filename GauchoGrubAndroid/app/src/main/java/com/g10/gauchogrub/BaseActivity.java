@@ -84,6 +84,7 @@ public class BaseActivity extends ActionBarActivity {
             }
         };
         navDrawerLayout.setDrawerListener(navDrawerToggle);
+        selectItem(0);
     }
 
     @Override
@@ -128,17 +129,17 @@ public class BaseActivity extends ActionBarActivity {
         // Create a new fragment
         Fragment fragment = null;
         if (position == 0) {
-            fragment = new MenuFragment();
+            fragment = new MainMenuFragment();
         } else if (position == 1){
-            fragment = new ScheduleFragment();
+            fragment = new MenuFragment();
         } else if (position == 2){
-            fragment = new DiningCamsFragment();
+            fragment = new ScheduleFragment();
         } else if (position == 3){
             fragment = new FavoritesFragment();
         } else if (position == 4){
             fragment = new SwipesFragment();
         } else if (position == 5){
-            fragment = new MainMenuFragment();
+            fragment = new DiningCamsFragment();
         }
 
         // Insert the fragment by replacing any existing fragment
