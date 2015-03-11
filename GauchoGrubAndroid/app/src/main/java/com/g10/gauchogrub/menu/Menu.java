@@ -14,5 +14,5 @@ public class Menu {
     @SerializedName("MenuItems")
     public ArrayList<MenuItem> menuItems;
     @SerializedName("Id")
-    public int id;
+    public int menuID;
 }

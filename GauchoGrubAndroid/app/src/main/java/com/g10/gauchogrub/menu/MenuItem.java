@@ -10,5 +10,9 @@ public class MenuItem {
     @SerializedName("MenuItemType")
     public MenuItemType menuItemType;
     @SerializedName("Id")
-    public int id;
+    public int menuItemID;
+    @SerializedName("TotalRatings")
+    public int totalRatings;
+    @SerializedName("TotalPositiveRatings")
+    public int totalPositiveRatings;
 }

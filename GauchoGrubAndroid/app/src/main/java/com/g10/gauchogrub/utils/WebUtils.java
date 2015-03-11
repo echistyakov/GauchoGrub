@@ -123,10 +123,11 @@ public class WebUtils {
         return result;
     }
 
-    public void postRatings(String userId, int menuId, int menuItemId, int rating) throws Exception{
+    public void postRatings(String userId, int menuId, int menuItemId, int rating) throws Exception {
         String ur = "http://gauchogrub.azurewebsites.net/api/UserRatings?userId=" + userId + "&menuId=" + menuId + "&menuItemId=" + menuItemId + "&rating=" + rating;
         URL url = new URL(ur);
-        httpRequest(url,HttpMethod.POST,100000);
+        httpRequest(url, HttpMethod.POST, 100000);
+    }
 
     public String getRating(final int menuItemID) throws Exception{
                     String test = menuItemID + "";

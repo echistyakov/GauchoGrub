@@ -136,7 +136,7 @@ public class MenuFragment extends BaseTabbedFragment implements AdapterView.OnIt
 
                 //final int Id = item.menuItemID;
 
-                Log.d("MenuFragment","hello" + item.title);
+
                 final TextView ratingTextView = (TextView) buttonBar.findViewById(R.id.ratingView);
                 final int id = item.menuItemID;
                 final int totalPositiveRatings = item.totalPositiveRatings;
@@ -289,8 +289,8 @@ public class MenuFragment extends BaseTabbedFragment implements AdapterView.OnIt
         final ImageButton like = (ImageButton) entryView.findViewById(R.id.thumbsUpButton);
         final ImageButton dislike = (ImageButton) entryView.findViewById(R.id.thumbsDownButton);
 
-        final int menuId = menu.id;
-        final int menuItemId = item.id;
+        final int menuId = menu.menuID;
+        final int menuItemId = item.menuItemID;
 
         AndroidId idClass = new AndroidId();
         final String userId = idClass.getAndroidId();
@@ -325,6 +325,7 @@ public class MenuFragment extends BaseTabbedFragment implements AdapterView.OnIt
                 try {
                     if (like.getBackground().getConstantState().equals(current.getConstantState())) {
                         like.setBackgroundResource(R.drawable.ic_action_good_on);
+                        dislike.setBackgroundResource(R.drawable.ic_action_bad);
 
                         postRating(userId, menuId, menuItemId, 1);
                         logger.log(Level.INFO, "Posted rating: positive ");
@@ -348,7 +349,7 @@ public class MenuFragment extends BaseTabbedFragment implements AdapterView.OnIt
                 try {
                     if (dislike.getBackground().getConstantState().equals(current.getConstantState())) {
                         dislike.setBackgroundResource(R.drawable.ic_action_bad_on);
-
+                        like.setBackgroundResource(R.drawable.ic_action_good);
                         postRating(userId, menuId, menuItemId, -1);
                         logger.log(Level.INFO, "Posted rating: negative ");
                     } else {
