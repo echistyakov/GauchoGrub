@@ -17,9 +17,9 @@
                 android:background="@drawable/upvote_off_xxhdpi"
                 android:padding="15dp"
                 android:clickable="true"
-                android:layout_marginRight="23dp"
-                android:layout_marginEnd="23dp"
-                android:layout_centerVertical="true"
+                android:layout_marginRight="25dp"
+                android:layout_marginEnd="25dp"
+                android:layout_alignParentTop="true"
                 android:layout_toLeftOf="@+id/thumbsDownButton"
                 android:layout_toStartOf="@+id/thumbsDownButton"></ImageButton >
 
