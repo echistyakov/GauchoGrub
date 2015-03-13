@@ -43,7 +43,7 @@ public abstract class BaseTabbedFragment extends Fragment {
         });
     }
 
-    public boolean writeFavorites(HashSet<String> favorites, String diningCommon) throws IOException {
+    public boolean writeFavorites(HashSet<String> favorites, String diningCommon) {
         OutputStreamWriter outStream;
         try {
             logger.info("Writing favorites to file");
@@ -52,13 +52,13 @@ public abstract class BaseTabbedFragment extends Fragment {
                 outStream.write(favorite + "\n");
             }
             outStream.close();
-        } catch (IOException e) {
+        } catch (IOException | NullPointerException e) {
             return false;
         }
         return true;
     }
 
-    public HashSet<String> fillFavoritesList(String diningCommon) throws IOException, NullPointerException {
+    public HashSet<String> fillFavoritesList(String diningCommon) {
         String tempFavorite;
         FileInputStream inStream;
         HashSet<String> favoritesList = new HashSet<>();

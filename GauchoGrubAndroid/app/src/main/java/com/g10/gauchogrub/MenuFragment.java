@@ -66,11 +66,7 @@ public class MenuFragment extends BaseTabbedFragment implements AdapterView.OnIt
 
         this.fillSpinnerWithDates();
 
-        try {
-            favoritesList = fillFavoritesList(diningCommon);
-        } catch (IOException | NullPointerException e) {
-            logger.warning(e.toString());
-        }
+        favoritesList = fillFavoritesList(diningCommon);
 
         // Initialize Spinner
         Spinner spinner = (Spinner) rootView.findViewById(R.id.schedule_spinner);
@@ -247,11 +243,7 @@ public class MenuFragment extends BaseTabbedFragment implements AdapterView.OnIt
         diningCommon = DiningCommon.DATA_USE_DINING_COMMONS[tag];
 
         //Update favorites list corresponding to the tabbed Dining Common
-        try {
-            favoritesList = fillFavoritesList(diningCommon);
-        } catch (IOException e) {
-            logger.warning(e.toString());
-        }
+        favoritesList = fillFavoritesList(diningCommon);
         run();
     }
 
@@ -298,11 +290,8 @@ public class MenuFragment extends BaseTabbedFragment implements AdapterView.OnIt
                     favorite.setBackgroundResource(R.drawable.favorite_off_xxhdpi);
                     favoritesList.remove(menuItemName);
                 }
-                try {
-                    writeFavorites(favoritesList, diningCommon);
-                } catch (IOException | NullPointerException e) {
-                    logger.warning(e.toString());
-                }
+
+                writeFavorites(favoritesList, diningCommon);
             }
         });
 

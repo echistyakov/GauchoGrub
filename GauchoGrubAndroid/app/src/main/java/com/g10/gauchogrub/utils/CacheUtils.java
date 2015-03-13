@@ -14,12 +14,6 @@ public class CacheUtils {
 
     private final static Logger logger = Logger.getLogger("CachingUtils");
 
-    /**
-     *
-     */
-    public CacheUtils() {
-    }
-
     public boolean cacheFile(Context context, String fileName, String data) {
         try {
             File file = new File(context.getApplicationContext().getCacheDir(), fileName);
