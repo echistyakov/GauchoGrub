@@ -19,7 +19,7 @@ import java.util.logging.Logger;
 public class ScheduleFragment extends BaseTabbedFragment {
 
     private TableLayout scheduleTable;
-    public final static Logger logger = Logger.getLogger("ScheduleFragment");
+    private final static Logger logger = Logger.getLogger("ScheduleFragment");
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {

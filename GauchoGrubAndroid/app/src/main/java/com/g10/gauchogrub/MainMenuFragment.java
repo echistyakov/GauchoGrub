@@ -14,6 +14,7 @@ import android.widget.TextView;
 import com.g10.gauchogrub.menu.DiningCommon;
 import com.g10.gauchogrub.menu.Menu;
 import com.g10.gauchogrub.menu.MenuItem;
+import com.g10.gauchogrub.utils.APIInterface;
 import com.g10.gauchogrub.utils.CacheUtils;
 import com.g10.gauchogrub.utils.MenuParser;
 import com.g10.gauchogrub.utils.WebUtils;
@@ -23,9 +24,9 @@ import java.util.logging.Logger;
 
 public class MainMenuFragment extends Fragment {
 
-    public final static Logger logger = Logger.getLogger("MainMenuFragment");
+    private final static Logger logger = Logger.getLogger("MainMenuFragment");
     ArrayList<ArrayList<Double>> allRankings;
-    WebUtils w = new WebUtils();
+    APIInterface api = new APIInterface();
     MenuParser mp = new MenuParser();
     TableLayout ratingsTable;
 
@@ -58,25 +59,26 @@ public class MainMenuFragment extends Fragment {
             ratingsTable.addView(ratingRow, count);
             count += 2;
         }
-
     }
 
     public void getTodaysRankings() {
         new AsyncTask<Void, Void, ArrayList<ArrayList<Double>>>() {
             @Override
             protected ArrayList<ArrayList<Double>> doInBackground(Void... v) {
-                    for(int i = 0; i <=3; i++) {
-                        String menuString;
-                        try {
-                            menuString = w.createMenuString(DiningCommon.DATA_USE_DINING_COMMONS[i], "03/1" + i + "/2015");
-                        } catch (Exception e) { e.printStackTrace(); menuString = "";
-                        logger.info("caught api exception");}
-
-                        ArrayList<Menu> todaysMenus = mp.getDailyMenuList(menuString);
-                        ArrayList<Double> todaysRankings = getRankings(todaysMenus);
-                        allRankings.add(todaysRankings);
+                for (int i = 0; i <=3; i++) {
+                    String menuJson = "";
+                    try {
+                        menuJson = api.getMenuJson(DiningCommon.DATA_USE_DINING_COMMONS[i], "03/1" + i + "/2015");
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        logger.info("caught api exception");
                     }
-                    return allRankings;
+
+                    ArrayList<Menu> todaysMenus = mp.getDailyMenuList(menuJson);
+                    ArrayList<Double> todaysRankings = getRankings(todaysMenus);
+                    allRankings.add(todaysRankings);
+                }
+                return allRankings;
             }
             @Override
             protected void onPostExecute(ArrayList<ArrayList<Double>> result) {
@@ -174,5 +176,4 @@ public class MainMenuFragment extends Fragment {
         else
             return null;
     }
-
 }

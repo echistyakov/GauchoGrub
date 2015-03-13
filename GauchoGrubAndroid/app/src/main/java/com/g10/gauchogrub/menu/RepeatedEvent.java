@@ -1,6 +1,7 @@
 package com.g10.gauchogrub.menu;
 
 import com.google.gson.annotations.SerializedName;
+
 import org.joda.time.Period;
 
 public class RepeatedEvent {

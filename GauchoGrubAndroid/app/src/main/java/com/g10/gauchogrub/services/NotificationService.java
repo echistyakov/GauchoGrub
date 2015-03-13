@@ -29,7 +29,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class NotificationService extends Service {
@@ -48,14 +47,14 @@ public class NotificationService extends Service {
     private class NotificationTask extends AsyncTask<Void, Void, Void> {
         @Override
         protected Void doInBackground(Void... params) {
-
-            //Creates string with all favorites that appear today, names, dining commons, and meals
-            //in format; "MenuItemName is being served at DiningCommonName during MealName"
+            // Creates string with all favorites that appear today, names, dining commons, and meals
+            // in format; "MenuItemName is being served at DiningCommonName during MealName"
             HashMap<String, ArrayList<String>> favorites = getFavoritesToday();
             NotificationCompat.Builder builder;
             int i = 0;
-            if (favorites.size() <= 0)
+            if (favorites.size() <= 0) {
                 stopSelf();
+            }
             // Sends out up to 5 individual notifications (don't want to send the user
             // too many notifications)
             Intent baseIntent = new Intent(getBaseContext(), BaseActivity.class);
@@ -73,8 +72,7 @@ public class NotificationService extends Service {
                         .setGroupSummary(true)
                         .setContentTitle("Favorites Today - " + meal)
                         .setContentText("Expand for details")
-                        .setStyle(style
-                                .setBigContentTitle("Favorites Today - " + meal));
+                        .setStyle(style.setBigContentTitle("Favorites Today - " + meal));
                 builder.setContentIntent(bIntent);
                 NotificationManager nManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
                 nManager.notify(i++, builder.build());
@@ -85,41 +83,41 @@ public class NotificationService extends Service {
     }
 
     /**
-     * Creates a Hashmap where each key corresponds to a Meal name, and its value is an arraylist of all notification strings for that meal.
-     * @return a Hashmap of strings mapped to arraylists of strings.
+     * Creates a HashMap where each key corresponds to a Meal name, and its value is an ArrayList of all notification strings for that meal.
+     * @return a HashMap of strings mapped to ArrayLists of strings.
      */
     private HashMap<String, ArrayList <String>> getFavoritesToday() {
-        //Gets all cached files
+        // Gets all cached files
         CacheUtils c = new CacheUtils();
         Date date = new Date();
         DateFormat dateFormat = new SimpleDateFormat("MMddyyyy");
         File file = new File(getApplicationContext().getCacheDir().getAbsolutePath());
         File[] files = file.listFiles();
-        //List of DiningCommons
+        // List of DiningCommons
         HashMap <String, ArrayList<String>> notifications = new HashMap<>();
         try {
-            for(int i = 0; i < 4; i++) {
+            for (int i = 0; i < 4; i++) {
                 HashSet<String> favorites = fillFavoritesList(DiningCommon.DATA_USE_DINING_COMMONS[i]);
-                //For each stored file
+                // For each stored file
                 for (File f : files) {
-                    //if JSON File is for today && right diningCommon
+                    // if JSON File is for today && right diningCommon
                     if (f.getName().contains(dateFormat.format(date)) &&
                             f.getName().contains(DiningCommon.DATA_USE_DINING_COMMONS[i])) {
-                        //Parse Menus
+                        // Parse Menus
                         MenuParser menuParser = new MenuParser();
                         ArrayList<Menu> menus = menuParser.getDailyMenuList(c.readCachedFile(this, f.getName()));
-                        //For each Menu in JSON File
+                        // For each Menu in JSON File
                         for (Menu m : menus) {
-                            //For each menuItem in menu
+                            // For each menuItem in menu
                             for (MenuItem menuItem : m.menuItems) {
-                                //For each favoritedItem
+                                // For each favoritedItem
                                 for (String favorite : favorites) {
-                                    //Checks that the item is in the favorites
+                                    // Checks that the item is in the favorites
                                     if (menuItem.title.equals(favorite)) {
-                                        //Adds to the ArrayList
+                                        // Adds to the ArrayList
                                         String mealName = m.event.meal.name;
                                         String addString = favorite + " - " + DiningCommon.READABLE_DINING_COMMONS[i];
-                                        //For first item of that meal type
+                                        // For first item of that meal type
                                         if(!notifications.containsKey(m.event.meal.name)) {
                                             notifications.put(mealName, new ArrayList<String>());
                                         }
@@ -133,7 +131,7 @@ public class NotificationService extends Service {
             }
         }
         catch (Exception ex) {
-            logger.log(Level.INFO, ex.getMessage());
+            logger.info(ex.getMessage());
         }
         return notifications;
     }
@@ -155,11 +153,11 @@ public class NotificationService extends Service {
                 inStream.close();
             }
         } catch (FileNotFoundException e) {
-            logger.log(Level.INFO, "login activity", "File not found: " + e.toString());
+            logger.info("File not found: " + e.toString());
         } catch (IOException e) {
-            logger.log(Level.INFO, "login activity", "Can not read file: " + e.toString());
+            logger.info("Can not read file: " + e.toString());
         } catch (NullPointerException e) {
-            logger.log(Level.INFO, "login activity", "List reached end: " + e.toString());
+            logger.info("List reached end: " + e.toString());
         }
         return favoritesList;
     }

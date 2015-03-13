@@ -8,7 +8,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TabHost;
 import android.widget.TableLayout;
@@ -26,7 +25,7 @@ import java.util.logging.Logger;
 public class FavoritesFragment extends BaseTabbedFragment {
 
     HashSet<String> favoritesList;
-    public final static Logger logger = Logger.getLogger("FavoritesFragment");
+    private final static Logger logger = Logger.getLogger("FavoritesFragment");
 
     private TableLayout favoritesTable;
     private RelativeLayout buttonLayout;

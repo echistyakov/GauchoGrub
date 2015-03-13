@@ -5,16 +5,14 @@ import android.content.Context;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class CacheUtils {
 
-    public final static Logger logger = Logger.getLogger("CachingUtils");
+    private final static Logger logger = Logger.getLogger("CachingUtils");
 
     /**
      *
@@ -22,7 +20,6 @@ public class CacheUtils {
     public CacheUtils() {
     }
 
-    //date = MMDDYYYY
     public boolean cacheFile(Context context, String fileName, String data) {
         try {
             File file = new File(context.getApplicationContext().getCacheDir(), fileName);
@@ -32,7 +29,7 @@ public class CacheUtils {
             return true;
         }
         catch (IOException ex) {
-            logger.log(Level.INFO, ex.getMessage());
+            logger.info(ex.getMessage());
         }
         return false;
    }
@@ -59,11 +56,7 @@ public class CacheUtils {
             streamReader.close();
             inputStream.close();
             return builder.toString();
-        } catch (FileNotFoundException ex) {
-            return "";
-        } catch (IOException ex) {
-            return "";
-        } catch (NullPointerException ex) {
+        } catch (IOException|NullPointerException ex) {
             return "";
         }
     }

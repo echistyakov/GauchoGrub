@@ -20,7 +20,7 @@ import java.util.logging.Logger;
 
 public abstract class BaseTabbedFragment extends Fragment {
 
-    public final static Logger logger = Logger.getLogger("BaseTabbedFragment");
+    private final static Logger logger = Logger.getLogger("BaseTabbedFragment");
 
     public abstract void setDisplayContent(int tag);
 

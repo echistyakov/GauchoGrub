@@ -5,10 +5,6 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.provider.Settings;
 import android.content.Context;
-import android.content.Intent;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
-import android.os.AsyncTask;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -19,15 +15,10 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import com.g10.gauchogrub.dining_cams.DiningCamsFragment;
-import com.g10.gauchogrub.utils.MenuParser;
-import com.g10.gauchogrub.utils.WebUtils;
-import java.util.ArrayList;
-import com.g10.gauchogrub.services.DataAutomationService;
-import com.g10.gauchogrub.services.NotificationService;
-import com.g10.gauchogrub.utils.CacheUtils;
 
-import java.util.Calendar;
+import com.g10.gauchogrub.dining_cams.DiningCamsFragment;
+import com.g10.gauchogrub.services.NotificationService;
+
 import java.util.logging.Logger;
 
 /*

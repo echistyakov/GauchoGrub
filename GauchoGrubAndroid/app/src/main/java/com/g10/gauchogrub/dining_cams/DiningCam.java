@@ -1,7 +1,9 @@
 package com.g10.gauchogrub.dining_cams;
 
 import android.graphics.Bitmap;
+
 import com.g10.gauchogrub.utils.WebUtils;
+
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Date;
@@ -13,12 +15,13 @@ import java.util.logging.Logger;
  */
 public class DiningCam {
 
-    public final static String Carrillo = "http://diningcams.housing.ucsb.edu/Image/Carrillo?";
-    public final static String DeLaGuerra = "http://diningcams.housing.ucsb.edu/Image/DeLaGuerra?";
-    public final static String Ortega = "http://diningcams.housing.ucsb.edu/Image/Ortega?";
-    // There is no DiningCam for Portola
+    private final static Logger logger = Logger.getLogger("DiningCam");
 
-    public final static Logger logger = Logger.getLogger("DiningCam");
+    private final static String BASE_CAM_URL = "http://diningcams.housing.ucsb.edu/Image/";
+    public final static String CARRILLO = BASE_CAM_URL + "CARRILLO?";
+    public final static String DE_LA_GUERRA = BASE_CAM_URL + "DE_LA_GUERRA?";
+    public final static String ORTEGA = BASE_CAM_URL + "ORTEGA?";
+    // No DiningCam for Portola
 
     private String partialUrl;
     private WebUtils web;
@@ -41,6 +44,6 @@ public class DiningCam {
 
     public Bitmap getCurrentImage(int delay) {
         URL currentUrl = this.getCurrentImageUrl();
-        return web.getDrawable(currentUrl, delay);
+        return web.getBitmap(currentUrl, delay);
     }
 }

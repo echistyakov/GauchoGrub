@@ -15,6 +15,7 @@ import android.widget.TabHost;
 import android.widget.TableLayout;
 
 import com.g10.gauchogrub.menu.DiningCommon;
+import com.g10.gauchogrub.utils.APIInterface;
 import com.g10.gauchogrub.utils.CacheUtils;
 import com.g10.gauchogrub.utils.WebUtils;
 import com.g10.gauchogrub.utils.MenuParser;
@@ -36,7 +37,7 @@ import java.text.SimpleDateFormat;
 
 public class MenuFragment extends BaseTabbedFragment implements AdapterView.OnItemSelectedListener, Runnable {
 
-    public final static Logger logger = Logger.getLogger("MenuFragment");
+    private final static Logger logger = Logger.getLogger("MenuFragment");
     private TableLayout menuTable;
     private static String diningCommon;
     private static String date;
@@ -211,13 +212,13 @@ public class MenuFragment extends BaseTabbedFragment implements AdapterView.OnIt
             @Override
             protected ArrayList<Menu> doInBackground(Void... v) {
                 try {
-                    WebUtils w = new WebUtils();
+                    APIInterface api = new APIInterface();
                     String menuString, title = diningCommon + date.replace("/","");
                     CacheUtils c = new CacheUtils();
                     if(new File(getActivity().getBaseContext().getCacheDir(), title).exists())
                         menuString = c.readCachedFile(getActivity(), title);
                     else {
-                        menuString = w.createMenuString(diningCommon, date);
+                        menuString = api.getMenuJson(diningCommon, date);
                         c.cacheFile(getActivity(), title, menuString);
                     }
                     MenuParser mp = new MenuParser();
@@ -248,8 +249,6 @@ public class MenuFragment extends BaseTabbedFragment implements AdapterView.OnIt
             favoritesList = fillFavoritesList(diningCommon);
         } catch(IOException e){
             e.printStackTrace();
-        } catch(NullPointerException e){
-            e.printStackTrace();
         }
 
         run();
@@ -268,7 +267,7 @@ public class MenuFragment extends BaseTabbedFragment implements AdapterView.OnIt
 
     //function to fill drop down menu with the next seven dates
     public void fillSpinnerWithDates(){
-        DateFormat dateFormat = new SimpleDateFormat(WebUtils.REQUEST_DATE_FORMAT);
+        DateFormat dateFormat = new SimpleDateFormat(APIInterface.REQUEST_DATE_FORMAT);
         Date date = new Date();
 
         for(int i = 0; i < 7 ; i++){
@@ -392,18 +391,13 @@ public class MenuFragment extends BaseTabbedFragment implements AdapterView.OnIt
             @Override
             protected Void doInBackground(Void... v) {
                 try {
-                    WebUtils w = new WebUtils();
-                    w.postRatings(userId, menuId, menuItemId, value);
-
+                    APIInterface api = new APIInterface();
+                    api.postRating(userId, menuId, menuItemId, value);
                 } catch(Exception e) {
                     logger.log(Level.INFO, e.getMessage());
                 }
                 return null;
             }
-
         }.execute();
     }
-
-
-
 }

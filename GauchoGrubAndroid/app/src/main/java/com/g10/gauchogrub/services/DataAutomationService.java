@@ -1,12 +1,12 @@
 package com.g10.gauchogrub.services;
 
-
 import android.app.Service;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.IBinder;
 
 import com.g10.gauchogrub.menu.DiningCommon;
+import com.g10.gauchogrub.utils.APIInterface;
 import com.g10.gauchogrub.utils.CacheUtils;
 import com.g10.gauchogrub.utils.WebUtils;
 
@@ -18,7 +18,7 @@ import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class DataAutomationService extends Service{
+public class DataAutomationService extends Service {
 
     public static Logger logger = Logger.getLogger("DataAutomationService");
 
@@ -53,29 +53,27 @@ public class DataAutomationService extends Service{
     private class CleanCacheTask extends AsyncTask<Void, Void, Void> {
         @Override
         protected Void doInBackground(Void... params) {
-            Calendar cal = Calendar.getInstance();
+            Calendar calendar = Calendar.getInstance();
             File cacheDir = new File(getApplicationContext().getCacheDir().getAbsolutePath());
             File[] cachedFiles = cacheDir.listFiles();
             for(File f : cachedFiles) {
                 Date dateModified = new Date(f.lastModified());
-                cal.add(Calendar.DATE, -1);
-                Date yesterday = new Date(cal.getTimeInMillis());
-                //Checks if it is the favorites file
+                calendar.add(Calendar.DATE, -1);
+                Date yesterday = new Date(calendar.getTimeInMillis());
+                // Checks if it is the favorites file
                 if(dateModified.before(yesterday) && !f.getName().contains("Favorites")) {
                     try {
                         f.delete();
                     }
                     catch (Exception ex) {
+                        logger.warning("Clean cache task failed");
                         logger.info(ex.getMessage());
-                        System.out.println("CLEAN CACHE TASK FAILED HERE");
-                        ex.printStackTrace();
                     }
                 }
             }
             return null;
         }
     }
-
 
     /**
      * UpdateDownloadsTask is a private inner class that is an AsyncTask to run
@@ -84,19 +82,19 @@ public class DataAutomationService extends Service{
     private class UpdateDownloadsTask extends AsyncTask<Void, Void, Void> {
         @Override
         protected Void doInBackground(Void... params) {
-            WebUtils w = new WebUtils();
+            APIInterface api = new APIInterface();
             CacheUtils c = new CacheUtils();
-            DateFormat requestFormat = new SimpleDateFormat(WebUtils.REQUEST_DATE_FORMAT);
-            //for each of the 7 days
-            for(int i = 0; i < 7; i++) {
-                //for each dining common
-                for(int j = 0; j < 4; j++) {
-                    Calendar cal = Calendar.getInstance();
-                    cal.add(Calendar.DATE, i);
-                    String requestDate = requestFormat.format(new Date(cal.getTimeInMillis()));
+            DateFormat requestFormat = new SimpleDateFormat(APIInterface.REQUEST_DATE_FORMAT);
+            // for each of the 7 days
+            for (int i = 0; i < 7; i++) {
+                // for each dining common
+                for (int j = 0; j < 4; j++) {
+                    Calendar calendar = Calendar.getInstance();
+                    calendar.add(Calendar.DATE, i);
+                    String requestDate = requestFormat.format(new Date(calendar.getTimeInMillis()));
                     try {
-                        String menu = w.createMenuString(DiningCommon.DATA_USE_DINING_COMMONS[j], requestDate);
-                        String saveDate = requestFormat.format(new Date(cal.getTimeInMillis())).replace("/","");
+                        String menu = api.getMenuJson(DiningCommon.DATA_USE_DINING_COMMONS[j], requestDate);
+                        String saveDate = requestFormat.format(new Date(calendar.getTimeInMillis())).replace("/", "");
 
                         String fileName = DiningCommon.DATA_USE_DINING_COMMONS[j] + saveDate;
                         c.cacheFile(getBaseContext(), fileName, menu);

@@ -11,7 +11,7 @@ import android.webkit.WebView;
 
 public class SwipesFragment extends Fragment {
 
-    public final static Logger logger = Logger.getLogger("FavoritesFragment");
+    private final static Logger logger = Logger.getLogger("FavoritesFragment");
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {

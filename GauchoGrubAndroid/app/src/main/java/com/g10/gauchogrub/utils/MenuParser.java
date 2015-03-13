@@ -14,16 +14,16 @@ import com.google.gson.reflect.TypeToken;
 import org.joda.time.DateTime;
 import org.joda.time.Period;
 
-public class MenuParser{
+public class MenuParser {
 
-    public final static Logger logger = Logger.getLogger("MenuParser");
+    private final static Logger logger = Logger.getLogger("MenuParser");
     public static final Type listMenuType = new TypeToken<ArrayList<Menu>>() {}.getType();
 
     public ArrayList<Menu> getDailyMenuList(String menuString) {
         try {
             return deserialize(menuString, listMenuType);
         } catch (Exception ex) {
-            ex.printStackTrace();
+            logger.info(ex.getMessage());
         }
         return null;
     }

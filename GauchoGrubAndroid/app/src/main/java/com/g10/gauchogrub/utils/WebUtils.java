@@ -1,6 +1,5 @@
 package com.g10.gauchogrub.utils;
 
-
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
@@ -20,12 +19,9 @@ import java.util.logging.Logger;
 
 public class WebUtils {
 
-    public static final int BASIC_TIMEOUT = 60 * 1000;        // 60 seconds
-    public static final int DOWNLOAD_TIMEOUT = 5 * 60 * 1000; // 5 minutes
-    public static final String REQUEST_DATE_FORMAT = "MM/dd/yyyy";
-    public final static Logger logger = Logger.getLogger("WebUtils");
+    private final static Logger logger = Logger.getLogger("WebUtils");
 
-    public Bitmap getDrawable(URL url, int timeout){
+    public Bitmap getBitmap(URL url, int timeout){
         HttpURLConnection connection = null;
         Bitmap image = null;
         try {
@@ -101,7 +97,7 @@ public class WebUtils {
         ByteArrayBuffer response = new ByteArrayBuffer(100000);
         byte[] buffer = new byte[1024];
         int length;
-        while((length = reader.read(buffer)) != -1){
+        while ((length = reader.read(buffer)) != -1){
             response.append(buffer, 0, length);
         }
         reader.close();
@@ -111,28 +107,6 @@ public class WebUtils {
     /* Logs the URL */
     private void log(URL url) {
         logger.log(Level.INFO, url.toString());
-    }
-
-    public String createMenuString(String diningCommon, String date) throws Exception{
-        //Make API Call
-        String ur = "http://gauchogrub.azurewebsites.net/api/Menus?diningCommon=" + diningCommon + "&date=" + date;
-        URL url = new URL(ur);
-        String result = httpRequest(url,HttpMethod.GET,100000);
-        return result;
-    }
-
-    public void postRatings(String userId, int menuId, int menuItemId, int rating) throws Exception {
-        String ur = "http://gauchogrub.azurewebsites.net/api/UserRatings?userId=" + userId + "&menuId=" + menuId + "&menuItemId=" + menuItemId + "&rating=" + rating;
-        URL url = new URL(ur);
-        httpRequest(url, HttpMethod.POST, 100000);
-    }
-
-    public String getRating(final int menuItemID) throws Exception{
-                    String test = menuItemID + "";
-                    String ur = "http://gauchogrub.azurewebsites.net/api/Ratings?menuItemId=" + test;
-                    URL url = new URL(ur);
-                    String result = httpRequest(url,HttpMethod.GET,100000);
-                    return result;
     }
 
     public enum HttpMethod {

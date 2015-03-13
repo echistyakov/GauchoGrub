@@ -9,10 +9,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TabHost;
+import android.widget.TabHost.TabContentFactory;
 
 import com.g10.gauchogrub.BaseTabbedFragment;
 import com.g10.gauchogrub.R;
-
 
 public class DiningCamsFragment extends BaseTabbedFragment implements Runnable {
 
@@ -34,11 +34,10 @@ public class DiningCamsFragment extends BaseTabbedFragment implements Runnable {
         return rootView;
     }
 
-    public void setDisplayContent(int tag) {
-        // An item was selected. You can retrieve the selected item using
-        // parent.getItemAtPosition(pos)
-        String[] camUrls = new String[]{DiningCam.Carrillo, DiningCam.DeLaGuerra, DiningCam.Ortega};
-        String camUrl = camUrls[tag];
+    public void setDisplayContent(int index) {
+        // An item was selected. You can retrieve the selected item using parent.getItemAtPosition(pos)
+        String[] camUrls = new String[]{DiningCam.CARRILLO, DiningCam.DE_LA_GUERRA, DiningCam.ORTEGA};
+        String camUrl = camUrls[index];
         this.currentCam = new DiningCam(camUrl);
         this.startCam();
     }
@@ -90,8 +89,8 @@ public class DiningCamsFragment extends BaseTabbedFragment implements Runnable {
         }
     }
 
-    public TabHost.TabContentFactory createTabContent(){
-        return new TabHost.TabContentFactory() {
+    public TabContentFactory createTabContent(){
+        return new TabContentFactory() {
             public View createTabContent(String tag) {
                 setDisplayContent(Integer.parseInt(tag));
                 return imageView;
