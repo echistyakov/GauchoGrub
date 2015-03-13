@@ -1,5 +1,6 @@
 package com.g10.gauchogrub;
 
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,6 +25,7 @@ public class ScheduleFragment extends BaseTabbedFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
         View rootView = inflater.inflate(R.layout.schedule_fragment, container, false);
         this.scheduleTable = (TableLayout) rootView.findViewById(R.id.schedule_table);
         // Create page tabs

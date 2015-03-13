@@ -1,5 +1,6 @@
 package com.g10.gauchogrub;
 
+import android.content.pm.ActivityInfo;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -52,6 +53,7 @@ public class MenuFragment extends BaseTabbedFragment implements AdapterView.OnIt
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
         View rootView = inflater.inflate(R.layout.menu_fragment, container, false);
         setHasOptionsMenu(true);
 
@@ -179,8 +181,6 @@ public class MenuFragment extends BaseTabbedFragment implements AdapterView.OnIt
                 if (favoritesList.contains(item.title)) {
                     favoriteButton.setBackgroundResource(R.drawable.favorite_on_xxhdpi);
                 }
-
-                //TODO set up like and dislike button listeners
                 setButtonListeners(buttonBar, (String) menuTypeView.getText(), menu, item);
 
                 TextView menuTimeView = (TextView) entryView.findViewById(R.id.meal_time);

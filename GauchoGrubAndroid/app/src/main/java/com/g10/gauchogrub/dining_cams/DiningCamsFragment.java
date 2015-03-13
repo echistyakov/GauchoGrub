@@ -1,5 +1,6 @@
 package com.g10.gauchogrub.dining_cams;
 
+import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -24,6 +25,7 @@ public class DiningCamsFragment extends BaseTabbedFragment implements Runnable {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
         View rootView = inflater.inflate(R.layout.dining_cams_fragment, container, false);
         this.imageView = (ImageView) rootView.findViewById(R.id.dining_cam_image_view);
         this.handler = new Handler();

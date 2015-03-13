@@ -1,5 +1,6 @@
 package com.g10.gauchogrub;
 
+import android.content.pm.ActivityInfo;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
@@ -33,6 +34,7 @@ public class FavoritesFragment extends BaseTabbedFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
         favoritesList = new HashSet<>();
         View rootView = inflater.inflate(R.layout.favorites_fragment, container, false);
         favoritesTable = (TableLayout)rootView.findViewById(R.id.favorites_table);
@@ -142,7 +144,7 @@ public class FavoritesFragment extends BaseTabbedFragment {
                 }
                 try {
                     FileIOUtils fio = new FileIOUtils();
-                    fio.writeFavorites(getActivity().getBaseContext(),favoritesList, diningCommon);
+                    fio.writeFavorites(getActivity().getBaseContext(), favoritesList, diningCommon);
                 } catch (Exception e) {
                     logger.warning(e.toString());
                 }
