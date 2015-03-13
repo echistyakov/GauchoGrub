@@ -22,7 +22,7 @@ public class InternetReceiver extends BroadcastReceiver {
         PendingIntent pendingAutomationIntent = PendingIntent.getService(context, 0, automationIntent, 0);
         if (netInfo != null && netInfo.isConnectedOrConnecting()) {
             WifiManager wifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
-            if (wifiManager.isWifiEnabled()){
+            if (wifiManager.isWifiEnabled()) {
                 alarmManager.set(AlarmManager.RTC_WAKEUP, 30 * 1000, pendingAutomationIntent);
             }
         }

@@ -21,7 +21,7 @@ public class WebUtils {
 
     private final static Logger logger = Logger.getLogger("WebUtils");
 
-    public Bitmap getBitmap(URL url, int timeout){
+    public Bitmap getBitmap(URL url, int timeout) {
         HttpURLConnection connection = null;
         Bitmap image = null;
         try {
@@ -34,9 +34,7 @@ public class WebUtils {
             byte[] response = readByteStream(connection.getInputStream());
             logger.info("GET image/jpeg: " + response.length + " bytes");
             image = BitmapFactory.decodeByteArray(response, 0, response.length);
-        } catch (SocketTimeoutException e) {
-            return null;
-        } catch(IOException e){
+        } catch (IOException e) {
             return null;
         } finally {
             connection.disconnect();
@@ -97,7 +95,7 @@ public class WebUtils {
         ByteArrayBuffer response = new ByteArrayBuffer(100000);
         byte[] buffer = new byte[1024];
         int length;
-        while ((length = reader.read(buffer)) != -1){
+        while ((length = reader.read(buffer)) != -1) {
             response.append(buffer, 0, length);
         }
         reader.close();

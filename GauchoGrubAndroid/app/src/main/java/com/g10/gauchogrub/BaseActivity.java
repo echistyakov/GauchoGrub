@@ -90,7 +90,7 @@ public class BaseActivity extends ActionBarActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        //getMenuInflater().inflate(R.menu.main_menu, menu);
+        // getMenuInflater().inflate(R.menu.main_menu, menu);
         return true;
     }
 
@@ -101,12 +101,11 @@ public class BaseActivity extends ActionBarActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
+
         if (id == R.id.action_settings) {
             return true;
-        }  else {
-            return super.onOptionsItemSelected(item) ||
-                   navDrawerToggle.onOptionsItemSelected(item);
+        } else {
+            return super.onOptionsItemSelected(item) || navDrawerToggle.onOptionsItemSelected(item);
         }
     }
 
@@ -116,22 +115,24 @@ public class BaseActivity extends ActionBarActivity {
         getSupportActionBar().setTitle(title);
     }
 
-    /** Swaps fragments in the main content view */
+    /**
+     * Swaps fragments in the main content view
+     */
     private void selectItem(int position) {
         Logger.getLogger(Logger.GLOBAL_LOGGER_NAME).info(String.format("Item {} selected in NavDrawer", position));
         // Create a new fragment
         Fragment fragment = null;
         if (position == 0) {
             fragment = new MainMenuFragment();
-        } else if (position == 1){
+        } else if (position == 1) {
             fragment = new MenuFragment();
-        } else if (position == 2){
+        } else if (position == 2) {
             fragment = new ScheduleFragment();
-        } else if (position == 3){
+        } else if (position == 3) {
             fragment = new FavoritesFragment();
-        } else if (position == 4){
+        } else if (position == 4) {
             fragment = new SwipesFragment();
-        } else if (position == 5){
+        } else if (position == 5) {
             fragment = new DiningCamsFragment();
         }
 

@@ -41,7 +41,7 @@ public class BootReceiver extends BroadcastReceiver {
 
         // sets up data automation service
         if (netinfo != null && netinfo.isConnectedOrConnecting()) {
-            alarmManager.set(AlarmManager.RTC_WAKEUP, 2*60*1000, pendingAutomationIntent);
+            alarmManager.set(AlarmManager.RTC_WAKEUP, 2 * 60 * 1000, pendingAutomationIntent);
             context.startService(timedIntent);
         }
         calendar.set(Calendar.HOUR_OF_DAY, 5);

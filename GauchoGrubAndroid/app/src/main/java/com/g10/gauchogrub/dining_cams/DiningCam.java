@@ -31,11 +31,11 @@ public class DiningCam {
         this.web = new WebUtils();
     }
 
-    private URL getCurrentImageUrl(){
+    private URL getCurrentImageUrl() {
         // Base URL concatenated with current UNIX time
         try {
             return new URL(this.partialUrl + new Date().getTime());
-        } catch(MalformedURLException e) {
+        } catch (MalformedURLException e) {
             // Will never happen, but just in case...
             logger.log(Level.INFO, e.toString());
             return null;

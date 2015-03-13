@@ -17,7 +17,7 @@ import java.util.Calendar;
 
 public class SplashScreen extends Activity {
 
-    private static int splashInterval = 2000;
+    private final static int SPLASH_INTERVAL = 2 * 1000;  // 2 seconds
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,7 +26,7 @@ public class SplashScreen extends Activity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
-        //makes sure notifications are running
+        // Makes sure notifications are running
         AlarmManager alarmManager = (AlarmManager) this.getSystemService(ALARM_SERVICE);
         Intent timedIntent = new Intent(this, NotificationService.class);
         PendingIntent pendingIntent = PendingIntent.getService(this, 0, timedIntent, 0);
@@ -36,13 +36,13 @@ public class SplashScreen extends Activity {
         calendar.set(Calendar.SECOND, 0);
         alarmManager.setRepeating(AlarmManager.RTC, calendar.getTimeInMillis(),
                 AlarmManager.INTERVAL_DAY, pendingIntent);
-        //Runs automation service
+        // Runs automation service
         Intent automationIntent = new Intent(this, DataAutomationService.class);
         PendingIntent pendingAutomationIntent = PendingIntent.getService(this, 0, automationIntent, 0);
         WifiManager wifiManager = (WifiManager) getSystemService(WIFI_SERVICE);
-        if(wifiManager.isWifiEnabled())
+        if (wifiManager.isWifiEnabled()) {
             alarmManager.set(AlarmManager.RTC_WAKEUP, 0, pendingAutomationIntent);
-
+        }
         setContentView(R.layout.splash_layout);
 
         new Handler().postDelayed(new Runnable() {
@@ -56,6 +56,6 @@ public class SplashScreen extends Activity {
             private void finish() {
 
             }
-        }, splashInterval);
+        }, SPLASH_INTERVAL);
     }
 }

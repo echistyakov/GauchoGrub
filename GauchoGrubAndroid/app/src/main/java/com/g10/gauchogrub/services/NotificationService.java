@@ -142,7 +142,7 @@ public class NotificationService extends Service {
         HashSet<String> favoritesList = new HashSet<>();
 
         try {
-            inStream = getApplicationContext().openFileInput("favorites" + diningCommon);
+            inStream = getApplicationContext().openFileInput("favorites_" + diningCommon);
             if (inStream != null) {
                 InputStreamReader inputStreamReader = new InputStreamReader(inStream);
                 BufferedReader bufferedReader = new BufferedReader(inputStreamReader);

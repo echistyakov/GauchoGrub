@@ -15,5 +15,4 @@ public class RepeatedEvent {
     public Period from;
     @SerializedName("To")
     public Period to;
-
 }

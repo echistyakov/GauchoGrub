@@ -8,10 +8,9 @@ import java.util.logging.Logger;
 import android.app.Fragment;
 import android.webkit.WebView;
 
-
 public class SwipesFragment extends Fragment {
 
-    private final static Logger logger = Logger.getLogger("FavoritesFragment");
+    private final static Logger logger = Logger.getLogger("SwipesFragment");
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {

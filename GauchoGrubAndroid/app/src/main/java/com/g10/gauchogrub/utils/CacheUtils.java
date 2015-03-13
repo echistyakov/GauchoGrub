@@ -27,15 +27,13 @@ public class CacheUtils {
             outputStream.write(data.getBytes());
             outputStream.close();
             return true;
-        }
-        catch (IOException ex) {
+        } catch (IOException ex) {
             logger.info(ex.getMessage());
         }
         return false;
-   }
+    }
 
     /**
-     *
      * @param context
      * @param fileName
      * @return
@@ -56,7 +54,7 @@ public class CacheUtils {
             streamReader.close();
             inputStream.close();
             return builder.toString();
-        } catch (IOException|NullPointerException ex) {
+        } catch (IOException | NullPointerException ex) {
             return "";
         }
     }

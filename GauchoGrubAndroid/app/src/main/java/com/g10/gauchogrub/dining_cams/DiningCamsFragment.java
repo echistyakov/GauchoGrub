@@ -28,7 +28,7 @@ public class DiningCamsFragment extends BaseTabbedFragment implements Runnable {
         this.imageView = (ImageView) rootView.findViewById(R.id.dining_cam_image_view);
         this.handler = new Handler();
 
-        TabHost tabs = (TabHost)rootView.findViewById(R.id.tabHost);
+        TabHost tabs = (TabHost) rootView.findViewById(R.id.tabHost);
         this.setUpTabs(tabs, createTabContent(), 3);
 
         return rootView;
@@ -45,7 +45,7 @@ public class DiningCamsFragment extends BaseTabbedFragment implements Runnable {
     @Override
     public void onPause() {
         super.onPause();
-        if(this.currentCam != null) {
+        if (this.currentCam != null) {
             this.stopCam();
         }
     }
@@ -53,7 +53,7 @@ public class DiningCamsFragment extends BaseTabbedFragment implements Runnable {
     @Override
     public void onResume() {
         super.onResume();
-        if(this.currentCam != null) {
+        if (this.currentCam != null) {
             this.startCam();
         }
     }
@@ -75,8 +75,9 @@ public class DiningCamsFragment extends BaseTabbedFragment implements Runnable {
             protected Bitmap doInBackground(Void... v) {
                 return currentCam.getCurrentImage(delay);
             }
+
             @Override
-            protected void onPostExecute(Bitmap result){
+            protected void onPostExecute(Bitmap result) {
                 imageView.setImageBitmap(result);
                 scheduleCamUpdate();
             }
@@ -84,12 +85,12 @@ public class DiningCamsFragment extends BaseTabbedFragment implements Runnable {
     }
 
     private void scheduleCamUpdate() {
-        if(isOn) {
+        if (isOn) {
             handler.postDelayed(this, delay);
         }
     }
 
-    public TabContentFactory createTabContent(){
+    public TabContentFactory createTabContent() {
         return new TabContentFactory() {
             public View createTabContent(String tag) {
                 setDisplayContent(Integer.parseInt(tag));

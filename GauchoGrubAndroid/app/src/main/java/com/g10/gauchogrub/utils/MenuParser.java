@@ -1,10 +1,10 @@
 package com.g10.gauchogrub.utils;
 
-import com.g10.gauchogrub.menu.Menu;
 import java.util.ArrayList;
 import java.util.logging.Logger;
 import java.lang.reflect.Type;
 
+import com.g10.gauchogrub.menu.Menu;
 import com.g10.gauchogrub.utils.gson.DateTimeDeserializer;
 import com.g10.gauchogrub.utils.gson.PeriodDeserializer;
 import com.google.gson.Gson;

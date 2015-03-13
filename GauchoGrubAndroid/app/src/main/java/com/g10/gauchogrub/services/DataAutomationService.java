@@ -8,7 +8,6 @@ import android.os.IBinder;
 import com.g10.gauchogrub.menu.DiningCommon;
 import com.g10.gauchogrub.utils.APIInterface;
 import com.g10.gauchogrub.utils.CacheUtils;
-import com.g10.gauchogrub.utils.WebUtils;
 
 import java.io.File;
 import java.text.DateFormat;

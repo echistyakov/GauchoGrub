@@ -24,9 +24,9 @@ import java.util.logging.Logger;
 
 public class FavoritesFragment extends BaseTabbedFragment {
 
-    HashSet<String> favoritesList;
     private final static Logger logger = Logger.getLogger("FavoritesFragment");
 
+    private HashSet<String> favoritesList;
     private TableLayout favoritesTable;
     private RelativeLayout buttonLayout;
     private TableRow currentSelectedItem = null;
@@ -106,6 +106,7 @@ public class FavoritesFragment extends BaseTabbedFragment {
         };
     }
 
+    @Override
     public void setDisplayContent(int tag) {
         buttonLayout.removeView(currentButtonBar);
         currentSelectedItem = null;

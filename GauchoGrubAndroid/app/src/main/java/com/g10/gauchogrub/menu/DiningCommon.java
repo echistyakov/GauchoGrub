@@ -14,4 +14,7 @@ public class DiningCommon extends NamedEnum {
     public final static String READABLE_PORTOLA = "Portola";
     public final static String[] READABLE_DINING_COMMONS = {READABLE_CARILLO, READABLE_DLG, READABLE_ORTEGA, READABLE_PORTOLA};
 
+    public enum DiningCommons {
+        DLG, Carillo, Portola, Ortega
+    }
 }
