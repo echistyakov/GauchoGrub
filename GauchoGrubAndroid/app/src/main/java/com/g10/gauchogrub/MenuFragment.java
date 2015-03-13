@@ -21,6 +21,7 @@ import android.os.AsyncTask;
 import com.g10.gauchogrub.menu.DiningCommon;
 import com.g10.gauchogrub.utils.APIInterface;
 import com.g10.gauchogrub.utils.CacheUtils;
+import com.g10.gauchogrub.utils.FileIOUtils;
 import com.g10.gauchogrub.utils.MenuParser;
 import com.g10.gauchogrub.menu.Menu;
 import com.g10.gauchogrub.menu.MenuItem;
@@ -65,8 +66,8 @@ public class MenuFragment extends BaseTabbedFragment implements AdapterView.OnIt
         this.setUpTabs(tabs, createTabContent(), 4);
 
         this.fillSpinnerWithDates();
-
-        favoritesList = fillFavoritesList(diningCommon);
+        FileIOUtils fio = new FileIOUtils();
+        favoritesList = fio.fillFavoritesList(getActivity().getBaseContext(), diningCommon);
 
         // Initialize Spinner
         Spinner spinner = (Spinner) rootView.findViewById(R.id.schedule_spinner);
@@ -243,7 +244,8 @@ public class MenuFragment extends BaseTabbedFragment implements AdapterView.OnIt
         diningCommon = DiningCommon.DATA_USE_DINING_COMMONS[tag];
 
         //Update favorites list corresponding to the tabbed Dining Common
-        favoritesList = fillFavoritesList(diningCommon);
+        FileIOUtils fio = new FileIOUtils();
+        favoritesList = fio.fillFavoritesList(getActivity().getBaseContext(), diningCommon);
         run();
     }
 
@@ -290,8 +292,8 @@ public class MenuFragment extends BaseTabbedFragment implements AdapterView.OnIt
                     favorite.setBackgroundResource(R.drawable.favorite_off_xxhdpi);
                     favoritesList.remove(menuItemName);
                 }
-
-                writeFavorites(favoritesList, diningCommon);
+                FileIOUtils fio = new FileIOUtils();
+                fio.writeFavorites(getActivity().getBaseContext(),favoritesList, diningCommon);
             }
         });
 

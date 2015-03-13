@@ -15,6 +15,7 @@ import android.widget.TableRow;
 import android.widget.TextView;
 
 import com.g10.gauchogrub.menu.DiningCommon;
+import com.g10.gauchogrub.utils.FileIOUtils;
 
 import java.io.IOException;
 import java.util.HashSet;
@@ -118,7 +119,8 @@ public class FavoritesFragment extends BaseTabbedFragment {
             @Override
             protected HashSet<String> doInBackground(Void... v) {
                 try {
-                    favoritesList = fillFavoritesList(diningCommon);
+                    FileIOUtils fio = new FileIOUtils();
+                    favoritesList = fio.fillFavoritesList(getActivity().getBaseContext(), diningCommon);
                     for(String test : favoritesList){
                         logger.info("list contains: " + test);
                     }
@@ -148,8 +150,9 @@ public class FavoritesFragment extends BaseTabbedFragment {
                     favoriteButton.setBackgroundResource(R.drawable.favorite_on_xxhdpi);
                 }
                 try {
-                    writeFavorites(favoritesList, diningCommon);
-                } catch (IOException e) {
+                    FileIOUtils fio = new FileIOUtils();
+                    fio.writeFavorites(getActivity().getBaseContext(),favoritesList, diningCommon);
+                } catch (Exception e) {
                     logger.warning(e.toString());
                 }
             }

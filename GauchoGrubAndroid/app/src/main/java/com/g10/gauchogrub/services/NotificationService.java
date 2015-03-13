@@ -15,6 +15,7 @@ import com.g10.gauchogrub.menu.DiningCommon;
 import com.g10.gauchogrub.menu.Menu;
 import com.g10.gauchogrub.menu.MenuItem;
 import com.g10.gauchogrub.utils.CacheUtils;
+import com.g10.gauchogrub.utils.FileIOUtils;
 import com.g10.gauchogrub.utils.MenuParser;
 
 import java.io.BufferedReader;
@@ -90,6 +91,7 @@ public class NotificationService extends Service {
     private HashMap<String, ArrayList<String>> getFavoritesToday() {
         // Gets all cached files
         CacheUtils c = new CacheUtils();
+        FileIOUtils fio = new FileIOUtils();
         Date date = new Date();
         DateFormat dateFormat = new SimpleDateFormat("MMddyyyy");
         File file = new File(getApplicationContext().getCacheDir().getAbsolutePath());
@@ -98,7 +100,7 @@ public class NotificationService extends Service {
         HashMap<String, ArrayList<String>> notifications = new HashMap<>();
         try {
             for (int i = 0; i < 4; i++) {
-                HashSet<String> favorites = fillFavoritesList(DiningCommon.DATA_USE_DINING_COMMONS[i]);
+                HashSet<String> favorites = fio.fillFavoritesList(getBaseContext(),DiningCommon.DATA_USE_DINING_COMMONS[i]);
                 // For each stored file
                 for (File f : files) {
                     // if JSON File is for today && right diningCommon
@@ -134,32 +136,6 @@ public class NotificationService extends Service {
             logger.info(e.getMessage());
         }
         return notifications;
-    }
-
-    private HashSet<String> fillFavoritesList(String diningCommon) {
-        String tempFavorite;
-        FileInputStream inStream;
-        HashSet<String> favoritesList = new HashSet<>();
-
-        try {
-            inStream = getApplicationContext().openFileInput("favorites_" + diningCommon);
-            if (inStream != null) {
-                InputStreamReader inputStreamReader = new InputStreamReader(inStream);
-                BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
-                while ((tempFavorite = bufferedReader.readLine()) != null) {
-                    favoritesList.add(tempFavorite);
-                    logger.info("Reading String " + tempFavorite);
-                }
-                inStream.close();
-            }
-        } catch (FileNotFoundException e) {
-            logger.info("File not found: " + e.toString());
-        } catch (IOException e) {
-            logger.info("Can not read file: " + e.toString());
-        } catch (NullPointerException e) {
-            logger.info("List reached end: " + e.toString());
-        }
-        return favoritesList;
     }
 
     @Override

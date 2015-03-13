@@ -43,44 +43,4 @@ public abstract class BaseTabbedFragment extends Fragment {
         });
     }
 
-    public boolean writeFavorites(HashSet<String> favorites, String diningCommon) {
-        OutputStreamWriter outStream;
-        try {
-            logger.info("Writing favorites to file");
-            outStream = new OutputStreamWriter(getActivity().getApplicationContext().openFileOutput("favorites_" + diningCommon, Context.MODE_PRIVATE)); //new FileOutputStream(favoritesFile);
-            for (String favorite : favorites) {
-                outStream.write(favorite + "\n");
-            }
-            outStream.close();
-        } catch (IOException | NullPointerException e) {
-            return false;
-        }
-        return true;
-    }
-
-    public HashSet<String> fillFavoritesList(String diningCommon) {
-        String tempFavorite;
-        FileInputStream inStream;
-        HashSet<String> favoritesList = new HashSet<>();
-
-        try {
-            logger.info("Reading favorites from file");
-            inStream = getActivity().getApplicationContext().openFileInput("favorites_" + diningCommon);
-            if (inStream != null) {
-                InputStreamReader inputStreamReader = new InputStreamReader(inStream);
-                BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
-                while ((tempFavorite = bufferedReader.readLine()) != null) {
-                    favoritesList.add(tempFavorite);
-                }
-                inStream.close();
-            }
-        } catch (FileNotFoundException e) {
-            logger.info("File not found: " + e.toString());
-        } catch (IOException e) {
-            logger.info("Can not read file: " + e.toString());
-        } catch (NullPointerException e) {
-            logger.info("List reached end: " + e.toString());
-        }
-        return favoritesList;
-    }
 }
