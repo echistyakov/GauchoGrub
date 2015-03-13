@@ -21,6 +21,10 @@ import java.util.AbstractMap.SimpleEntry;
 import java.util.ArrayList;
 import java.util.logging.Logger;
 
+/**
+ * The MainMenuFragment class defines the visual representation and functionality for displaying Main Menu Options
+ * in our interface.
+ */
 public class MainMenuFragment extends Fragment {
 
     public final static Logger logger = Logger.getLogger("MainMenuFragment");
@@ -29,6 +33,19 @@ public class MainMenuFragment extends Fragment {
     MenuParser mp = new MenuParser();
     TableLayout ratingsTable;
 
+    /**
+     * Make the function call to retrieve Menus in order to calculate and display ratings
+     *
+     * @param inflater The LayoutInflater object that can be used to inflate
+     * any views in the fragment,
+     * @param container If non-null, this is the parent view that the fragment's
+     * UI should be attached to.  The fragment should not add the view itself,
+     * but this can be used to generate the LayoutParams of the view.
+     * @param savedInstanceState If non-null, this fragment is being re-constructed
+     * from a previous saved state as given here.
+     *
+     * @return Return the View for the fragment's UI, or null.
+     */
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.main_menu_fragment, container, false);
         allRankings = new ArrayList<>();
@@ -39,6 +56,9 @@ public class MainMenuFragment extends Fragment {
         return rootView;
     }
 
+    /**
+     * Fill up textviews that contains information about the highest rated dining commons for each meal of the current day
+     */
     public void inflateRatingsTable(){
         int count = 1;
         ArrayList<SimpleEntry<Integer,Double>> maxRating = findHighestMealRatings();
@@ -61,6 +81,10 @@ public class MainMenuFragment extends Fragment {
 
     }
 
+    /**
+     * Performs an asychronous task to retrieve todays menus from the API and calls the function to display the highest
+     * rated dining commons
+     */
     public void getTodaysRankings() {
         new AsyncTask<Void, Void, ArrayList<ArrayList<Double>>>() {
             @Override
@@ -87,6 +111,13 @@ public class MainMenuFragment extends Fragment {
 
     }
 
+    /**
+     * Compute the average rating for each Menu by adding up the rating up every menu item on the menu and dividing
+     * by the total number of menu items.
+     *
+     * @param menus list of todays menu to retrieve item ratings from
+     * @return
+     */
     public ArrayList<Double> getRankings(ArrayList<Menu> menus) {
         double totalRating = 0, itemCount = 0;
         ArrayList<Double> dayRatings = new ArrayList<>();
@@ -104,6 +135,12 @@ public class MainMenuFragment extends Fragment {
         return dayRatings;
     }
 
+    /**
+     * Extracts a Menu Item rating from the total number of ratings an item has and the total number of positive ratings an item has
+     *
+     * @param item Menu Item to get a rating from
+     * @return
+     */
     public int getItemRating(MenuItem item){
         int totalPositiveRatings = item.totalPositiveRatings;
         int totalRating = item.totalRatings;
@@ -111,6 +148,12 @@ public class MainMenuFragment extends Fragment {
         return totalPositiveRatings - negativeRatings;
     }
 
+    /**
+     * Finds the highest rated breakfast lunch and dinner by comparing the ratings for breakfast lunch and dinner at
+     * each dining common
+     *
+     * @return
+     */
     public ArrayList<SimpleEntry<Integer,Double>> findHighestMealRatings() {
         if(allRankings.size() > 0 && allRankings.get(0).size() > 0) {
             double maxBreakFastRating = allRankings.get(0).get(0);
