@@ -3,7 +3,6 @@ package com.g10.gauchogrub;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,7 +25,6 @@ import com.g10.gauchogrub.menu.Menu;
 import com.g10.gauchogrub.menu.MenuItem;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.HashSet;
 import java.util.logging.Logger;
 import java.util.ArrayList;

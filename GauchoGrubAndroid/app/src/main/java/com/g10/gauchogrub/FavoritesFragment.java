@@ -16,10 +16,8 @@ import android.widget.TextView;
 
 import com.g10.gauchogrub.menu.DiningCommon;
 
-import java.io.IOException;
 import java.util.HashSet;
 import java.util.logging.Logger;
-
 
 public class FavoritesFragment extends BaseTabbedFragment {
 
@@ -147,11 +145,7 @@ public class FavoritesFragment extends BaseTabbedFragment {
                     favoritesList.add(favorite);
                     favoriteButton.setBackgroundResource(R.drawable.favorite_on_xxhdpi);
                 }
-                try {
-                    writeFavorites(favoritesList, diningCommon);
-                } catch (IOException e) {
-                    logger.warning(e.toString());
-                }
+                writeFavorites(favoritesList, diningCommon);
             }
         });
     }
