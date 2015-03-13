@@ -15,12 +15,14 @@ import com.g10.gauchogrub.menu.DiningCommon;
 import com.g10.gauchogrub.menu.Menu;
 import com.g10.gauchogrub.menu.MenuItem;
 import com.g10.gauchogrub.utils.APIInterface;
-import com.g10.gauchogrub.utils.CacheUtils;
 import com.g10.gauchogrub.utils.MenuParser;
-import com.g10.gauchogrub.utils.WebUtils;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.AbstractMap.SimpleEntry;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.logging.Logger;
 
 public class MainMenuFragment extends Fragment {
@@ -36,7 +38,7 @@ public class MainMenuFragment extends Fragment {
         allRankings = new ArrayList<>();
         ratingsTable = (TableLayout) rootView.findViewById(R.id.rankingsTable);
 
-        getTodaysRankings();
+        getCurrentDiningCommonRankings();
 
         return rootView;
     }
@@ -62,14 +64,20 @@ public class MainMenuFragment extends Fragment {
         }
     }
 
-    public void getTodaysRankings() {
+    public void getCurrentDiningCommonRankings() {
         new AsyncTask<Void, Void, ArrayList<ArrayList<Double>>>() {
             @Override
             protected ArrayList<ArrayList<Double>> doInBackground(Void... v) {
+                Calendar cal = Calendar.getInstance();
+                if (cal.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY ||
+                        cal.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY) // Saturday or Sunday
+
                 for (int i = 0; i <= 3; i++) {
                     String menuJson = "";
                     try {
-                        menuJson = api.getMenuJson(DiningCommon.DATA_USE_DINING_COMMONS[i], "03/1" + i + "/2015");
+                        Date date = new Date();
+                        DateFormat dateFormat = new SimpleDateFormat(APIInterface.REQUEST_DATE_FORMAT);
+                        menuJson = api.getMenuJson(DiningCommon.DATA_USE_DINING_COMMONS[i], dateFormat.format(date));
                     } catch (Exception e) {
                         logger.info("Caught API exception");
                         logger.info(e.toString());
@@ -82,6 +90,10 @@ public class MainMenuFragment extends Fragment {
                 return allRankings;
             }
 
+            /**
+             * onPostExecute is an overriden method of the AsyncTask class, inflates the ratings table
+             * @param result the return value allrankings from doInBackground
+             */
             @Override
             protected void onPostExecute(ArrayList<ArrayList<Double>> result) {
                 logger.info("entered post execute");
@@ -91,7 +103,7 @@ public class MainMenuFragment extends Fragment {
 
     }
 
-    public ArrayList<Double> getRankings(ArrayList<Menu> menus) {
+    private ArrayList<Double> getRankings(ArrayList<Menu> menus) {
         double totalRating = 0, itemCount = 0;
         ArrayList<Double> dayRatings = new ArrayList<>();
         if (menus == null) {
@@ -110,7 +122,7 @@ public class MainMenuFragment extends Fragment {
         return dayRatings;
     }
 
-    public int getItemRating(MenuItem item) {
+    private int getItemRating(MenuItem item) {
         int totalPositiveRatings = item.totalPositiveRatings;
         int totalRating = item.totalRatings;
         int negativeRatings = totalRating - totalPositiveRatings;
