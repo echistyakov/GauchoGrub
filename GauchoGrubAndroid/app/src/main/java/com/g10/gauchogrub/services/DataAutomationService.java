@@ -84,9 +84,9 @@ public class DataAutomationService extends Service {
             APIInterface api = new APIInterface();
             CacheUtils cache = new CacheUtils();
             DateFormat requestFormat = new SimpleDateFormat(APIInterface.REQUEST_DATE_FORMAT);
-            // for each of the 7 days
+            // For each of the 7 days
             for (int i = 0; i < 7; i++) {
-                // for each dining common
+                // For each dining common
                 for (int j = 0; j < 4; j++) {
                     Calendar calendar = Calendar.getInstance();
                     calendar.add(Calendar.DATE, i);
@@ -94,8 +94,8 @@ public class DataAutomationService extends Service {
                     try {
                         String menu = api.getMenuJson(DiningCommon.DATA_USE_DINING_COMMONS[j], requestDate);
                         String saveDate = requestFormat.format(new Date(calendar.getTimeInMillis())).replace("/", "");
-
                         String fileName = DiningCommon.DATA_USE_DINING_COMMONS[j] + saveDate;
+
                         cache.cacheFile(getBaseContext(), fileName, menu);
                     } catch (Exception ex) {
                         logger.info(ex.getMessage());

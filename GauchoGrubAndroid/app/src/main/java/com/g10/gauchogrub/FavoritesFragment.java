@@ -17,10 +17,8 @@ import android.widget.TextView;
 import com.g10.gauchogrub.menu.DiningCommon;
 import com.g10.gauchogrub.utils.FileIOUtils;
 
-import java.io.IOException;
 import java.util.HashSet;
 import java.util.logging.Logger;
-
 
 public class FavoritesFragment extends BaseTabbedFragment {
 
