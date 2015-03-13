@@ -130,15 +130,15 @@ public class NotificationService extends Service {
                 }
             }
         }
-        catch (Exception ex) {
-            logger.info(ex.getMessage());
+        catch (Exception e) {
+            logger.info(e.getMessage());
         }
         return notifications;
     }
 
     private HashSet<String> fillFavoritesList(String diningCommon) {
-        String tempFavorite = "";
-        FileInputStream inStream = null;
+        String tempFavorite;
+        FileInputStream inStream;
         HashSet<String> favoritesList = new HashSet<>();
 
         try {

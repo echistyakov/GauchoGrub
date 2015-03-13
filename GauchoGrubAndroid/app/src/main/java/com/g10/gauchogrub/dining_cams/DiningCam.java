@@ -7,7 +7,6 @@ import com.g10.gauchogrub.utils.WebUtils;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Date;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -18,9 +17,9 @@ public class DiningCam {
     private final static Logger logger = Logger.getLogger("DiningCam");
 
     private final static String BASE_CAM_URL = "http://diningcams.housing.ucsb.edu/Image/";
-    public final static String CARRILLO = BASE_CAM_URL + "CARRILLO?";
-    public final static String DE_LA_GUERRA = BASE_CAM_URL + "DE_LA_GUERRA?";
-    public final static String ORTEGA = BASE_CAM_URL + "ORTEGA?";
+    public final static String CARRILLO = BASE_CAM_URL + "Carrillo?";
+    public final static String DE_LA_GUERRA = BASE_CAM_URL + "DeLaGuerra?";
+    public final static String ORTEGA = BASE_CAM_URL + "Ortega?";
     // No DiningCam for Portola
 
     private String partialUrl;
@@ -37,7 +36,7 @@ public class DiningCam {
             return new URL(this.partialUrl + new Date().getTime());
         } catch (MalformedURLException e) {
             // Will never happen, but just in case...
-            logger.log(Level.INFO, e.toString());
+            logger.info(e.toString());
             return null;
         }
     }

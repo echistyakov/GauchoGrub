@@ -7,12 +7,15 @@ import org.apache.http.util.ByteArrayBuffer;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
+import java.io.UnsupportedEncodingException;
 import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -100,6 +103,24 @@ public class WebUtils {
         }
         reader.close();
         return response.toByteArray();
+    }
+
+    /* Creates a query String from key-value pairs in the dictionary */
+    public static String toQuery(Hashtable<String, String> dictionary) throws UnsupportedEncodingException {
+        if (dictionary == null) {
+            return "";
+        }
+        ArrayList<String> pairs = new ArrayList<>();
+        for (String key : dictionary.keySet()) {
+            pairs.add(key + "=" + encodeString(dictionary.get(key)));
+        }
+        // TODO
+        return "";
+    }
+
+    /* Encodes the supplied Url into an escaped format */
+    public static String encodeString(String str) throws UnsupportedEncodingException {
+        return URLEncoder.encode(str.toString(), "UTF-8");
     }
 
     /* Logs the URL */

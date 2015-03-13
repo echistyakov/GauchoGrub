@@ -3,6 +3,7 @@ package com.g10.gauchogrub;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,7 +26,6 @@ import com.g10.gauchogrub.menu.Menu;
 import com.g10.gauchogrub.menu.MenuItem;
 
 import java.io.File;
-import java.util.logging.Level;
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.logging.Logger;
@@ -224,7 +224,7 @@ public class MenuFragment extends BaseTabbedFragment implements AdapterView.OnIt
                     MenuParser mp = new MenuParser();
                     return mp.getDailyMenuList(menuString);
                 } catch (Exception e) {
-                    logger.log(Level.INFO, e.getMessage());
+                    logger.info(e.getMessage());
                 }
                 return null;
             }
@@ -252,7 +252,6 @@ public class MenuFragment extends BaseTabbedFragment implements AdapterView.OnIt
         } catch (IOException e) {
             e.printStackTrace();
         }
-
         run();
     }
 
@@ -286,8 +285,7 @@ public class MenuFragment extends BaseTabbedFragment implements AdapterView.OnIt
         final int menuId = menu.menuID;
         final int menuItemId = item.menuItemID;
 
-        AndroidId idClass = new AndroidId();
-        final String userId = idClass.getAndroidId();
+        final String userId = BaseActivity.androidId;
         final TextView ratingView = (TextView) entryView.findViewById(R.id.ratingView);
         favorite.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -302,9 +300,7 @@ public class MenuFragment extends BaseTabbedFragment implements AdapterView.OnIt
                 }
                 try {
                     writeFavorites(favoritesList, diningCommon);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } catch (NullPointerException e) {
+                } catch (IOException | NullPointerException e) {
                     e.printStackTrace();
                 }
             }
@@ -332,15 +328,15 @@ public class MenuFragment extends BaseTabbedFragment implements AdapterView.OnIt
                         }
                         postRating(userId, menuId, menuItemId, 1);
                         dislike.setBackgroundResource(R.drawable.downvote_off_xxhdpi);
-                        logger.log(Level.INFO, "Posted rating: positive ");
+                        logger.info("Posted rating: positive ");
                     } else {
                         postRating(userId, menuId, menuItemId, 0);
                         like.setBackgroundResource(R.drawable.upvote_off_xxhdpi);
                         ratingView.setText(posOrNeg + (rating - 1));
-                        logger.log(Level.INFO, "Posted rating: neutral ");
+                        logger.info("Posted rating: neutral ");
                     }
                 } catch (Exception e) {
-                    logger.log(Level.INFO, "failed");
+                    logger.info("Failed to like");
                     e.printStackTrace();
                 }
             }
@@ -368,16 +364,15 @@ public class MenuFragment extends BaseTabbedFragment implements AdapterView.OnIt
                             ratingView.setText(posOrNeg + (rating - 1));
                         }
                         like.setBackgroundResource(R.drawable.upvote_off_xxhdpi);
-                        logger.log(Level.INFO, "Posted rating: negative ");
+                        logger.info("Posted rating: negative ");
                     } else {
                         postRating(userId, menuId, menuItemId, 0);
                         dislike.setBackgroundResource(R.drawable.downvote_off_xxhdpi);
                         ratingView.setText(posOrNeg + (rating + 1));
-                        logger.log(Level.INFO, "Posted rating: neutral ");
+                        logger.info("Posted rating: neutral ");
                     }
                 } catch (Exception e) {
-                    logger.log(Level.INFO, "failed");
-                    e.printStackTrace();
+                    logger.info("Failed to dislike");
                 }
             }
         });

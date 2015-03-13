@@ -34,15 +34,14 @@ public class BaseActivity extends ActionBarActivity {
     private static ActionBarDrawerToggle navDrawerToggle;
     private static CharSequence navTitle;
     private static CharSequence navDrawerTitle;
+    public static String androidId = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        String androidId = Settings.Secure.getString(this.getContentResolver(), Settings.Secure.ANDROID_ID);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.base_layout);
 
-        //set android_id
-        new AndroidId(androidId);
+        androidId = Settings.Secure.getString(this.getContentResolver(), Settings.Secure.ANDROID_ID);
 
         // Create a drawer
         navTitle = navDrawerTitle = getTitle();
