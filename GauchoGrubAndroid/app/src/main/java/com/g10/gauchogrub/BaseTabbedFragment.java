@@ -43,7 +43,14 @@ public abstract class BaseTabbedFragment extends Fragment {
             }});
     }
 
-
+    /**
+     * Uses an HashSet to save all favorited items to a device file
+     *
+     * @param favoritesList List containing all favorited item
+     * @param diningCommon Which dining commons the list originates from
+     * @return
+     * @throws IOException
+     */
     public boolean writeFavorites(HashSet<String> favoritesList, String diningCommon) throws IOException {
         OutputStreamWriter outStream;
         try {
@@ -57,6 +64,14 @@ public abstract class BaseTabbedFragment extends Fragment {
         return true;
     }
 
+    /**
+     * Reads from a device file and fills up a HashSet of saved favorite menu items
+     *
+     * @param diningCommon Which dining commons the list originates from
+     * @return
+     * @throws IOException
+     * @throws NullPointerException
+     */
     public HashSet<String> fillFavoritesList(String diningCommon) throws IOException, NullPointerException {
         String tempFavorite = "";
         FileInputStream inStream = null;
