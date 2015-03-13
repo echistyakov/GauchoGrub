@@ -110,17 +110,16 @@ public class WebUtils {
         if (dictionary == null) {
             return "";
         }
-        ArrayList<String> pairs = new ArrayList<>();
+        String query = "";
         for (String key : dictionary.keySet()) {
-            pairs.add(key + "=" + encodeString(dictionary.get(key)));
+            query += ((query.length() == 0) ? "" : "&") + key + "=" + encodeString(dictionary.get(key));
         }
-        // TODO
-        return "";
+        return query;
     }
 
     /* Encodes the supplied Url into an escaped format */
     public static String encodeString(String str) throws UnsupportedEncodingException {
-        return URLEncoder.encode(str.toString(), "UTF-8");
+        return URLEncoder.encode(str, "UTF-8");
     }
 
     /* Logs the URL */
