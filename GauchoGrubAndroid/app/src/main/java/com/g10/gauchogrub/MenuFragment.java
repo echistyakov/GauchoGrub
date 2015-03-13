@@ -291,7 +291,7 @@ public class MenuFragment extends BaseTabbedFragment implements AdapterView.OnIt
                     favoritesList.remove(menuItemName);
                 }
                 FileIOUtils fio = new FileIOUtils();
-                fio.writeFavorites(getActivity().getBaseContext(),favoritesList, diningCommon);
+                fio.writeFavorites(getActivity().getBaseContext(), favoritesList, diningCommon);
             }
         });
 

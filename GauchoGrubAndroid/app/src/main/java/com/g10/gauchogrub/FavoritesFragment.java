@@ -116,15 +116,8 @@ public class FavoritesFragment extends BaseTabbedFragment {
         new AsyncTask<Void, Void, HashSet<String>>() {
             @Override
             protected HashSet<String> doInBackground(Void... v) {
-                try {
-                    FileIOUtils fio = new FileIOUtils();
-                    favoritesList = fio.fillFavoritesList(getActivity().getBaseContext(), diningCommon);
-                    for(String test : favoritesList){
-                        logger.info("list contains: " + test);
-                    }
-                } catch(Exception e) {
-                    logger.info(e.getMessage());
-                }
+                FileIOUtils fio = new FileIOUtils();
+                favoritesList = fio.fillFavoritesList(getActivity().getBaseContext(), diningCommon);
                 return null;
             }
             @Override
