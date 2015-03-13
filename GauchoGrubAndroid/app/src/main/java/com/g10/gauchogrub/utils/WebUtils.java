@@ -8,16 +8,13 @@ import org.apache.http.util.ByteArrayBuffer;
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.UnsupportedEncodingException;
-import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URLEncoder;
-import java.util.ArrayList;
 import java.util.Hashtable;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class WebUtils {
@@ -124,7 +121,7 @@ public class WebUtils {
 
     /* Logs the URL */
     private void log(URL url) {
-        logger.log(Level.INFO, url.toString());
+        logger.info(url.toString());
     }
 
     public enum HttpMethod {

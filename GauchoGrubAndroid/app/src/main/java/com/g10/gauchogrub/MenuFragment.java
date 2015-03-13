@@ -69,7 +69,7 @@ public class MenuFragment extends BaseTabbedFragment implements AdapterView.OnIt
         try {
             favoritesList = fillFavoritesList(diningCommon);
         } catch (IOException | NullPointerException e) {
-            e.printStackTrace();
+            logger.warning(e.toString());
         }
 
         // Initialize Spinner
@@ -250,7 +250,7 @@ public class MenuFragment extends BaseTabbedFragment implements AdapterView.OnIt
         try {
             favoritesList = fillFavoritesList(diningCommon);
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.warning(e.toString());
         }
         run();
     }
@@ -301,7 +301,7 @@ public class MenuFragment extends BaseTabbedFragment implements AdapterView.OnIt
                 try {
                     writeFavorites(favoritesList, diningCommon);
                 } catch (IOException | NullPointerException e) {
-                    e.printStackTrace();
+                    logger.warning(e.toString());
                 }
             }
         });
@@ -337,7 +337,7 @@ public class MenuFragment extends BaseTabbedFragment implements AdapterView.OnIt
                     }
                 } catch (Exception e) {
                     logger.info("Failed to like");
-                    e.printStackTrace();
+                    logger.warning(e.toString());
                 }
             }
         });

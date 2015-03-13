@@ -18,7 +18,6 @@ import com.g10.gauchogrub.menu.DiningCommon;
 
 import java.io.IOException;
 import java.util.HashSet;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 
@@ -124,7 +123,7 @@ public class FavoritesFragment extends BaseTabbedFragment {
                         logger.info("list contains: " + test);
                     }
                 } catch(Exception e) {
-                    logger.log(Level.INFO, e.getMessage());
+                    logger.info(e.getMessage());
                 }
                 return null;
             }
@@ -151,7 +150,7 @@ public class FavoritesFragment extends BaseTabbedFragment {
                 try {
                     writeFavorites(favoritesList, diningCommon);
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    logger.warning(e.toString());
                 }
             }
         });
