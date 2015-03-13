@@ -60,8 +60,8 @@ public abstract class BaseTabbedFragment extends Fragment {
     }
 
     public HashSet<String> fillFavoritesList(String diningCommon) throws IOException, NullPointerException {
-        String tempFavorite = "";
-        FileInputStream inStream = null;
+        String tempFavorite;
+        FileInputStream inStream;
         HashSet<String> favoritesList = new HashSet<>();
 
         try {

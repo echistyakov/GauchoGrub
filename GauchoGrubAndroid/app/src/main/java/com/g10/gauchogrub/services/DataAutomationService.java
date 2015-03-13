@@ -14,7 +14,6 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class DataAutomationService extends Service {
@@ -23,8 +22,9 @@ public class DataAutomationService extends Service {
 
     /**
      * onStartCommand is the sequence of actions followed when the service is started
-     * @param intent the intent object that the service receives
-     * @param flags not used
+     *
+     * @param intent  the intent object that the service receives
+     * @param flags   not used
      * @param startId not used
      * @return Service.START_NOT_STICKY indicates the service will not attempt to restart itself
      */
@@ -37,6 +37,7 @@ public class DataAutomationService extends Service {
 
     /**
      * onBind is a required method that will bind the service if desired
+     *
      * @param intent the intent object that the service receives
      * @return null prevents binding of the service
      */
@@ -55,16 +56,15 @@ public class DataAutomationService extends Service {
             Calendar calendar = Calendar.getInstance();
             File cacheDir = new File(getApplicationContext().getCacheDir().getAbsolutePath());
             File[] cachedFiles = cacheDir.listFiles();
-            for(File f : cachedFiles) {
+            for (File f : cachedFiles) {
                 Date dateModified = new Date(f.lastModified());
                 calendar.add(Calendar.DATE, -1);
                 Date yesterday = new Date(calendar.getTimeInMillis());
                 // Checks if it is the favorites file
-                if(dateModified.before(yesterday) && !f.getName().contains("Favorites")) {
+                if (dateModified.before(yesterday) && !f.getName().contains("Favorites")) {
                     try {
                         f.delete();
-                    }
-                    catch (Exception ex) {
+                    } catch (Exception ex) {
                         logger.warning("Clean cache task failed");
                         logger.info(ex.getMessage());
                     }
@@ -82,7 +82,7 @@ public class DataAutomationService extends Service {
         @Override
         protected Void doInBackground(Void... params) {
             APIInterface api = new APIInterface();
-            CacheUtils c = new CacheUtils();
+            CacheUtils cache = new CacheUtils();
             DateFormat requestFormat = new SimpleDateFormat(APIInterface.REQUEST_DATE_FORMAT);
             // for each of the 7 days
             for (int i = 0; i < 7; i++) {
@@ -96,10 +96,9 @@ public class DataAutomationService extends Service {
                         String saveDate = requestFormat.format(new Date(calendar.getTimeInMillis())).replace("/", "");
 
                         String fileName = DiningCommon.DATA_USE_DINING_COMMONS[j] + saveDate;
-                        c.cacheFile(getBaseContext(), fileName, menu);
-                    }
-                    catch (Exception ex) {
-                        logger.log(Level.INFO, ex.getMessage());
+                        cache.cacheFile(getBaseContext(), fileName, menu);
+                    } catch (Exception ex) {
+                        logger.info(ex.getMessage());
                     }
                 }
             }

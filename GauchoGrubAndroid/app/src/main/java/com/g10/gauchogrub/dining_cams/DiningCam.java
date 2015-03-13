@@ -31,8 +31,8 @@ public class DiningCam {
     }
 
     private URL getCurrentImageUrl() {
-        // Base URL concatenated with current UNIX time
         try {
+            // Base URL concatenated with current UNIX time
             return new URL(this.partialUrl + new Date().getTime());
         } catch (MalformedURLException e) {
             // Will never happen, but just in case...

@@ -84,9 +84,10 @@ public class NotificationService extends Service {
 
     /**
      * Creates a HashMap where each key corresponds to a Meal name, and its value is an ArrayList of all notification strings for that meal.
+     *
      * @return a HashMap of strings mapped to ArrayLists of strings.
      */
-    private HashMap<String, ArrayList <String>> getFavoritesToday() {
+    private HashMap<String, ArrayList<String>> getFavoritesToday() {
         // Gets all cached files
         CacheUtils c = new CacheUtils();
         Date date = new Date();
@@ -94,7 +95,7 @@ public class NotificationService extends Service {
         File file = new File(getApplicationContext().getCacheDir().getAbsolutePath());
         File[] files = file.listFiles();
         // List of DiningCommons
-        HashMap <String, ArrayList<String>> notifications = new HashMap<>();
+        HashMap<String, ArrayList<String>> notifications = new HashMap<>();
         try {
             for (int i = 0; i < 4; i++) {
                 HashSet<String> favorites = fillFavoritesList(DiningCommon.DATA_USE_DINING_COMMONS[i]);
@@ -118,7 +119,7 @@ public class NotificationService extends Service {
                                         String mealName = m.event.meal.name;
                                         String addString = favorite + " - " + DiningCommon.READABLE_DINING_COMMONS[i];
                                         // For first item of that meal type
-                                        if(!notifications.containsKey(m.event.meal.name)) {
+                                        if (!notifications.containsKey(m.event.meal.name)) {
                                             notifications.put(mealName, new ArrayList<String>());
                                         }
                                         notifications.get(mealName).add(addString);
@@ -129,8 +130,7 @@ public class NotificationService extends Service {
                     }
                 }
             }
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             logger.info(e.getMessage());
         }
         return notifications;
@@ -146,7 +146,7 @@ public class NotificationService extends Service {
             if (inStream != null) {
                 InputStreamReader inputStreamReader = new InputStreamReader(inStream);
                 BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
-                while ((tempFavorite = bufferedReader.readLine()) != null ) {
+                while ((tempFavorite = bufferedReader.readLine()) != null) {
                     favoritesList.add(tempFavorite);
                     logger.info("Reading String " + tempFavorite);
                 }

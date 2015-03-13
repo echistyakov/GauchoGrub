@@ -31,7 +31,6 @@ public class FavoritesFragment extends BaseTabbedFragment {
     private RelativeLayout buttonLayout;
     private TableRow currentSelectedItem = null;
     private View currentButtonBar;
-
     private String diningCommon = DiningCommon.DATA_USE_CARILLO;
 
     @Override
@@ -107,11 +106,11 @@ public class FavoritesFragment extends BaseTabbedFragment {
     }
 
     @Override
-    public void setDisplayContent(int tag) {
+    public void setDisplayContent(int index) {
         buttonLayout.removeView(currentButtonBar);
         currentSelectedItem = null;
         currentButtonBar = null;
-        diningCommon = DiningCommon.DATA_USE_DINING_COMMONS[tag];
+        diningCommon = DiningCommon.DATA_USE_DINING_COMMONS[index];
         run();
     }
 
