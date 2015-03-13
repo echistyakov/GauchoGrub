@@ -19,6 +19,11 @@ public class MenuParser {
     private final static Logger logger = Logger.getLogger("MenuParser");
     public static final Type listMenuType = new TypeToken<ArrayList<Menu>>() {}.getType();
 
+    /**
+     * getDailyMenuList() parses a JSON string of menus into an ArrayList of Menu objects
+     * @param menuString a JSON string of menus for a specific dining Common and specific day
+     * @return an ArrayList of Menu objects
+     */
     public ArrayList<Menu> getDailyMenuList(String menuString) {
         try {
             return deserialize(menuString, listMenuType);

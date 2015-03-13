@@ -20,6 +20,13 @@ public class BootReceiver extends BroadcastReceiver {
     public BootReceiver() {
     }
 
+    /**
+     * onRecieve() takes a context and an intent defined in the AndroidManifest.xml file, defined
+     * as an intent released by the system when the OS is booted up
+     * it then sets specifically timed dataAutomation and notification services
+     * @param context the application context
+     * @param intent the android boot intent
+     */
     @Override
     public void onReceive(Context context, Intent intent) {
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);

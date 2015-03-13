@@ -23,6 +23,14 @@ public class APIInterface {
     private final String USER_RATINGS_PATH = "UserRatings";
     private final String RATINGS_PATH = "Ratings";
 
+    /**
+     * getMenuJson() queries the database, resulting in a string containing a set of JSON
+     * menus for that entire day
+     * @param diningCommon the name of the diningCommon related to the menus being looked up
+     * @param date the date of the menu being looked up
+     * @return a String containing a JSON object
+     * @throws IOException
+     */
     public String getMenuJson(String diningCommon, String date) throws IOException {
         Hashtable<String, String> queryMap = new Hashtable<>();
         queryMap.put("diningCommon", diningCommon);
@@ -33,6 +41,14 @@ public class APIInterface {
         return web.httpRequest(url, HttpMethod.GET, DEFAULT_TIMEOUT); // 20 second timeout
     }
 
+    /**
+     * postRating() posts a rating to the database
+     * @param userId the unique userID for each android device
+     * @param menuId the ID of the specific menu that contains the menuitem being rated
+     * @param menuItemId the ID of the menuItem being rated
+     * @param rating the user's rating of the menuItem
+     * @throws IOException
+     */
     public void postRating(String userId, int menuId, int menuItemId, int rating) throws IOException {
         Hashtable<String, String> queryMap = new Hashtable<>();
         queryMap.put("userId", userId);
@@ -45,6 +61,12 @@ public class APIInterface {
         web.httpRequest(url, HttpMethod.POST, DEFAULT_TIMEOUT);
     }
 
+    /**
+     * getRating() gets a specific rating for an individual menuItem
+     * @param menuItemID the ID of the relevant menuItem
+     * @return a JSON string containing the rating information for the individual menuItem
+     * @throws IOException
+     */
     public String getRating(int menuItemID) throws IOException {
         Hashtable<String, String> queryMap = new Hashtable<>();
         queryMap.put("menuItemId", Integer.toString(menuItemID));

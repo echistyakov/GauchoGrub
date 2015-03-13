@@ -36,6 +36,10 @@ public class DiningCamsFragment extends BaseTabbedFragment implements Runnable {
         return rootView;
     }
 
+    /**
+     *
+     * @param index
+     */
     public void setDisplayContent(int index) {
         // An item was selected. You can retrieve the selected item using parent.getItemAtPosition(pos)
         String[] camUrls = new String[]{DiningCam.CARRILLO, DiningCam.DE_LA_GUERRA, DiningCam.ORTEGA};
@@ -44,6 +48,10 @@ public class DiningCamsFragment extends BaseTabbedFragment implements Runnable {
         this.startCam();
     }
 
+    /**
+     * onPause() is an internally called method overridden to prevent the page
+     * from loading data while the screen is off
+     */
     @Override
     public void onPause() {
         super.onPause();
@@ -52,6 +60,10 @@ public class DiningCamsFragment extends BaseTabbedFragment implements Runnable {
         }
     }
 
+    /**
+     * onResume() restarts the page-loading when the screen is turned back on,
+     * or does an initial load as a background check.
+     */
     @Override
     public void onResume() {
         super.onResume();
@@ -60,16 +72,25 @@ public class DiningCamsFragment extends BaseTabbedFragment implements Runnable {
         }
     }
 
+    /**
+     * startCam() updates the image immediately
+     */
     private void startCam() {
         this.isOn = true;
         this.handler.post(this); // Update image right now
     }
 
+    /**
+     * stopCam() stops the camera from being loaded
+     */
     private void stopCam() {
         this.isOn = false;
         this.handler.removeCallbacks(this);
     }
 
+    /**
+     * Asynchronous task to load the image on a separate thread
+     */
     @Override
     public void run() {
         new AsyncTask<Void, Void, Bitmap>() {
@@ -86,12 +107,20 @@ public class DiningCamsFragment extends BaseTabbedFragment implements Runnable {
         }.execute();
     }
 
+    /**
+     * scheduleCamUpdate() handles the delay period for the camera refresh
+     */
     private void scheduleCamUpdate() {
         if (isOn) {
             handler.postDelayed(this, delay);
         }
     }
 
+    /**
+     * inherited method from BaseTabbedFragment that handles creation of content within a
+     * dining common tab
+     * @return the current imageView after updates
+     */
     public TabContentFactory createTabContent() {
         return new TabContentFactory() {
             public View createTabContent(String tag) {

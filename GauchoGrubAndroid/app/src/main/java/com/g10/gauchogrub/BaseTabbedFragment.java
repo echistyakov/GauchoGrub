@@ -25,6 +25,12 @@ public abstract class BaseTabbedFragment extends Fragment {
 
     public abstract TabContentFactory createTabContent();
 
+    /**
+     * setUpTabs() handles the creation of tabs on each fragment with tabs
+     * @param tabs a TabHost object that the tabs will be added to
+     * @param contentCreate a TabContentFactory that will create content for the tabs
+     * @param numTabs the number of tabs to create
+     */
     public void setUpTabs(TabHost tabs, TabContentFactory contentCreate, int numTabs) {
         tabs.setup();
         // Create tabs and set text & content

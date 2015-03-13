@@ -25,11 +25,20 @@ public class DiningCam {
     private String partialUrl;
     private WebUtils web;
 
+    /**
+     * default constructor that takes in a diningCommon URL, specifying a particular diningCommon
+     * @param diningCommonUrl
+     */
     public DiningCam(String diningCommonUrl) {
         this.partialUrl = diningCommonUrl;
         this.web = new WebUtils();
     }
 
+    /**
+     * getCurrentImageUrl() is a private helper method to get the properly formed URL
+     * to use when accessingthe database
+     * @return
+     */
     private URL getCurrentImageUrl() {
         try {
             // Base URL concatenated with current UNIX time
@@ -41,6 +50,11 @@ public class DiningCam {
         }
     }
 
+    /**
+     * returns a bitmap image from the diningCommons
+     * @param delay the amount of delay in milliseconds
+     * @return a bitmap image of the line from a specific diningCommon
+     */
     public Bitmap getCurrentImage(int delay) {
         URL currentUrl = this.getCurrentImageUrl();
         return web.getBitmap(currentUrl, delay);

@@ -21,6 +21,12 @@ public class WebUtils {
 
     private final static Logger logger = Logger.getLogger("WebUtils");
 
+    /**
+     * getBitmap queries a URL and returns a bitmap image
+     * @param url the URL being queried
+     * @param timeout the time in milliseconds before it fails
+     * @return a bitmap image
+     */
     public Bitmap getBitmap(URL url, int timeout) {
         HttpURLConnection connection = null;
         Bitmap image = null;

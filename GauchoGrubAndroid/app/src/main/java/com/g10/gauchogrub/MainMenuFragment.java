@@ -36,7 +36,6 @@ public class MainMenuFragment extends Fragment {
     private SimpleEntry<String, Double> bestLunch = new SimpleEntry<>("", Double.MIN_VALUE);
     private SimpleEntry<String, Double> bestDinner = new SimpleEntry<>("", Double.MIN_VALUE);
 
-
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.main_menu_fragment, container, false);
         allRankings = new ArrayList<>();
@@ -48,6 +47,10 @@ public class MainMenuFragment extends Fragment {
         return rootView;
     }
 
+    /**
+     * inflateRatingsTable() inflates the corresponding xml file to create a structured fragment
+     * viewable to the user
+     */
     public void inflateRatingsTable() {
         int count = 1;
         ArrayList<SimpleEntry<String,Double>> bestMealList = new ArrayList<SimpleEntry<String, Double>>();
@@ -79,7 +82,10 @@ public class MainMenuFragment extends Fragment {
     }
     }
 
-
+    /**
+     * getCurrentDiningCommonRankings runs an Asynchronous task that retrieves current diningCommon
+     * data from the server and sets instance variables to the highest rankings.
+     */
     public void getCurrentDiningCommonRankings() {
         new AsyncTask<Void, Void, Void>() {
             @Override
@@ -112,6 +118,11 @@ public class MainMenuFragment extends Fragment {
 
     }
 
+    /**
+     * setHighestRankings sets the instance variables in the class for the highest rankings.
+     * @param menus an ArrayList of Menu objects for a specific diningCommon on the current day
+     * @param diningCommon the user-readable name of the diningCommon
+     */
     private void setHighestRankings(ArrayList<Menu> menus, String diningCommon) {
         double totalRating = 0, itemCount = 0;
         if (menus == null)
@@ -133,6 +144,11 @@ public class MainMenuFragment extends Fragment {
         }
     }
 
+    /**
+     * getItemRating() is a private helper function that calculates the itemrating given a menuItem
+     * @param item a menuItem object that contains rating data
+     * @return the calculated rating for the menuItem
+     */
     private int getItemRating(MenuItem item) {
         int totalPositiveRatings = item.totalPositiveRatings;
         int totalRating = item.totalRatings;
