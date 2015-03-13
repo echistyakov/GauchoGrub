@@ -21,6 +21,10 @@ import com.g10.gauchogrub.utils.FileIOUtils;
 import java.util.HashSet;
 import java.util.logging.Logger;
 
+/**
+ * The FavoritesFragment class defines the visual representation and functionality for displaying Favorited Items
+ * in our interface.
+ */
 public class FavoritesFragment extends BaseTabbedFragment {
 
     private final static Logger logger = Logger.getLogger("FavoritesFragment");
@@ -32,6 +36,25 @@ public class FavoritesFragment extends BaseTabbedFragment {
     private View currentButtonBar;
     private String diningCommon = DiningCommon.DATA_USE_CARILLO;
 
+    /**
+     * Called to have the fragment instantiate its user interface view.
+     * This is optional, and non-graphical fragments can return null (which
+     * is the default implementation).  This will be called between
+     * {@link #onCreate(Bundle)} and {@link #onActivityCreated(Bundle)}.
+     *
+     * <p>If you return a View from here, you will later be called in
+     * {@link #onDestroyView} when the view is being released.
+     *
+     * @param inflater The LayoutInflater object that can be used to inflate
+     * any views in the fragment,
+     * @param container If non-null, this is the parent view that the fragment's
+     * UI should be attached to.  The fragment should not add the view itself,
+     * but this can be used to generate the LayoutParams of the view.
+     * @param savedInstanceState If non-null, this fragment is being re-constructed
+     * from a previous saved state as given here.
+     *
+     * @return Return the View for the fragment's UI, or null.
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
@@ -46,6 +69,10 @@ public class FavoritesFragment extends BaseTabbedFragment {
         return rootView;
     }
 
+    /**
+     * Fills up a table full of previously favorited menu items for the currently selected dining common. Also
+     * sets up the Menu Item on click Listener
+     */
     private void inflateFavorites() {
         favoritesTable.removeAllViews();
 
@@ -95,6 +122,10 @@ public class FavoritesFragment extends BaseTabbedFragment {
         }
     }
 
+    /**
+     * On-click tab listener for when a new tab is selected
+     * @return TabContentFactory
+     */
     public TabHost.TabContentFactory createTabContent() {
         return new TabHost.TabContentFactory() {
             @Override
@@ -114,6 +145,9 @@ public class FavoritesFragment extends BaseTabbedFragment {
         run();
     }
 
+    /**
+     * Performs an asynchronous task to fill up list of favorite and call the method to inflate them to the screen
+     */
     public void run() {
         new AsyncTask<Void, Void, HashSet<String>>() {
             @Override
@@ -129,6 +163,13 @@ public class FavoritesFragment extends BaseTabbedFragment {
         }.execute();
     }
 
+    /**
+     * Used to set-up the actions to perform when the favorite button is pressed for a menu item that is
+     * currently selected
+     *
+     * @param entryView Layout view that the button is contained in
+     * @param favorite Title of the Menu Item for which the favorite button was selected
+     */
     public void setButtonListeners(View entryView, final String favorite){
         final ImageButton favoriteButton = (ImageButton) entryView.findViewById(R.id.favoriteButton);
         favoriteButton.setOnClickListener(new View.OnClickListener() {
