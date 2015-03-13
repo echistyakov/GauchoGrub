@@ -34,6 +34,11 @@ import java.util.Date;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 
+
+/**
+ * The MenuFragment class defines the visual representation and functionality for displaying Dining Common Menus
+ * in our interface.
+ */
 public class MenuFragment extends BaseTabbedFragment implements AdapterView.OnItemSelectedListener, Runnable {
 
     public final static Logger logger = Logger.getLogger("MenuFragment");
@@ -51,6 +56,19 @@ public class MenuFragment extends BaseTabbedFragment implements AdapterView.OnIt
 
     private HashSet<String> favoritesList;
 
+    /**
+     * This method is used to set up and create the initial graphical interface on the Menu's page
+     *
+     * @param inflater The LayoutInflater object that can be used to inflate
+     * any views in the fragment,
+     * @param container If non-null, this is the parent view that the fragment's
+     * UI should be attached to.  The fragment should not add the view itself,
+     * but this can be used to generate the LayoutParams of the view.
+     * @param savedInstanceState If non-null, this fragment is being re-constructed
+     * from a previous saved state as given here.
+     *
+     * @return Return the View for the fragment's UI, or null.
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.menu_fragment, container, false);
@@ -85,6 +103,11 @@ public class MenuFragment extends BaseTabbedFragment implements AdapterView.OnIt
         return rootView;
     }
 
+    /**
+     * Called when a date is selected in the drop down menu
+     *
+     * @param parent The AdapterView that now contains no selected item.
+     */
     public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
         TextView dateView = (TextView) view;
         date = dateView.getText().toString();
@@ -96,6 +119,11 @@ public class MenuFragment extends BaseTabbedFragment implements AdapterView.OnIt
         // Another interface callback
     }
 
+    /**
+     * Fills up the Menu Table with Data from menu data structures. Sets click listeners for buttons and Menu Items.
+     *
+     * @param menus list of menus to display
+     */
     private void inflateMenu(ArrayList<Menu> menus) {
 
         menuTable.removeAllViews();
@@ -204,7 +232,9 @@ public class MenuFragment extends BaseTabbedFragment implements AdapterView.OnIt
 
     }
 
-    //This runnable begins a series of calls to get and display menus
+    /**
+     * This runnable begins a series of calls to get menus by making an HTTP request and display menus.
+     */
     @Override
     public void run() {
         new AsyncTask<Void, Void, ArrayList<Menu>>() {
@@ -234,6 +264,11 @@ public class MenuFragment extends BaseTabbedFragment implements AdapterView.OnIt
         }.execute();
     }
 
+    /**
+     * Tab selection listener calls this to update the Menu Table when a tab is selected.
+     *
+     * @param tag ID to indicate which tab has been selected
+     */
     public void setDisplayContent(int tag) {
         //When switching Dining Commons, Remove button bar
         buttonLayout.removeView(currentBar);
@@ -255,7 +290,10 @@ public class MenuFragment extends BaseTabbedFragment implements AdapterView.OnIt
         run();
     }
 
-    //This function is called when a user clicks a different tab
+    /**
+     * This function is called when a user clicks a different tab
+     *
+    */
     public TabHost.TabContentFactory createTabContent() {
         return new TabHost.TabContentFactory() {
             @Override
@@ -266,8 +304,11 @@ public class MenuFragment extends BaseTabbedFragment implements AdapterView.OnIt
         };
     }
 
-    //function to fill drop down menu with the next seven dates
-    public void fillSpinnerWithDates(){
+    /**
+     * Fills drop down menu with the next seven dates
+     *
+    */
+     public void fillSpinnerWithDates(){
         DateFormat dateFormat = new SimpleDateFormat(WebUtils.REQUEST_DATE_FORMAT);
         Date date = new Date();
 
@@ -277,6 +318,14 @@ public class MenuFragment extends BaseTabbedFragment implements AdapterView.OnIt
         }
     }
 
+    /**
+     * Sets up on-click listeners for favorite, like, and dislike
+     *
+     * @param entryView View that has been selected
+     * @param menuItemName Name of Menu Item
+     * @param menu Menu that the selected item is contained in
+     * @param item Menu Item that the selected item is connected to
+     */
     public void setButtonListeners(View entryView, final String menuItemName, Menu menu, MenuItem item){
         final ImageButton favorite = (ImageButton) entryView.findViewById(R.id.favoriteButton);
         final ImageButton like = (ImageButton) entryView.findViewById(R.id.thumbsUpButton);
@@ -382,6 +431,7 @@ public class MenuFragment extends BaseTabbedFragment implements AdapterView.OnIt
         });
     }
 
+    
     public void postRating(String id, int m, int mi, int x) {
         final String userId = id;
         final int menuId = m;
