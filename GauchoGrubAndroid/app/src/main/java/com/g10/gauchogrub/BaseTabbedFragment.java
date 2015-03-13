@@ -15,91 +15,37 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.util.HashSet;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public abstract class BaseTabbedFragment extends Fragment {
 
-    public final static Logger logger = Logger.getLogger("BaseTabbedFragment");
+    private final static Logger logger = Logger.getLogger("BaseTabbedFragment");
 
-    public abstract void setDisplayContent(int tag);
+    public abstract void setDisplayContent(int index);
 
     public abstract TabContentFactory createTabContent();
 
-    public void setUpTabs(TabHost tabs, TabContentFactory contentCreate, int numTabs){
+    /**
+     * setUpTabs() handles the creation of tabs on each fragment with tabs
+     * @param tabs a TabHost object that the tabs will be added to
+     * @param contentCreate a TabContentFactory that will create content for the tabs
+     * @param numTabs the number of tabs to create
+     */
+    public void setUpTabs(TabHost tabs, TabContentFactory contentCreate, int numTabs) {
         tabs.setup();
-        //Create tabs and set text & content
-        for(int i = 0; i < numTabs ; i ++) {
+        // Create tabs and set text & content
+        for (int i = 0; i < numTabs; i++) {
             TabSpec tab = tabs.newTabSpec(i + "");
             tab.setContent(contentCreate);
             tab.setIndicator(DiningCommon.READABLE_DINING_COMMONS[i]);
             tabs.addTab(tab);
         }
-        //Set tab listeners to change content when triggered
-        tabs.setOnTabChangedListener(new TabHost.OnTabChangeListener(){
+        // Set tab listeners to change content when triggered
+        tabs.setOnTabChangedListener(new TabHost.OnTabChangeListener() {
             @Override
             public void onTabChanged(String tabId) {
                 setDisplayContent(Integer.parseInt(tabId));
-            }});
-    }
-
-    /**
-     * Uses an HashSet to save all favorited items to a device file
-     *
-     * @param favoritesList List containing all favorited item
-     * @param diningCommon Which dining commons the list originates from
-     * @return
-     * @throws IOException
-     */
-    public boolean writeFavorites(HashSet<String> favoritesList, String diningCommon) throws IOException {
-        OutputStreamWriter outStream;
-        try {
-            outStream = new OutputStreamWriter(getActivity().getApplicationContext().openFileOutput("favorites" + diningCommon, Context.MODE_PRIVATE)); //new FileOutputStream(favoritesFile);
-            for (String thisfavorite : favoritesList) {
-                outStream.write(thisfavorite + "\n");
-                logger.info("Writing String " + thisfavorite);
             }
-            outStream.close();
-        } catch (IOException e) { return false; }
-        return true;
-    }
-
-    /**
-     * Reads from a device file and fills up a HashSet of saved favorite menu items
-     *
-     * @param diningCommon Which dining commons the list originates from
-     * @return
-     * @throws IOException
-     * @throws NullPointerException
-     */
-    public HashSet<String> fillFavoritesList(String diningCommon) throws IOException, NullPointerException {
-        String tempFavorite = "";
-        FileInputStream inStream = null;
-        HashSet<String> favoritesList = new HashSet<>();
-
-        try {
-            inStream = getActivity().getApplicationContext().openFileInput("favorites" + diningCommon);
-            if (inStream != null) {
-                InputStreamReader inputStreamReader = new InputStreamReader(inStream);
-                BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
-                while ((tempFavorite = bufferedReader.readLine()) != null ) {
-                    favoritesList.add(tempFavorite);
-                    logger.info("Reading String " + tempFavorite);
-                }
-
-                inStream.close();
-            }
-        } catch (FileNotFoundException e) {
-            logger.log(Level.INFO, "login activity", "File not found: " + e.toString());
-        } catch (IOException e) {
-            logger.log(Level.INFO, "login activity", "Can not read file: " + e.toString());
-        } catch (NullPointerException e) {
-            logger.log(Level.INFO, "login activity", "List reached end: " + e.toString());
-        }
-        return favoritesList;
-    }
-
-    public enum DiningCommons {
-        DLG, Carillo, Portola, Ortega
+        });
     }
 }

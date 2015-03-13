@@ -5,10 +5,6 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.provider.Settings;
 import android.content.Context;
-import android.content.Intent;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
-import android.os.AsyncTask;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -19,15 +15,10 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import com.g10.gauchogrub.dining_cams.DiningCamsFragment;
-import com.g10.gauchogrub.utils.MenuParser;
-import com.g10.gauchogrub.utils.WebUtils;
-import java.util.ArrayList;
-import com.g10.gauchogrub.services.DataAutomationService;
-import com.g10.gauchogrub.services.NotificationService;
-import com.g10.gauchogrub.utils.CacheUtils;
 
-import java.util.Calendar;
+import com.g10.gauchogrub.dining_cams.DiningCamsFragment;
+import com.g10.gauchogrub.services.NotificationService;
+
 import java.util.logging.Logger;
 
 /*
@@ -43,15 +34,14 @@ public class BaseActivity extends ActionBarActivity {
     private static ActionBarDrawerToggle navDrawerToggle;
     private static CharSequence navTitle;
     private static CharSequence navDrawerTitle;
+    public static String androidId = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        String androidId = Settings.Secure.getString(this.getContentResolver(), Settings.Secure.ANDROID_ID);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.base_layout);
 
-        //set android_id
-        new AndroidId(androidId);
+        androidId = Settings.Secure.getString(this.getContentResolver(), Settings.Secure.ANDROID_ID);
 
         // Create a drawer
         navTitle = navDrawerTitle = getTitle();
@@ -99,7 +89,7 @@ public class BaseActivity extends ActionBarActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        //getMenuInflater().inflate(R.menu.main_menu, menu);
+        // getMenuInflater().inflate(R.menu.main_menu, menu);
         return true;
     }
 
@@ -110,12 +100,11 @@ public class BaseActivity extends ActionBarActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
+
         if (id == R.id.action_settings) {
             return true;
-        }  else {
-            return super.onOptionsItemSelected(item) ||
-                   navDrawerToggle.onOptionsItemSelected(item);
+        } else {
+            return super.onOptionsItemSelected(item) || navDrawerToggle.onOptionsItemSelected(item);
         }
     }
 
@@ -125,22 +114,24 @@ public class BaseActivity extends ActionBarActivity {
         getSupportActionBar().setTitle(title);
     }
 
-    /** Swaps fragments in the main content view */
+    /**
+     * Swaps fragments in the main content view
+     */
     private void selectItem(int position) {
         Logger.getLogger(Logger.GLOBAL_LOGGER_NAME).info(String.format("Item {} selected in NavDrawer", position));
         // Create a new fragment
         Fragment fragment = null;
         if (position == 0) {
             fragment = new MainMenuFragment();
-        } else if (position == 1){
+        } else if (position == 1) {
             fragment = new MenuFragment();
-        } else if (position == 2){
+        } else if (position == 2) {
             fragment = new ScheduleFragment();
-        } else if (position == 3){
+        } else if (position == 3) {
             fragment = new FavoritesFragment();
-        } else if (position == 4){
+        } else if (position == 4) {
             fragment = new SwipesFragment();
-        } else if (position == 5){
+        } else if (position == 5) {
             fragment = new DiningCamsFragment();
         }
 
@@ -163,13 +154,4 @@ public class BaseActivity extends ActionBarActivity {
         }
     }
 
-    private boolean notificationServiceRunning() {
-        ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
-        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
-            if (NotificationService.class.getName().equals(service.service.getClassName())) {
-                return true;
-            }
-        }
-        return false;
-    }
 }

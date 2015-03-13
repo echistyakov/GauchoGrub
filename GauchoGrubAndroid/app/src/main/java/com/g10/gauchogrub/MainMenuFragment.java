@@ -1,6 +1,7 @@
 package com.g10.gauchogrub;
 
 import android.app.Fragment;
+import android.content.pm.ActivityInfo;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -14,96 +15,102 @@ import android.widget.TextView;
 import com.g10.gauchogrub.menu.DiningCommon;
 import com.g10.gauchogrub.menu.Menu;
 import com.g10.gauchogrub.menu.MenuItem;
-import com.g10.gauchogrub.utils.CacheUtils;
+import com.g10.gauchogrub.utils.APIInterface;
 import com.g10.gauchogrub.utils.MenuParser;
-import com.g10.gauchogrub.utils.WebUtils;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.AbstractMap.SimpleEntry;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.logging.Logger;
 
-/**
- * The MainMenuFragment class defines the visual representation and functionality for displaying Main Menu Options
- * in our interface.
- */
 public class MainMenuFragment extends Fragment {
 
-    public final static Logger logger = Logger.getLogger("MainMenuFragment");
+    private final static Logger logger = Logger.getLogger("MainMenuFragment");
     ArrayList<ArrayList<Double>> allRankings;
-    WebUtils w = new WebUtils();
-    MenuParser mp = new MenuParser();
+    APIInterface api = new APIInterface();
     TableLayout ratingsTable;
+    private SimpleEntry<String, Double> bestBreakfast = new SimpleEntry<>("", Double.MIN_VALUE);
+    private SimpleEntry<String, Double> bestLunch = new SimpleEntry<>("", Double.MIN_VALUE);
+    private SimpleEntry<String, Double> bestDinner = new SimpleEntry<>("", Double.MIN_VALUE);
 
-    /**
-     * Make the function call to retrieve Menus in order to calculate and display ratings
-     *
-     * @param inflater The LayoutInflater object that can be used to inflate
-     * any views in the fragment,
-     * @param container If non-null, this is the parent view that the fragment's
-     * UI should be attached to.  The fragment should not add the view itself,
-     * but this can be used to generate the LayoutParams of the view.
-     * @param savedInstanceState If non-null, this fragment is being re-constructed
-     * from a previous saved state as given here.
-     *
-     * @return Return the View for the fragment's UI, or null.
-     */
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.main_menu_fragment, container, false);
         allRankings = new ArrayList<>();
-        ratingsTable = (TableLayout)rootView.findViewById(R.id.rankingsTable);
+        ratingsTable = (TableLayout) rootView.findViewById(R.id.rankingsTable);
 
-        getTodaysRankings();
+        getCurrentDiningCommonRankings();
+        getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
         return rootView;
     }
 
     /**
-     * Fill up textviews that contains information about the highest rated dining commons for each meal of the current day
+     * inflateRatingsTable() inflates the corresponding xml file to create a structured fragment
+     * viewable to the user
      */
-    public void inflateRatingsTable(){
+    public void inflateRatingsTable() {
         int count = 1;
-        ArrayList<SimpleEntry<Integer,Double>> maxRating = findHighestMealRatings();
+        ArrayList<SimpleEntry<String,Double>> bestMealList = new ArrayList<SimpleEntry<String, Double>>();
+        bestMealList.add(bestBreakfast);
+        bestMealList.add(bestLunch);
+        bestMealList.add(bestDinner);
 
-        for(int i = 0; i <= 2; i++) {
+        for (int i = 0; i <= 2; i++) {
             TableRow ratingRow = new TableRow(getActivity().getApplicationContext());
             ratingRow.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
 
             TextView ratingTextView = new TextView(getActivity().getApplicationContext());
-            ratingTextView.setTextColor(Color.rgb(255,108,52));
+            ratingTextView.setTextColor(Color.rgb(255, 108, 52));
             ratingTextView.setTextSize(16);
-            if(maxRating != null)
-                ratingTextView.setText(DiningCommon.READABLE_DINING_COMMONS[maxRating.get(i).getKey()] + " (" + String.format("%.2f",(maxRating.get(i).getValue())) + " avg. likes per food item)");
+            if (i == 0 && !bestBreakfast.getKey().equals("")) {
+                ratingTextView.setText(bestMealList.get(i).getKey() + " (" + String.format("%.2f", (bestMealList.get(i).getValue())) + " avg. likes per food item)");
+            }
+            else if (i == 1 && !bestLunch.getKey().equals("")) {
+                ratingTextView.setText(bestMealList.get(i).getKey() + " (" + String.format("%.2f", (bestMealList.get(i).getValue())) + " avg. likes per food item)");
+            }
+            else if (i == 2 && !bestDinner.getKey().equals("")) {
+                ratingTextView.setText(bestMealList.get(i).getKey() + " (" + String.format("%.2f", (bestMealList.get(i).getValue())) + " avg. likes per food item)");
+            }
             else
-                ratingTextView.setText("Please connect to the internet for rating info");
+                ratingTextView.setText("Rating data unavailable");
             ratingRow.addView(ratingTextView);
             ratingsTable.addView(ratingRow, count);
             count += 2;
-        }
-
+    }
     }
 
     /**
-     * Performs an asychronous task to retrieve todays menus from the API and calls the function to display the highest
-     * rated dining commons
+     * getCurrentDiningCommonRankings runs an Asynchronous task that retrieves current diningCommon
+     * data from the server and sets instance variables to the highest rankings.
      */
-    public void getTodaysRankings() {
-        new AsyncTask<Void, Void, ArrayList<ArrayList<Double>>>() {
+    public void getCurrentDiningCommonRankings() {
+        new AsyncTask<Void, Void, Void>() {
             @Override
-            protected ArrayList<ArrayList<Double>> doInBackground(Void... v) {
-                    for(int i = 0; i <=3; i++) {
-                        String menuString;
-                        try {
-                            menuString = w.createMenuString(DiningCommon.DATA_USE_DINING_COMMONS[i], "03/1" + i + "/2015");
-                        } catch (Exception e) { e.printStackTrace(); menuString = "";
-                        logger.info("caught api exception");}
-
-                        ArrayList<Menu> todaysMenus = mp.getDailyMenuList(menuString);
-                        ArrayList<Double> todaysRankings = getRankings(todaysMenus);
-                        allRankings.add(todaysRankings);
+            protected Void doInBackground(Void... v) {
+                MenuParser menuParser = new MenuParser();
+                for (int i = 0; i <= 3; i++) {
+                    String menuString = "";
+                    try {
+                        Date date = new Date();
+                        DateFormat dateFormat = new SimpleDateFormat(APIInterface.REQUEST_DATE_FORMAT);
+                        menuString = api.getMenuJson(DiningCommon.DATA_USE_DINING_COMMONS[i], dateFormat.format(date));
+                    } catch (Exception e) {
+                        logger.info("Caught API exception");
+                        logger.info(e.toString());
                     }
-                    return allRankings;
+                    ArrayList<Menu> todaysMenus = menuParser.getDailyMenuList(menuString); //one diningCommon at a time
+                    setHighestRankings(todaysMenus, DiningCommon.READABLE_DINING_COMMONS[i]);
+                }
+                return null;
             }
+            /**
+             * onPostExecute is an overridden method of the AsyncTask class, inflates the ratings table
+             */
             @Override
-            protected void onPostExecute(ArrayList<ArrayList<Double>> result) {
+            protected void onPostExecute(Void v) {
                 logger.info("entered post execute");
                 inflateRatingsTable();
             }
@@ -112,110 +119,41 @@ public class MainMenuFragment extends Fragment {
     }
 
     /**
-     * Compute the average rating for each Menu by adding up the rating up every menu item on the menu and dividing
-     * by the total number of menu items.
-     *
-     * @param menus list of todays menu to retrieve item ratings from
-     * @return
+     * setHighestRankings sets the instance variables in the class for the highest rankings.
+     * @param menus an ArrayList of Menu objects for a specific diningCommon on the current day
+     * @param diningCommon the user-readable name of the diningCommon
      */
-    public ArrayList<Double> getRankings(ArrayList<Menu> menus) {
+    private void setHighestRankings(ArrayList<Menu> menus, String diningCommon) {
         double totalRating = 0, itemCount = 0;
-        ArrayList<Double> dayRatings = new ArrayList<>();
-        if(menus == null){ return dayRatings; }
-
-        for(Menu menu : menus){
-            for(MenuItem item : menu.menuItems) {
+        if (menus == null)
+            return;
+        for (Menu menu : menus) {
+            for (MenuItem item : menu.menuItems) {
                 itemCount++;
                 totalRating = totalRating + getItemRating(item);
             }
-            dayRatings.add((totalRating/itemCount));
+            double scaledRating = (totalRating / itemCount);
+            if (menu.event.meal.name.toLowerCase().contains("breakfast") && scaledRating > bestBreakfast.getValue())
+                bestBreakfast = new SimpleEntry<String, Double>(diningCommon, scaledRating);
+            if (menu.event.meal.name.contains("unch") && scaledRating > bestLunch.getValue()) //if brunch or lunch, rating is higher
+                bestLunch = new SimpleEntry<String, Double>(diningCommon, scaledRating);
+            else if(menu.event.meal.name.toLowerCase().contains("dinner") && scaledRating > bestDinner.getValue())
+                bestDinner = new SimpleEntry<String, Double>(diningCommon, scaledRating);
             itemCount = 0;
             totalRating = 0;
         }
-        return dayRatings;
     }
 
     /**
-     * Extracts a Menu Item rating from the total number of ratings an item has and the total number of positive ratings an item has
-     *
-     * @param item Menu Item to get a rating from
-     * @return
+     * getItemRating() is a private helper function that calculates the itemrating given a menuItem
+     * @param item a menuItem object that contains rating data
+     * @return the calculated rating for the menuItem
      */
-    public int getItemRating(MenuItem item){
+    private int getItemRating(MenuItem item) {
         int totalPositiveRatings = item.totalPositiveRatings;
         int totalRating = item.totalRatings;
         int negativeRatings = totalRating - totalPositiveRatings;
         return totalPositiveRatings - negativeRatings;
-    }
-
-    /**
-     * Finds the highest rated breakfast lunch and dinner by comparing the ratings for breakfast lunch and dinner at
-     * each dining common
-     *
-     * @return
-     */
-    public ArrayList<SimpleEntry<Integer,Double>> findHighestMealRatings() {
-        if(allRankings.size() > 0 && allRankings.get(0).size() > 0) {
-            double maxBreakFastRating = allRankings.get(0).get(0);
-            double maxLunchRating = allRankings.get(0).get(1);
-            double maxDinnerRating = allRankings.get(0).get(2);
-            int dcTrack = 0, dcTrack1 = 0, dcTrack2 = 0;
-            ArrayList<SimpleEntry<Integer, Double>> maxRatingList = new ArrayList<>();
-            ArrayList<Integer> nullCheck = new ArrayList<>();
-
-            for (int j = 0; j <= 3; j++) {
-                if (allRankings.get(j).size() == 0) {
-                    nullCheck.add(j);
-                    logger.info(DiningCommon.DATA_USE_DINING_COMMONS[j] + " is null");
-                }
-            }
-
-            for (int i = 1; i <= 3; i++) {
-                if (!nullCheck.contains((i))) {
-                    //Compute Max BreakFast Rating
-                    if (i != 1) {
-                        double currentBreakFastRating = allRankings.get(i).get(0);
-                        if (currentBreakFastRating > maxBreakFastRating) {
-                            maxBreakFastRating = currentBreakFastRating;
-                            dcTrack = i;
-                        }
-                    }
-                    //Compute Max Lunch Rating
-                    double currentLunchRating;
-                    if (i == 1) {
-                        currentLunchRating = allRankings.get(i).get(0);
-                    } else {
-                        currentLunchRating = allRankings.get(i).get(1);
-                    }
-                    if (currentLunchRating > maxLunchRating) {
-                        maxLunchRating = currentLunchRating;
-                        dcTrack1 = i;
-                    }
-
-                    //Compute Max Dinner Rating
-                    double currentDinnerRating;
-                    if (i == 1) {
-                        currentDinnerRating = allRankings.get(i).get(1);
-                    } else {
-                        currentDinnerRating = allRankings.get(i).get(2);
-                    }
-                    if (currentDinnerRating > maxDinnerRating) {
-                        maxDinnerRating = currentDinnerRating;
-                        dcTrack2 = i;
-                    }
-                }
-            }
-            SimpleEntry<Integer, Double> maxBreakFast = new SimpleEntry<>(dcTrack, maxBreakFastRating);
-            SimpleEntry<Integer, Double> maxLunch = new SimpleEntry<>(dcTrack1, maxLunchRating);
-            SimpleEntry<Integer, Double> maxDinner = new SimpleEntry<>(dcTrack2, maxDinnerRating);
-            maxRatingList.add(maxBreakFast);
-            maxRatingList.add(maxLunch);
-            maxRatingList.add(maxDinner);
-
-            return maxRatingList;
-        }
-        else
-            return null;
     }
 
 }

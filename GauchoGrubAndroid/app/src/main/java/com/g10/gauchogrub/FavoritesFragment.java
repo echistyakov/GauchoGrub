@@ -1,5 +1,6 @@
 package com.g10.gauchogrub;
 
+import android.content.pm.ActivityInfo;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
@@ -8,7 +9,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TabHost;
 import android.widget.TableLayout;
@@ -16,10 +16,9 @@ import android.widget.TableRow;
 import android.widget.TextView;
 
 import com.g10.gauchogrub.menu.DiningCommon;
+import com.g10.gauchogrub.utils.FileIOUtils;
 
-import java.io.IOException;
 import java.util.HashSet;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -28,14 +27,13 @@ import java.util.logging.Logger;
  */
 public class FavoritesFragment extends BaseTabbedFragment {
 
-    HashSet<String> favoritesList;
-    public final static Logger logger = Logger.getLogger("FavoritesFragment");
+    private final static Logger logger = Logger.getLogger("FavoritesFragment");
 
+    private HashSet<String> favoritesList;
     private TableLayout favoritesTable;
     private RelativeLayout buttonLayout;
     private TableRow currentSelectedItem = null;
     private View currentButtonBar;
-
     private String diningCommon = DiningCommon.DATA_USE_CARILLO;
 
     /**
@@ -59,6 +57,7 @@ public class FavoritesFragment extends BaseTabbedFragment {
      */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
         favoritesList = new HashSet<>();
         View rootView = inflater.inflate(R.layout.favorites_fragment, container, false);
         favoritesTable = (TableLayout)rootView.findViewById(R.id.favorites_table);
@@ -137,15 +136,12 @@ public class FavoritesFragment extends BaseTabbedFragment {
         };
     }
 
-    /**
-     * Defines actions to perform when a new tab is selected
-     * @param tag
-     */
-    public void setDisplayContent(int tag) {
+    @Override
+    public void setDisplayContent(int index) {
         buttonLayout.removeView(currentButtonBar);
         currentSelectedItem = null;
         currentButtonBar = null;
-        diningCommon = DiningCommon.DATA_USE_DINING_COMMONS[tag];
+        diningCommon = DiningCommon.DATA_USE_DINING_COMMONS[index];
         run();
     }
 
@@ -156,14 +152,8 @@ public class FavoritesFragment extends BaseTabbedFragment {
         new AsyncTask<Void, Void, HashSet<String>>() {
             @Override
             protected HashSet<String> doInBackground(Void... v) {
-                try {
-                    favoritesList = fillFavoritesList(diningCommon);
-                    for(String test : favoritesList){
-                        logger.info("list contains: " + test);
-                    }
-                } catch(Exception e) {
-                    logger.log(Level.INFO, e.getMessage());
-                }
+                FileIOUtils fio = new FileIOUtils();
+                favoritesList = fio.fillFavoritesList(getActivity().getBaseContext(), diningCommon);
                 return null;
             }
             @Override
@@ -194,9 +184,10 @@ public class FavoritesFragment extends BaseTabbedFragment {
                     favoriteButton.setBackgroundResource(R.drawable.favorite_on_xxhdpi);
                 }
                 try {
-                    writeFavorites(favoritesList, diningCommon);
-                } catch (IOException e) {
-                    e.printStackTrace();
+                    FileIOUtils fio = new FileIOUtils();
+                    fio.writeFavorites(getActivity().getBaseContext(), favoritesList, diningCommon);
+                } catch (Exception e) {
+                    logger.warning(e.toString());
                 }
             }
         });

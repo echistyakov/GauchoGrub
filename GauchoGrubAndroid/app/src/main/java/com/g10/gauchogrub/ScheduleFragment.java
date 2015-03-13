@@ -1,6 +1,6 @@
 package com.g10.gauchogrub;
 
-
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,42 +10,50 @@ import android.widget.AdapterView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
-import java.util.AbstractMap.SimpleEntry;
 import android.widget.TabHost;
 import android.widget.TabHost.TabContentFactory;
+
+import java.util.AbstractMap.SimpleEntry;
 import java.util.ArrayList;
 import java.util.logging.Logger;
 
 public class ScheduleFragment extends BaseTabbedFragment {
 
+    private final static Logger logger = Logger.getLogger("ScheduleFragment");
+
     private TableLayout scheduleTable;
-    public final static Logger logger = Logger.getLogger("ScheduleFragment");
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
         View rootView = inflater.inflate(R.layout.schedule_fragment, container, false);
         this.scheduleTable = (TableLayout) rootView.findViewById(R.id.schedule_table);
-        //Create page tabs
-        TabHost tabs = (TabHost)rootView.findViewById(R.id.tabHost);
+        // Create page tabs
+        TabHost tabs = (TabHost) rootView.findViewById(R.id.tabHost);
         this.setUpTabs(tabs, createTabContent(), 4);
         return rootView;
     }
 
-    public void setDisplayContent(int tag) {
+    @Override
+    public void setDisplayContent(int index) {
         // An item was selected. You can retrieve the selected item using
         // parent.getItemAtPosition(pos)
         ArrayList<SimpleEntry<String, ArrayList<SimpleEntry<String, String>>>> schedule = null;
         scheduleTable.removeAllViews();
 
-        switch (tag) {
-            case 0: schedule = getCarilloSchedule();
-                    break;
-            case 1: schedule = getDeLaGuerraSchedule();
-                    break;
-            case 2: schedule = getOrtegaSchedule();
-                    break;
-            case 3: schedule = getPortollaSchedule();
-                    break;
+        switch (index) {
+            case 0:
+                schedule = getCarilloSchedule();
+                break;
+            case 1:
+                schedule = getDeLaGuerraSchedule();
+                break;
+            case 2:
+                schedule = getOrtegaSchedule();
+                break;
+            case 3:
+                schedule = getPortollaSchedule();
+                break;
         }
 
         for (SimpleEntry<String, ArrayList<SimpleEntry<String, String>>> headerEntry : schedule) {
@@ -59,7 +67,7 @@ public class ScheduleFragment extends BaseTabbedFragment {
             headerRow.addView(headerView);
             scheduleTable.addView(headerRow);
 
-            for(SimpleEntry<String, String> mealEntry : headerEntry.getValue()) {
+            for (SimpleEntry<String, String> mealEntry : headerEntry.getValue()) {
                 String mealTitle = mealEntry.getKey();
                 String mealTime = mealEntry.getValue();
 
@@ -75,7 +83,6 @@ public class ScheduleFragment extends BaseTabbedFragment {
 
                 entryRow.addView(entryView);
                 scheduleTable.addView(entryRow);
-                logger.info("child count " + scheduleTable.getChildCount());
             }
         }
     }
@@ -85,16 +92,16 @@ public class ScheduleFragment extends BaseTabbedFragment {
     }
 
     private ArrayList<SimpleEntry<String, ArrayList<SimpleEntry<String, String>>>> getOrtegaSchedule() {
-        ArrayList<SimpleEntry<String, ArrayList<SimpleEntry<String, String>>>> schedule = new ArrayList<SimpleEntry<String, ArrayList<SimpleEntry<String, String>>>>();
+        ArrayList<SimpleEntry<String, ArrayList<SimpleEntry<String, String>>>> schedule = new ArrayList<>();
 
         // Monday-Friday
-        ArrayList<SimpleEntry<String, String>> monFri = new ArrayList<SimpleEntry<String, String>>();
+        ArrayList<SimpleEntry<String, String>> monFri = new ArrayList<>();
         monFri.add(new SimpleEntry("Breakfast", "7:15am - 10:45am"));
         monFri.add(new SimpleEntry("Lunch", "11:45am - 2:30pm"));
         monFri.add(new SimpleEntry("Dinner", "5:00pm - 8:00pm"));
 
         // Sack Meals
-        ArrayList<SimpleEntry<String, String>> sackMeals = new ArrayList<SimpleEntry<String, String>>();
+        ArrayList<SimpleEntry<String, String>> sackMeals = new ArrayList<>();
         sackMeals.add(new SimpleEntry("Mon-Fri", "7:30am - 11:30am"));
 
         schedule.add(new SimpleEntry("Monday-Friday", monFri));
@@ -104,19 +111,19 @@ public class ScheduleFragment extends BaseTabbedFragment {
     }
 
     private ArrayList<SimpleEntry<String, ArrayList<SimpleEntry<String, String>>>> getDeLaGuerraSchedule() {
-        ArrayList<SimpleEntry<String, ArrayList<SimpleEntry<String, String>>>> schedule = new ArrayList<SimpleEntry<String, ArrayList<SimpleEntry<String, String>>>>();
+        ArrayList<SimpleEntry<String, ArrayList<SimpleEntry<String, String>>>> schedule = new ArrayList<>();
 
         // Monday-Friday
-        ArrayList<SimpleEntry<String, String>> monFri = new ArrayList<SimpleEntry<String, String>>();
+        ArrayList<SimpleEntry<String, String>> monFri = new ArrayList<>();
         monFri.add(new SimpleEntry("Lunch", "11:00am - 2:30pm"));
         monFri.add(new SimpleEntry("Dinner", "5:00pm - 8:00pm"));
 
         // Monday-Thursday
-        ArrayList<SimpleEntry<String, String>> monThu = new ArrayList<SimpleEntry<String, String>>();
+        ArrayList<SimpleEntry<String, String>> monThu = new ArrayList<>();
         monThu.add(new SimpleEntry("Late Night", "9:00pm - 12:30am"));
 
         // Saturday-Sunday
-        ArrayList<SimpleEntry<String, String>> satSun = new ArrayList<SimpleEntry<String, String>>();
+        ArrayList<SimpleEntry<String, String>> satSun = new ArrayList<>();
         satSun.add(new SimpleEntry("Brunch", "10:30am - 2:00pm"));
         satSun.add(new SimpleEntry("Dinner", "5:00pm - 8:00pm"));
 
@@ -128,16 +135,16 @@ public class ScheduleFragment extends BaseTabbedFragment {
     }
 
     private ArrayList<SimpleEntry<String, ArrayList<SimpleEntry<String, String>>>> getCarilloSchedule() {
-        ArrayList<SimpleEntry<String, ArrayList<SimpleEntry<String, String>>>> schedule = new ArrayList<SimpleEntry<String, ArrayList<SimpleEntry<String, String>>>>();
+        ArrayList<SimpleEntry<String, ArrayList<SimpleEntry<String, String>>>> schedule = new ArrayList<>();
 
         // Monday-Friday
-        ArrayList<SimpleEntry<String, String>> monFri = new ArrayList<SimpleEntry<String, String>>();
+        ArrayList<SimpleEntry<String, String>> monFri = new ArrayList<>();
         monFri.add(new SimpleEntry("Breakfast", "7:15am - 10:00am"));
         monFri.add(new SimpleEntry("Lunch", "11:00am - 2:30pm"));
         monFri.add(new SimpleEntry("Dinner", "5:00pm - 8:00pm"));
 
         // Saturday-Sunday
-        ArrayList<SimpleEntry<String, String>> satSun = new ArrayList<SimpleEntry<String, String>>();
+        ArrayList<SimpleEntry<String, String>> satSun = new ArrayList<>();
         satSun.add(new SimpleEntry("Brunch", "10:30am - 2:00pm"));
         satSun.add(new SimpleEntry("Dinner", "5:00pm - 8:00pm"));
 
@@ -148,21 +155,21 @@ public class ScheduleFragment extends BaseTabbedFragment {
     }
 
     private ArrayList<SimpleEntry<String, ArrayList<SimpleEntry<String, String>>>> getPortollaSchedule() {
-        ArrayList<SimpleEntry<String, ArrayList<SimpleEntry<String, String>>>> schedule = new ArrayList<SimpleEntry<String, ArrayList<SimpleEntry<String, String>>>>();
+        ArrayList<SimpleEntry<String, ArrayList<SimpleEntry<String, String>>>> schedule = new ArrayList<>();
 
         // Monday-Friday
-        ArrayList<SimpleEntry<String, String>> monFri = new ArrayList<SimpleEntry<String, String>>();
+        ArrayList<SimpleEntry<String, String>> monFri = new ArrayList<>();
         monFri.add(new SimpleEntry("Breakfast", "7:00am - 10:30am"));
         monFri.add(new SimpleEntry("Lunch", "12:00am - 2:30pm"));
         monFri.add(new SimpleEntry("Dinner", "5:00pm - 8:00pm"));
 
         // Saturday-Sunday
-        ArrayList<SimpleEntry<String, String>> satSun = new ArrayList<SimpleEntry<String, String>>();
+        ArrayList<SimpleEntry<String, String>> satSun = new ArrayList<>();
         satSun.add(new SimpleEntry("Brunch", "10:30am - 2:00pm"));
         satSun.add(new SimpleEntry("Dinner", "5:00pm - 8:00pm"));
 
         // Sack Meals
-        ArrayList<SimpleEntry<String, String>> sackMeals = new ArrayList<SimpleEntry<String, String>>();
+        ArrayList<SimpleEntry<String, String>> sackMeals = new ArrayList<>();
         sackMeals.add(new SimpleEntry("Mon-Fri", "7:30am - 11:30am"));
 
         schedule.add(new SimpleEntry("Monday-Friday", monFri));
@@ -172,7 +179,7 @@ public class ScheduleFragment extends BaseTabbedFragment {
         return schedule;
     }
 
-    public TabContentFactory createTabContent(){
+    public TabContentFactory createTabContent() {
         return new TabContentFactory() {
             @Override
             public View createTabContent(String tag) {

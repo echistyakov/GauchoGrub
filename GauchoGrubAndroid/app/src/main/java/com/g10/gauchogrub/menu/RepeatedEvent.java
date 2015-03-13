@@ -1,6 +1,7 @@
 package com.g10.gauchogrub.menu;
 
 import com.google.gson.annotations.SerializedName;
+
 import org.joda.time.Period;
 
 public class RepeatedEvent {
@@ -14,5 +15,4 @@ public class RepeatedEvent {
     public Period from;
     @SerializedName("To")
     public Period to;
-
 }

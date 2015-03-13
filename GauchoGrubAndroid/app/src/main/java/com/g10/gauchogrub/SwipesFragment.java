@@ -1,5 +1,6 @@
 package com.g10.gauchogrub;
 
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,7 +15,7 @@ import android.webkit.WebView;
  */
 public class SwipesFragment extends Fragment {
 
-    public final static Logger logger = Logger.getLogger("FavoritesFragment");
+    private final static Logger logger = Logger.getLogger("SwipesFragment");
 
 
     /**
@@ -32,6 +33,7 @@ public class SwipesFragment extends Fragment {
      */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
         View rootView = inflater.inflate(R.layout.swipes_fragment, container, false);
         WebView swipesView = (WebView)rootView.findViewById(R.id.webView);
 

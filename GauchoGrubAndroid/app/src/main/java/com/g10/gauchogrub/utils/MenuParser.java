@@ -1,10 +1,10 @@
 package com.g10.gauchogrub.utils;
 
-import com.g10.gauchogrub.menu.Menu;
 import java.util.ArrayList;
 import java.util.logging.Logger;
 import java.lang.reflect.Type;
 
+import com.g10.gauchogrub.menu.Menu;
 import com.g10.gauchogrub.utils.gson.DateTimeDeserializer;
 import com.g10.gauchogrub.utils.gson.PeriodDeserializer;
 import com.google.gson.Gson;
@@ -14,16 +14,21 @@ import com.google.gson.reflect.TypeToken;
 import org.joda.time.DateTime;
 import org.joda.time.Period;
 
-public class MenuParser{
+public class MenuParser {
 
-    public final static Logger logger = Logger.getLogger("MenuParser");
+    private final static Logger logger = Logger.getLogger("MenuParser");
     public static final Type listMenuType = new TypeToken<ArrayList<Menu>>() {}.getType();
 
+    /**
+     * getDailyMenuList() parses a JSON string of menus into an ArrayList of Menu objects
+     * @param menuString a JSON string of menus for a specific dining Common and specific day
+     * @return an ArrayList of Menu objects
+     */
     public ArrayList<Menu> getDailyMenuList(String menuString) {
         try {
             return deserialize(menuString, listMenuType);
         } catch (Exception ex) {
-            ex.printStackTrace();
+            logger.info(ex.getMessage());
         }
         return null;
     }

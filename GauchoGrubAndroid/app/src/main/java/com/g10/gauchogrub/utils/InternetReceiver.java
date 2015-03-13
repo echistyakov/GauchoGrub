@@ -13,6 +13,13 @@ import com.g10.gauchogrub.services.DataAutomationService;
 
 public class InternetReceiver extends BroadcastReceiver {
 
+    /**
+     * onRecieve() takes a context and an intent defined in the AndroidManifest.xml file, defined
+     * as an intent released by the system when the network state changes
+     * it then attempts to start the dataAutomation services if connected to wifi
+     * @param context the application context
+     * @param intent the android boot intent
+     */
     @Override
     public void onReceive(Context context, Intent intent) {
         ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -22,8 +29,9 @@ public class InternetReceiver extends BroadcastReceiver {
         PendingIntent pendingAutomationIntent = PendingIntent.getService(context, 0, automationIntent, 0);
         if (netInfo != null && netInfo.isConnectedOrConnecting()) {
             WifiManager wifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
-            if(wifiManager.isWifiEnabled())
-                alarmManager.set(AlarmManager.RTC_WAKEUP, 30*1000, pendingAutomationIntent);
+            if (wifiManager.isWifiEnabled()) {
+                alarmManager.set(AlarmManager.RTC_WAKEUP, 30 * 1000, pendingAutomationIntent);
+            }
         }
     }
 }
