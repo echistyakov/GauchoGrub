@@ -1,6 +1,8 @@
-G10: GauchoGrub
+# GauchoGrub
+The Original GauchoGrub
+
 UCSB CS48 W15
-Melvin Nguyen, Zak Blake, Victor Porter, Evgeny Chistyakov, Eric Swenson
+G10: Melvin Nguyen, Zak Blake, Victor Porter, Evgeny Chistyakov, Eric Swenson
 
 Public Github Repository: https://github.com/echistyakov/GauchoGrub
 
