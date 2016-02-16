@@ -5,11 +5,11 @@
 
 ### Android Application
 
-To run the Android Application:
+To run the app:
 
 1. Clone the repo
 2. Open GauchoGrub/GauchoGrubAndroid/ directory in Android Studio
-3. Create an AVD (with level 16 or above API).
+3. Create an AVD (with level 16 API or higher).
 4. Launch the application in the emulator.
 
 Special information for testing:
